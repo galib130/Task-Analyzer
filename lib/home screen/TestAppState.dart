@@ -421,38 +421,52 @@ class TestAppState extends State<TestApp>{
          Scaffold(
 
           appBar: AppBar(
-            backgroundColor: Colors.blue,
-              title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [change_state==0?Text("Active"):Text("Secondary"),
+             backgroundColor: Colors.lightBlueAccent,
+              title:  Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [change_state==0?Text("Active"):Text("Secondary"),
 
-              Align(
-                alignment: Alignment.topRight,
-                child: ElevatedButton(
+                Align(
+                  alignment: Alignment.topRight,
+                  child: ElevatedButton(
 
-                  onPressed: (){
+                    onPressed: (){
 
-                   setState(() {
-                     context.read<FlutterFireAuthService>().signOut();
-                     //Navigator.of(context).pop();
-                     Navigator.of(context)
-                         .pushNamedAndRemoveUntil('/openview', (Route<dynamic> route) => false);
+                     setState(() {
+                       context.read<FlutterFireAuthService>().signOut();
+                       //Navigator.of(context).pop();
+                       Navigator.of(context)
+                           .pushNamedAndRemoveUntil('/openview', (Route<dynamic> route) => false);
 
-                   });
+                     });
 
-                  },child: Text('Sign Out'),
+                    },child: Text('Sign Out'),
+                  ),
                 ),
-              ),
 
 
 
-              ],)
+                ],),
+
           ),
           backgroundColor: Colors.black,
           drawer: Drawer(
 
             child: Container(
-              color: Colors.black,
+              decoration: BoxDecoration(
+
+                  borderRadius: BorderRadius.circular(4),
+                  //image:  DecorationImage(image: new AssetImage('assets/listtile.jpg'),fit: BoxFit.cover)
+                  gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.topLeft,
+                      colors: [
+                        Colors.cyan,
+                        Colors.indigoAccent,
+
+                      ]
+                  )
+              ),
               child: Stack(
                 children: [
                  Positioned(
@@ -461,18 +475,25 @@ class TestAppState extends State<TestApp>{
                      right: 50,
                      child:
                     ElevatedButton(
+
                    onPressed: (){  //ADD button
                      change(0);
                      Navigator.of(context)
                          .pushNamedAndRemoveUntil('/profile', (Route<dynamic> route) => false);
-                     }, child: Text('Active'),
+                     }, child: Text('Active',style: TextStyle(
+                      fontSize: 20,
+
+                    ),),
                       style: ElevatedButton.styleFrom(
                           primary: Colors.blue,
-                          onPrimary: Colors.black
+                          onPrimary: Colors.black,
+                        shadowColor: Colors.red,
+                          elevation: 10,
+                        padding: EdgeInsets.all(25)
                       ),
                  )),
                   Positioned(
-                      top: 160,
+                      top: 180,
                       left: 50,
                       right: 50,
                       child:
@@ -484,15 +505,20 @@ class TestAppState extends State<TestApp>{
                             .pushNamedAndRemoveUntil('/profile', (Route<dynamic> route) => false);
                        // Navigator.of(context).pop();
                       },
-                        child: Text('Secondary'),
+                        child: Text('Secondary',style: TextStyle(
+                          fontSize: 20
+                        ),),
                         style: ElevatedButton.styleFrom(
                             primary: Colors.blue,
-                            onPrimary: Colors.black
+                            onPrimary: Colors.black,
+                            padding: EdgeInsets.all(25),
+                          shadowColor: Colors.red,
+                          elevation: 10,
                         ),
                       )
                   ),
                   Positioned(
-                      top: 240,
+                      top: 280,
                       left: 50,
                       right: 50,
                       child:  ElevatedButton(
@@ -506,10 +532,15 @@ class TestAppState extends State<TestApp>{
                                 .pushNamedAndRemoveUntil('/profile', (Route<dynamic> route) => false);
                           });
 
-                        },child: Text('Set Session'),
+                        },child: Text('Set Session',style: TextStyle(
+                          fontSize: 20
+                      ),),
                       style: ElevatedButton.styleFrom(
                       primary: Colors.blue,
-                       onPrimary: Colors.black
+                       onPrimary: Colors.black,
+                          padding: EdgeInsets.all(25),
+                        shadowColor: Colors.red,
+                        elevation: 10,
                       ),
                       ),
 
@@ -517,32 +548,43 @@ class TestAppState extends State<TestApp>{
                   ),
 
                   Positioned(
-                    top: 320,
+                    top: 380,
                     left: 50,
                     right: 50,
                     child:
                   ElevatedButton(onPressed:() {
                     Navigator.of(context)
                         .pushNamed('/chart');
-                  },child: Text('Session Summary'),
+                  },child: Text('Session Summary',style: TextStyle(
+                      fontSize: 18
+                  ),),
                     style: ElevatedButton.styleFrom(
+
                         primary: Colors.blue,
-                        onPrimary: Colors.black
+                        onPrimary: Colors.black,
+                      padding: EdgeInsets.all(25),
+                      shadowColor: Colors.red,
+                      elevation: 10,
                     ),
                   ),
                   ),
                   Positioned(
-                    top: 400,
+                    top: 480,
                     left: 50,
                     right: 50,
                     child:
                     ElevatedButton(onPressed:() {
                       Navigator.of(context)
                           .pushNamed('/average_chart');
-                    },child: Text('Efficiency'),
+                    },child: Text('Efficiency',style: TextStyle(
+                        fontSize: 20
+                    ),),
                       style: ElevatedButton.styleFrom(
                           primary: Colors.blue,
-                          onPrimary: Colors.black
+                          onPrimary: Colors.black,
+                        padding: EdgeInsets.all(25),
+                        shadowColor: Colors.red,
+                        elevation: 10,
                       ),
                     ),
                   )
@@ -561,16 +603,21 @@ class TestAppState extends State<TestApp>{
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children:[
+                        SizedBox(height: 10,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             ElevatedButton(
 
                                 style: ElevatedButton.styleFrom(
-                                  primary: Colors.cyan,
+                                  primary: Colors.lightBlueAccent,
+                                  padding: EdgeInsets.all(20),
+                                  shadowColor: Colors.red,
+                                  elevation: 10,
 
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
+
                                   ),),
                                 onPressed: ()async{
                                   var get_date_time_data = await set_date_time.get();
@@ -631,6 +678,9 @@ class TestAppState extends State<TestApp>{
                             ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     primary: Colors.cyan,
+                                  padding: EdgeInsets.all(20),
+                                  shadowColor: Colors.red,
+                                  elevation: 10,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
 
@@ -644,65 +694,82 @@ class TestAppState extends State<TestApp>{
                             ),),),//For Detail view
                           ],
                         ),
+                        SizedBox(height: 10,),
 
                         //Type Input Field
-                        TypeAheadField(
-                          //cursorHeight: 2,
-                          textFieldConfiguration: TextFieldConfiguration(
-                            autofocus: false,
-                            cursorColor: Colors.black ,
-                            controller: _taskcontroller,
-                            maxLines: 1,
-                            decoration: InputDecoration(
-                              hintText: "Items",
-                              filled: true,
-                              fillColor: Colors.cyan,
-                              suffixIcon: IconButton(
-                                color: Colors.black,
-                                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 2),
-                                onPressed: () {
-                                  add();
-                                  _taskcontroller.clear();
-                                  _timecontroller.clear();
-                                  _datecontroller.clear();
-                                  _secondcontroller.clear();
-                                  _descriptioncontroller.clear();
+                        Container(
+                          decoration: BoxDecoration(
 
-                                },
-                                icon: Icon(Icons.add_box_rounded,),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue),
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                              ),
-                              disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue),
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                              ),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue),
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderRadius: BorderRadius.circular(4),
+                              //image:  DecorationImage(image: new AssetImage('assets/listtile.jpg'),fit: BoxFit.cover)
+                              gradient: LinearGradient(
+                                  begin: Alignment.topRight,
+                                  end: Alignment.topLeft,
+                                  colors: [
+                                    Colors.lightBlueAccent,
+                                    Colors.cyanAccent
+                                  ]
+                              )
+                          ),
+                          child: TypeAheadField(
+                            //cursorHeight: 2,
+                            textFieldConfiguration: TextFieldConfiguration(
+                              autofocus: false,
+                              cursorColor: Colors.black ,
+                              controller: _taskcontroller,
+                              maxLines: 1,
+                              decoration: InputDecoration(
+                                hintText: "Items",
+                                filled: true,
+                                //fillColor: Colors.lightBlueAccent,
+                                suffixIcon: IconButton(
+                                  color: Colors.black,
+                                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 2),
+                                  onPressed: () {
+                                    add();
+                                    _taskcontroller.clear();
+                                    _timecontroller.clear();
+                                    _datecontroller.clear();
+                                    _secondcontroller.clear();
+                                    _descriptioncontroller.clear();
+
+                                  },
+                                  icon: Icon(Icons.add_box_rounded,),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue),
+                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue),
+                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue),
+                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                ),
                               ),
                             ),
+                            suggestionsCallback: (pattern)async{
+                              return await suggestionList(pattern);
+                            },
+                            itemBuilder: (context, suggestion) {
+                              return Container(
+
+                                child: ListTile(
+                                  tileColor: Colors.cyan,
+                                  title: Text(suggestion.toString()),
+
+                                ),
+
+                              ) ;
+                            },
+                            onSuggestionSelected: (suggestion){
+                              _taskcontroller.text= suggestion.toString() ;
+                            },
+                            hideOnLoading: true,
+
                           ),
-                          suggestionsCallback: (pattern)async{
-                            return await suggestionList(pattern);
-                          },
-                          itemBuilder: (context, suggestion) {
-                            return Container(
-                              child: ListTile(
-                                tileColor: Colors.cyan,
-                                title: Text(suggestion.toString()),
-
-                              ),
-
-                            ) ;
-                          },
-                          onSuggestionSelected: (suggestion){
-                            _taskcontroller.text= suggestion.toString() ;
-                          },
-                          hideOnLoading: true,
-
                         ) ,
 
                         SizedBox(height: 10,child: Container(),),
