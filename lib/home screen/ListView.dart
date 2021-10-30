@@ -50,6 +50,7 @@ class AddList_State  extends StatelessWidget{
                 Expanded(
                   child: TextField(
                     maxLines: 1,
+
                     controller: update_controller,
 
                   ),
@@ -59,7 +60,7 @@ class AddList_State  extends StatelessWidget{
                 Expanded(
                   child: TextField(
                     maxLines: 1,
-                    readOnly: true,
+                    
                     controller: description_controller,
                   ),
                 ),
@@ -175,7 +176,7 @@ class AddList_State  extends StatelessWidget{
 
                             decoration: BoxDecoration(
 
-                              borderRadius: BorderRadius.circular(5),
+                              borderRadius: BorderRadius.circular(4),
                                 //image:  DecorationImage(image: new AssetImage('assets/listtile.jpg'),fit: BoxFit.cover)
                               gradient: LinearGradient(
                                 begin: Alignment.topRight,
