@@ -55,6 +55,7 @@ createAlertDialog(BuildContext context,TextEditingController  _namecontroller,Te
                     flex: 1,
                     child: TextField(
                       maxLines: 1,
+                  readOnly: true,
                       decoration: InputDecoration(
                           hintText: 'Date'
                       ),
@@ -80,6 +81,7 @@ createAlertDialog(BuildContext context,TextEditingController  _namecontroller,Te
                     flex: 1,
                     child: TextField(
                       maxLines: 1,
+                      readOnly: true,
                       decoration: InputDecoration(
                           hintText: 'Time'
                       ),

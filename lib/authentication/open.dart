@@ -31,7 +31,11 @@ class _OpenViewState extends State<OpenView>{
 
     return Scaffold(
       body: Container(
+          decoration:
 
+          BoxDecoration(
+              image:  DecorationImage(image: new AssetImage('assets/gradient.png'),fit: BoxFit.cover)
+          ),
 
 
           child:Column(

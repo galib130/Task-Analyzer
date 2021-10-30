@@ -63,6 +63,7 @@ class AddList_State  extends StatelessWidget{
                 Expanded(
                   child: TextField(
                     maxLines: 1,
+                    readOnly: true,
                     controller: description_controller,
                   ),
                 ),
@@ -70,6 +71,7 @@ class AddList_State  extends StatelessWidget{
                   flex: 1,
                   child: TextField(
                     maxLines: 1,
+                    readOnly: true,
                     decoration: InputDecoration(
                         hintText: 'Date'
                     ),
@@ -205,7 +207,7 @@ class AddList_State  extends StatelessWidget{
                                                  checkbox(data['Name'],value!,document);
                                                }),
                                              ]),
-                                       if(data.containsValue(data['setTime']))
+                                       if(data.containsValue(data['setTime'])&&data['setTime']!='    ')
 
                                        Text(data['setTime'].toString(),style:
                                            TextStyle(fontStyle: FontStyle.italic),)

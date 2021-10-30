@@ -572,16 +572,19 @@ class TestAppState extends State<TestApp>{
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),),
-                                onPressed: ()async{  //ADD button
-
+                                onPressed: ()async{
+                                  var get_date_time_data = await set_date_time.get();
+                                  var date_time_data = get_date_time_data.data() as Map;
+//ADD button
+                                  if(_taskcontroller.text.isNotEmpty)
+                               {
+                                  setState(() {
                                   add();
                                   print(difference.toString() + 'difference');
 
 
-                                  var get_date_time_data = await set_date_time.get();
-                                  var date_time_data = get_date_time_data.data() as Map;
 
-                                  if(date_difference!=0|| time_difference!=0) {
+                                    if(date_difference!=0|| time_difference!=0) {
 
                                       difference=date_difference+time_difference;
 
@@ -601,20 +604,22 @@ class TestAppState extends State<TestApp>{
                                       difference=0;
 
 
-                                  }
-                                  else{
-                                    print('not notifying');
-                                  }
-                                  set_date_time.set({
-                                    "date difference" : 0,
-                                    "time difference": 0,
+                                    }
+                                    else{
+                                      print('not notifying');
+                                    }  }); }
+                                    set_date_time.set({
+                                      "date difference" : 0,
+                                      "time difference": 0,
 
-                                  });
-                                  _datecontroller.clear();
-                                  _timecontroller.clear();
-                                  _taskcontroller.clear();
-                                  _secondcontroller.clear();
-                                  _descriptioncontroller.clear();
+                                    });
+                                    _datecontroller.clear();
+                                    _timecontroller.clear();
+                                    _taskcontroller.clear();
+                                    _secondcontroller.clear();
+                                    _descriptioncontroller.clear();
+
+
 
                                 },
                                 child: Text('Set Notification',style: TextStyle(
