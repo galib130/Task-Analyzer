@@ -108,7 +108,7 @@ class TestAppState extends State<TestApp>{
       }
 
 
-      Future.delayed(const Duration(milliseconds: 700), () {
+      Future.delayed(const Duration(milliseconds: 300), () {
         documentSnapshot.reference.delete();
 
       });
@@ -229,10 +229,10 @@ class TestAppState extends State<TestApp>{
               Timestamp.fromDate(DateTime.now())) > 0 && change_state == 0) {
             collectquadrant1.update(
                 {"Name": FieldValue.increment(-1), "color": '0xFF34c9eb',
-                  "xaxis": 'Quadrant1'});
+                 });
           avg_q1_document.update({
             "Name": FieldValue.increment(-1), "color": '0xFF34c9eb',
-            "xaxis": 'Quadrant1',
+
           });
 
           }
@@ -244,7 +244,7 @@ class TestAppState extends State<TestApp>{
               Timestamp.fromDate(DateTime.now())) > 0 && change_state == 1) {
             collectquadrant2.update(
                 {"Name": FieldValue.increment(-1), "color": '0xFFa531e8',
-                  "xaxis": 'Quadrant2'});
+                  });
             avg_q2_document.update({
               "Name": FieldValue.increment(-1),
             });
