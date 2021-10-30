@@ -15,7 +15,8 @@ Functionalities:
 
 -Delete notification upon deleting the task -Drawer holding different pages to navigate to
 
--Session button setting a time for 1 minute: Any task added within that minute will give user a -1 point Any task ticked off will give the user a +3 point
+-Session button setting a time for 1 minute: Any task added within that minute will give user a -1 point.
+Any task ticked off will give the user a +3 point
 
 The overall evaluation for a session is displayed in a bar chart for the two categories
 
@@ -31,4 +32,4 @@ Firebase was used to store user information
 
 For UI:
 
-image was used for background gradient was used for list tile
+Image was used for background gradient was used for list tile
