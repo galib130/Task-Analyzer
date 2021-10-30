@@ -115,6 +115,7 @@ class MyApp extends StatelessWidget{
   Widget build(BuildContext context) {
     return
            MaterialApp(
+             debugShowCheckedModeBanner: false,
              routes: {
                '/profile':(context)=>TestApp(),
                '/openview':(context)=>OpenView(),

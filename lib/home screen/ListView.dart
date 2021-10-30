@@ -210,7 +210,7 @@ class AddList_State  extends StatelessWidget{
                                                autofocus: true,
                                                    value: data['ticked'],
                                                    onChanged: (bool? value){
-                                                 checkbox(data['Name'],value!,document);
+                                                 checkbox(data['displayName'],value!,document);
                                                }),
                                              ]),
                                        if(data.containsValue(data['setTime'])&&data['setTime']!='    ')
