@@ -176,7 +176,15 @@ class AddList_State  extends StatelessWidget{
                             decoration: BoxDecoration(
 
                               borderRadius: BorderRadius.circular(5),
-                                image:  DecorationImage(image: new AssetImage('assets/listtile.jpg'),fit: BoxFit.cover)
+                                //image:  DecorationImage(image: new AssetImage('assets/listtile.jpg'),fit: BoxFit.cover)
+                              gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                end: Alignment.topLeft,
+                                colors: [
+                                  Colors.black12,
+                                  Colors.black54
+                                ]
+                              )
                             ),
                             child: Column(
                               children: [
@@ -193,7 +201,8 @@ class AddList_State  extends StatelessWidget{
                                                Expanded(
                                                  child: Text(data['displayName'].toString(),style:
                                              new TextStyle(
-                                                 fontSize: 20
+                                                 fontSize: 20,
+                                               color: Colors.white
                                              ),),
                                                ),
                                                Checkbox(
@@ -206,7 +215,8 @@ class AddList_State  extends StatelessWidget{
                                        if(data.containsValue(data['setTime'])&&data['setTime']!='    ')
 
                                        Text(data['setTime'].toString(),style:
-                                           TextStyle(fontStyle: FontStyle.italic),)
+                                           TextStyle(fontStyle: FontStyle.italic,
+                                           color: Colors.white),)
                                         ])
                                        ,),
 
