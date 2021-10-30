@@ -35,5 +35,5 @@ Firebase was used to store user information
 
 For UI:
 
-imgae was used for background
+image was used for background
 gradient was used for list tile
