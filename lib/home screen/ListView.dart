@@ -27,10 +27,6 @@ class AddList_State  extends StatelessWidget{
         ){
       TextEditingController update_controller=  TextEditingController();
       TextEditingController description_controller=  TextEditingController();
-      TextEditingController date_controller_proxy=  TextEditingController();
-      date_controller_proxy=date_controller;
-      TextEditingController time_controller_proxy=  TextEditingController();
-      time_controller_proxy=time_controller;
       update_controller.text=data;
       description_controller.text=description;
       if(map_data.containsValue(map_data['date']))

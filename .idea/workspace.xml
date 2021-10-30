@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="289bb56f-449a-4f9a-8215-7c3b2949a36c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.dart_tool/package_config.json" beforeDir="false" afterPath="$PROJECT_DIR$/.dart_tool/package_config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/b6b68957fc5ed9202596a46ebc5bde9b/_composite.stamp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/b6b68957fc5ed9202596a46ebc5bde9b/gen_dart_plugin_registrant.stamp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build/b6b68957fc5ed9202596a46ebc5bde9b/gen_localizations.stamp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.packages" beforeDir="false" afterPath="$PROJECT_DIR$/.packages" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/charts/average_chart.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/charts/average_chart.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/home screen/ListView.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/home screen/ListView.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
