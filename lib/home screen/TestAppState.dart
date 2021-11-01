@@ -266,11 +266,12 @@ class TestAppState extends State<TestApp>{
     DocumentReference q2_document=  FirebaseFirestore.instance.collection('Users').doc(uid).collection("session").doc('Quadrant2');
     DocumentReference avg_q1_document= FirebaseFirestore.instance.collection('Users').doc(uid).collection("average_session").doc('Quadrant1');
     DocumentReference avg_q2_document= FirebaseFirestore.instance.collection('Users').doc(uid).collection("average_session").doc('Quadrant2');
-    addwithtoday=today.add(new Duration(minutes: 1));
+    addwithtoday=today.add(new Duration(days: 7));
     DateTime currentdate=DateTime.now();
-    addwithtoday=currentdate.add(new Duration(minutes: 1));
+    addwithtoday=currentdate.add(new Duration(days: 7));
     Timestamp time=Timestamp.fromDate(addwithtoday);
 
+    print (time.toString());
     session_time.set({
       "time":time
     });
@@ -611,7 +612,7 @@ class TestAppState extends State<TestApp>{
 
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.lightBlueAccent,
-                                  padding: EdgeInsets.all(20),
+                                  padding: EdgeInsets.all(18),
                                   shadowColor: Colors.red,
                                   elevation: 10,
 
@@ -678,7 +679,7 @@ class TestAppState extends State<TestApp>{
                             ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                     primary: Colors.cyan,
-                                  padding: EdgeInsets.all(20),
+                                  padding: EdgeInsets.all(18),
                                   shadowColor: Colors.red,
                                   elevation: 10,
                                   shape: RoundedRectangleBorder(
@@ -699,7 +700,7 @@ class TestAppState extends State<TestApp>{
                         //Type Input Field
                         Container(
                           decoration: BoxDecoration(
-
+                            
                               borderRadius: BorderRadius.circular(4),
                               //image:  DecorationImage(image: new AssetImage('assets/listtile.jpg'),fit: BoxFit.cover)
                               gradient: LinearGradient(
@@ -715,6 +716,7 @@ class TestAppState extends State<TestApp>{
                             //cursorHeight: 2,
                             textFieldConfiguration: TextFieldConfiguration(
                               autofocus: false,
+
                               cursorColor: Colors.black ,
                               controller: _taskcontroller,
                               maxLines: 1,
