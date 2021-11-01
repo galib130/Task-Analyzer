@@ -1,4 +1,4 @@
-//import 'dart:ffi';
+import 'dart:ffi';
 
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:firebase_auth/firebase_auth.dart';
