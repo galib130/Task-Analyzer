@@ -754,14 +754,24 @@ class TestAppState extends State<TestApp>{
                               return await suggestionList(pattern);
                             },
                             itemBuilder: (context, suggestion) {
-                              return Container(
+                              return Dismissible(
+                                key: UniqueKey(),
+                                onDismissed:(DismissDirection){
+                                  var documentdata = quadrant1_complete.doc(suggestion.toString());
 
-                                child: ListTile(
-                                  tileColor: Colors.cyan,
-                                  title: Text(suggestion.toString()),
+                                 documentdata.delete();
+
+
+                                },
+                                child: Container(
+
+                                  child: ListTile(
+                                    tileColor: Colors.cyan,
+                                    title: Text(suggestion.toString()),
+
+                                  ),
 
                                 ),
-
                               ) ;
                             },
                             onSuggestionSelected: (suggestion){
