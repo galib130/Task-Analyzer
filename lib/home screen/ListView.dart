@@ -159,7 +159,7 @@ class AddList_State  extends StatelessWidget{
                   document.reference.delete();
                   },
                 child: GestureDetector(
-                  onLongPress: (){
+                 onTap: (){
               if(data.containsValue(data['description']))
                 createAlertDialog(BuildContext, context,data['displayName'].toString(),document,data['description'],
                   data,date_controller,time_controller,
