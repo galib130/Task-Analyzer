@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 // import 'package:jarvia/main.dart';
 import '../main.dart';
+import 'dart:async';
 
 class AddList_State  extends StatelessWidget{
   bool _value = false;
@@ -147,11 +148,26 @@ class AddList_State  extends StatelessWidget{
           else if (snapshot.connectionState == ConnectionState.waiting) {
             return Text("Loading");
           }
-          return ListView(
-            shrinkWrap: true,
+          return ReorderableListView(
 
+            shrinkWrap: true,
+            key: UniqueKey(),
+            onReorder: (oldIndex,newIndex) {
+              if (oldIndex < newIndex) newIndex -= 1;
+
+              var oldsnapshot= snapshot.data!.docs[oldIndex];
+
+
+              //print(oldsnapshot['displayName']);
+              snapshot.data!.docs[oldIndex].reference.update({'Timestamp':snapshot.data!.docs[newIndex]['Timestamp']});
+              snapshot.data!.docs[newIndex].reference.update({'Timestamp':oldsnapshot['Timestamp']});
+              
+
+            },
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
+
             Map<dynamic, dynamic> data = document.data()! as Map<dynamic, dynamic>;
+
             return Dismissible(key: UniqueKey(),
                 onDismissed:(DismissDirection)async{
                   //ondismissed(data['Name']);
@@ -193,8 +209,6 @@ class AddList_State  extends StatelessWidget{
                                     title: Container(child:Column(
 
                                         crossAxisAlignment: CrossAxisAlignment.start,
-
-
                                         children: [
                                          Row(
                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -213,7 +227,7 @@ class AddList_State  extends StatelessWidget{
                                                  checkbox(data['displayName'],value!,document);
                                                }),
                                              ]),
-                                       if(data.containsValue(data['setTime'])&&data['setTime']!='    ')
+                                       if(data.containsValue(data['setTime'])&&data['setTime']!='    '&&data['setTime']!='  ')
 
                                        Text(data['setTime'].toString(),style:
                                            TextStyle(fontStyle: FontStyle.italic,

@@ -160,7 +160,7 @@ class TestAppState extends State<TestApp>{
       return lastlist;
     }
     //Function to add data to backend
-    Future<void> Add_Data_to_Backend(String? task, int flag) async{
+    Future<void> postTasks(String? task, int flag) async{
       if(task!='') {
 
         FirebaseAuth auth = FirebaseAuth.instance;
@@ -259,7 +259,7 @@ class TestAppState extends State<TestApp>{
 
     }
     //Function to set a new session
-    void set_session ()  async {
+    void setSession ()  async {
   setState(() {
     DocumentReference session_time= FirebaseFirestore.instance.collection("Users").doc(uid).collection("session_time").doc("time");
     DocumentReference q1_document=  FirebaseFirestore.instance.collection('Users').doc(uid).collection("session").doc('Quadrant1');
@@ -313,12 +313,12 @@ class TestAppState extends State<TestApp>{
     void add(){
         if(change_state==0) {           //flag 0 for quadrant 1
 
-          Add_Data_to_Backend(_taskcontroller.text.trim() + _datecontroller.text.trim() + _timecontroller.text.trim(),
+          postTasks(_taskcontroller.text.trim() + _datecontroller.text.trim() + _timecontroller.text.trim(),
               change_state); // calls the function which adds to firebase
         }
         else       //flag1 for quadrant 2
         {
-        Add_Data_to_Backend(_taskcontroller.text.trim() + _datecontroller.text.trim() + _timecontroller.text.trim(),change_state);
+        postTasks(_taskcontroller.text.trim() + _datecontroller.text.trim() + _timecontroller.text.trim(),change_state);
         }
 
     }
@@ -528,7 +528,7 @@ class TestAppState extends State<TestApp>{
 
                           setState(() {
                             uid=auth.currentUser!.uid;
-                            set_session();
+                            setSession();
                             Navigator.of(context)
                                 .pushNamedAndRemoveUntil('/profile', (Route<dynamic> route) => false);
                           });
