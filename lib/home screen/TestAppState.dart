@@ -137,10 +137,6 @@ class TestAppState extends State<TestApp> {
 
       DateTime newDate = DateTime.parse(timestamp.toDate().toString());
 
-      //print(newSnapshotTimestamp['displayName']);
-
-      // snapshot.data!.docs[newIndex].reference
-      //     .update({'Timestamp': snapshot.data!.docs[oldIndex]['Timestamp']});
       if (oldIndex < newIndex)
         snapshot.data!.docs[oldIndex].reference.update({
           'Timestamp':
@@ -151,19 +147,6 @@ class TestAppState extends State<TestApp> {
           'Timestamp':
               Timestamp.fromDate(newDate.subtract(Duration(microseconds: 1)))
         });
-
-      // var olditem = snapshot.data!.docs[oldIndex];
-      // var newitem = snapshot.data!.docs[newIndex];
-      // var temp1 = snapshot.data!.docs[oldIndex];
-      // snapshot.data!.docs[oldIndex].reference.delete();
-      // snapshot.data!.docs[newIndex].reference.set({
-      //   "displayName": temp1['displayName'],
-      //   "Name": temp1['Name'],
-      //   "Timestamp": temp1['Timestamp'],
-      //   "ticked": temp1["ticked"],
-      // });
-      // snapshot.data!.docs[newIndex] = olditem;
-      // snapshot.data!.docs[oldIndex] = newitem;
     });
   }
 
@@ -272,9 +255,6 @@ class TestAppState extends State<TestApp> {
             .collection("average_session")
             .doc('Quadrant2');
 
-        // set_date_time.set({"notification id": FieldValue.increment(1)},SetOptions(merge: true));
-        // var get_date_time_data = await set_date_time.get();
-        // var date_time_data = get_date_time_data.data() as Map;
         if (flag == 0) {
           print(task);
           print(_taskcontroller.text);

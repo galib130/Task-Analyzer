@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-// import 'package:jarvia/main.dart';
 import '../main.dart';
 import 'dart:async';
 
@@ -199,7 +198,7 @@ class AddList_State extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: StreamBuilder<QuerySnapshot>(
-          stream: taskQuery, //.doc('itemvalue').get(),
+          stream: taskQuery,
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
               return Text('Something went wrong');
@@ -208,12 +207,7 @@ class AddList_State extends StatelessWidget {
             }
             return ReorderableListView(
               shrinkWrap: true,
-              // key: UniqueKey(),
-              // proxyDecorator: ,
-
               onReorder: (oldIndex, newIndex) {
-                //if (oldIndex < newIndex) newIndex -= 1;
-
                 reorder(snapshot, newIndex, oldIndex);
               },
               children: snapshot.data!.docs.map((DocumentSnapshot document) {
@@ -287,8 +281,6 @@ class AddList_State extends StatelessWidget {
                           Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4),
-                                //image:  DecorationImage(image: new AssetImage('assets/listtile.jpg'),fit: BoxFit.cover)
-
                                 gradient: LinearGradient(
                                     begin: Alignment.topRight,
                                     end: Alignment.topLeft,
