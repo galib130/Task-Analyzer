@@ -254,74 +254,50 @@ class TestAppState extends State<TestApp> {
             .doc(uid)
             .collection("average_session")
             .doc('Quadrant2');
-
+        CollectionReference selected_doc;
+        DocumentReference selected_collectQuadrant;
+        DocumentReference selected_avg_document;
+        flag == 0 ? selected_doc = users : selected_doc = quadrant2;
         if (flag == 0) {
-          print(task);
-          print(_taskcontroller.text);
-          users.doc().set({
-            "Name": task,
-            "Timestamp": time,
-            "difference": time_difference + date_difference,
-            "ticked": false,
-            "setTime": _datecontroller.text + '    ' + _timecontroller.text,
-            "displayName": _taskcontroller.text,
-            "notification id": _datecontroller.text.trim() +
-                _timecontroller.text.trim() +
-                _secondcontroller.text.trim(),
-            "description": _descriptioncontroller.text.trim(),
-            "date": _datecontroller.text.trim(),
-            "time": _timecontroller.text.trim(),
-          }, SetOptions(merge: true));
+          selected_doc = users;
+
+          selected_collectQuadrant = collectQuadrant1;
+          selected_avg_document = avg_q1_document;
         } else {
-          quadrant2.doc().set({
-            "Name": task,
-            "Timestamp": time,
-            "ticked": false,
-            "setTime": _datecontroller.text + '    ' + _timecontroller.text,
-            "displayName": _taskcontroller.text,
-            "difference": time_difference + date_difference,
-            "notification id": _datecontroller.text.trim() +
-                _timecontroller.text.trim() +
-                _secondcontroller.text.trim(),
-            "description": _descriptioncontroller.text.trim(),
-            "date": _datecontroller.text.trim(),
-            "time": _timecontroller.text.trim(),
-          }, SetOptions(merge: true));
+          selected_doc = quadrant2;
+          selected_collectQuadrant = collectQuadrant2;
+          selected_avg_document = avg_q2_document;
         }
+
+        selected_doc.doc().set({
+          "Name": task,
+          "Timestamp": time,
+          "difference": time_difference + date_difference,
+          "ticked": false,
+          "setTime": _datecontroller.text + '    ' + _timecontroller.text,
+          "displayName": _taskcontroller.text,
+          "notification id": _datecontroller.text.trim() +
+              _timecontroller.text.trim() +
+              _secondcontroller.text.trim(),
+          "description": _descriptioncontroller.text.trim(),
+          "date": _datecontroller.text.trim(),
+          "time": _timecontroller.text.trim(),
+        }, SetOptions(merge: true));
 
         var documentdata = await session.get();
 
         var documentuser = documentdata.data() as Map;
 
-        if (flag == 0) {
-          if (documentuser['time']
-                      .compareTo(Timestamp.fromDate(DateTime.now())) >
-                  0 &&
-              change_state == 0) {
-            collectQuadrant1.update({
-              "Name": FieldValue.increment(-1),
-              "color": '0xFF34c9eb',
-            });
-            avg_q1_document.update({
-              "Name": FieldValue.increment(-1),
-              "color": '0xFF34c9eb',
-            });
-          } else
-            print(time.toDate());
-        } else {
-          if (documentuser['time']
-                      .compareTo(Timestamp.fromDate(DateTime.now())) >
-                  0 &&
-              change_state == 1) {
-            collectQuadrant2.update({
-              "Name": FieldValue.increment(-1),
-              "color": '0xFFa531e8',
-            });
-            avg_q2_document.update({
-              "Name": FieldValue.increment(-1),
-            });
-          }
-        }
+        if (documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
+            0) {
+          selected_collectQuadrant.update({
+            "Name": FieldValue.increment(-1),
+          });
+          selected_avg_document.update({
+            "Name": FieldValue.increment(-1),
+          });
+        } else
+          print(time.toDate());
       } else {
         Fluttertoast.showToast(
             msg: "Please enter a non empty task", backgroundColor: Colors.blue);
@@ -398,22 +374,12 @@ class TestAppState extends State<TestApp> {
 
     //Function to initially add a task
     void add() {
-      if (change_state == 0) {
-        //flag 0 for quadrant 1
-
-        postTasks(
-            _taskcontroller.text.trim() +
-                _datecontroller.text.trim() +
-                _timecontroller.text.trim(),
-            change_state); // calls the function which adds to firebase
-      } else //flag1 for quadrant 2
-      {
-        postTasks(
-            _taskcontroller.text.trim() +
-                _datecontroller.text.trim() +
-                _timecontroller.text.trim(),
-            change_state);
-      }
+      //flag 0 for quadrant 1
+      postTasks(
+          _taskcontroller.text.trim() +
+              _datecontroller.text.trim() +
+              _timecontroller.text.trim(),
+          change_state); // calls the function which adds to firebase
     }
 
     //Function to change quadrants
@@ -870,32 +836,18 @@ class TestAppState extends State<TestApp> {
               ),
 
               //See list button depending on state
-              if (change_state == 0)
-                // Listview for quadrant 1
-                AddList_State(
-                  taskQuery: users,
-                  flag: change_state,
-                  checkBox: checkbox,
-                  setDate: _selectDate,
-                  setTime: _selectTime,
-                  reorder: reorder,
-                  dateController: _datecontroller,
-                  timeController: _timecontroller,
-                  color: Colors.blue,
-                )
-              else
-                //Listview for quadrant 2
-                AddList_State(
-                  taskQuery: quadrant2,
-                  flag: change_state,
-                  checkBox: checkbox,
-                  setDate: _selectDate,
-                  setTime: _selectTime,
-                  reorder: reorder,
-                  dateController: _datecontroller,
-                  timeController: _timecontroller,
-                  color: Colors.yellow,
-                )
+              // Listview for quadrant 1
+              AddList_State(
+                taskQuery: change_state == 0 ? users : quadrant2,
+                flag: change_state,
+                checkBox: checkbox,
+                setDate: _selectDate,
+                setTime: _selectTime,
+                reorder: reorder,
+                dateController: _datecontroller,
+                timeController: _timecontroller,
+                color: Colors.blue,
+              )
             ]),
       ),
     );

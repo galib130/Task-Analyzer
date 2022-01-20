@@ -195,7 +195,36 @@ class AddList_State extends StatelessWidget {
     required this.color,
   });
   List list1 = [''];
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   Widget build(BuildContext context) {
+    DocumentReference collectQuadrant2 = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth.currentUser!.uid)
+        .collection("session")
+        .doc('Quadrant2');
+    DocumentReference collectQuadrant1 = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth.currentUser!.uid)
+        .collection("session")
+        .doc('Quadrant1');
+    DocumentReference avg_q1_document = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth.currentUser!.uid)
+        .collection("average_session")
+        .doc('Quadrant1');
+    DocumentReference avg_q2_document = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth.currentUser!.uid)
+        .collection("average_session")
+        .doc('Quadrant2');
+
+    DocumentReference session = FirebaseFirestore.instance
+        .collection("Users")
+        .doc(auth.currentUser!.uid)
+        .collection("session_time")
+        .doc("time");
+
     return Expanded(
       child: StreamBuilder<QuerySnapshot>(
           stream: taskQuery,
@@ -218,6 +247,33 @@ class AddList_State extends StatelessWidget {
                     key: Key('$data'),
                     onDismissed: (DismissDirection) async {
                       //ondismissed(data['Name']);
+
+                      var documentdata = await session.get();
+
+                      var documentuser = documentdata.data() as Map;
+                      if (flag == 0 &&
+                          documentuser['time'].compareTo(
+                                  Timestamp.fromDate(DateTime.now())) >
+                              0) {
+                        collectQuadrant1.update({
+                          "Name": FieldValue.increment(1),
+                        });
+                        avg_q1_document.update({
+                          "Name": FieldValue.increment(1),
+                        });
+                      } else if (flag == 1 &&
+                          documentuser['time'].compareTo(
+                                  Timestamp.fromDate(DateTime.now())) >
+                              0) {
+                        collectQuadrant2.update({
+                          "Name": FieldValue.increment(1),
+                          "color": '0xFFa531e8',
+                        });
+                        avg_q2_document.update({
+                          "Name": FieldValue.increment(1),
+                        });
+                      }
+
                       await flutterLocalNotificationsPlugin
                           .cancel(data['notification id'].hashCode);
                       document.reference.delete();
