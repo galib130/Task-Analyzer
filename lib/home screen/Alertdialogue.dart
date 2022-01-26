@@ -16,8 +16,6 @@ Future<void> createAlertDialog(
             title: Text("Details"),
             backgroundColor: Colors.cyan,
             content: Container(
-              height: 450,
-              width: 550,
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,

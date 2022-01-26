@@ -417,8 +417,11 @@ class TestAppState extends State<TestApp> {
           date_difference = 0;
           if (currentDate.day != DateTime.now().day) {
             date_difference = currentDate.difference(datenow).inSeconds;
+            // set_date_time.set({
+            //   "date difference": currentDate.difference(datenow).inDays,
+            // }, SetOptions(merge: true));
             set_date_time.set({
-              "date difference": currentDate.difference(datenow).inSeconds,
+              "date difference": currentDate.day - datenow.day,
             }, SetOptions(merge: true));
 
             totalDate =
@@ -667,7 +670,8 @@ class TestAppState extends State<TestApp> {
                         setState(() {
                           add();
                           print(difference.toString() + 'difference');
-
+                          print(date_time_data['date difference'] * 24 * 3600 +
+                              date_time_data['time difference']);
                           if (date_difference != 0 || time_difference != 0) {
                             difference = date_difference + time_difference;
 
@@ -680,14 +684,15 @@ class TestAppState extends State<TestApp> {
                                 body: 'Hey you added this task',
                                 scheduledDate: DateTime.now().add(Duration(
                                     seconds: (date_time_data[
-                                            'date difference'] +
+                                                'date difference'] *
+                                            24 *
+                                            3600 +
                                         date_time_data['time difference']))));
 
                             totalDate = compareDate;
                             date_difference = 0;
                             time_difference = 0;
 
-                            print(date_picked);
                             difference = 0;
                           } else {
                             print('not notifying');
