@@ -499,7 +499,7 @@ class TestAppState extends State<TestApp> {
           ],
         ),
       ),
-      backgroundColor: Color.fromARGB(255, 3, 8, 78),
+      backgroundColor: Color.fromARGB(255, 7, 7, 7),
       drawer: Drawer(
         child: Container(
           decoration: BoxDecoration(
@@ -509,8 +509,8 @@ class TestAppState extends State<TestApp> {
                   begin: Alignment.topRight,
                   end: Alignment.topLeft,
                   colors: [
-                    Colors.cyan,
-                    Colors.indigoAccent,
+                    Color.fromARGB(255, 2, 1, 19),
+                    Color.fromARGB(255, 2, 1, 19),
                   ])),
           child: Stack(
             children: [
@@ -532,9 +532,9 @@ class TestAppState extends State<TestApp> {
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.blue,
-                        onPrimary: Colors.black,
-                        shadowColor: Colors.red,
+                        primary: Color.fromARGB(255, 10, 2, 49),
+                        onPrimary: Color.fromARGB(255, 247, 244, 244),
+                        shadowColor: Color.fromARGB(255, 216, 244, 54),
                         elevation: 10,
                         padding: EdgeInsets.all(25)),
                   )),
