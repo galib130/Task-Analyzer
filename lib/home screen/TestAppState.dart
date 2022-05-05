@@ -1,4 +1,5 @@
 import 'dart:async';
+// import 'dart:js_util';
 import 'package:flutter/material.dart';
 import 'TestApp.dart';
 import 'ListView.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../notification/notification.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Alertdialogue.dart';
+import 'package:proda/Themes.dart';
 
 List<String> textadd1 = <String>['S/W Lab', 'Maths'];
 final firebaseinstance = FirebaseFirestore.instance;
@@ -20,6 +22,7 @@ FirebaseAuth auth = FirebaseAuth.instance;
 
 class TestAppState extends State<TestApp> {
   String uid = auth.currentUser!.uid;
+  var ThemeStyle = ThemeStyles();
   var date_picked = 1;
   var time_picked = 1;
   var date_difference = 0;
@@ -181,6 +184,7 @@ class TestAppState extends State<TestApp> {
 
   Widget build(BuildContext context) {
     final suggestList = [];
+
     //call suggestlist
     setState(() {
       suggestList.clear();
@@ -478,6 +482,7 @@ class TestAppState extends State<TestApp> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: ThemeStyle.PrimaryDrawerButtonColor,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -485,6 +490,7 @@ class TestAppState extends State<TestApp> {
             Align(
               alignment: Alignment.topRight,
               child: ElevatedButton(
+                style: ThemeStyle.getAppButtonStyle(),
                 onPressed: () {
                   setState(() {
                     context.read<FlutterFireAuthService>().signOut();
@@ -531,12 +537,7 @@ class TestAppState extends State<TestApp> {
                         fontSize: 20,
                       ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                        primary: Color.fromARGB(255, 10, 2, 49),
-                        onPrimary: Color.fromARGB(255, 247, 244, 244),
-                        shadowColor: Color.fromARGB(255, 216, 244, 54),
-                        elevation: 10,
-                        padding: EdgeInsets.all(25)),
+                    style: ThemeStyle.getDrawerStyle(),
                   )),
               Positioned(
                   top: 180,
@@ -556,13 +557,7 @@ class TestAppState extends State<TestApp> {
                       'Secondary',
                       style: TextStyle(fontSize: 20),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blue,
-                      onPrimary: Colors.black,
-                      padding: EdgeInsets.all(25),
-                      shadowColor: Colors.red,
-                      elevation: 10,
-                    ),
+                    style: ThemeStyle.getDrawerStyle(),
                   )),
               Positioned(
                 top: 280,
@@ -570,24 +565,16 @@ class TestAppState extends State<TestApp> {
                 right: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      uid = auth.currentUser!.uid;
-                      setSession();
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/profile', (Route<dynamic> route) => false);
-                    });
+                    //uid = auth.currentUser!.uid;
+                    setSession();
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/profile', (Route<dynamic> route) => false);
                   },
                   child: Text(
                     'Set Session',
                     style: TextStyle(fontSize: 20),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
-                    onPrimary: Colors.black,
-                    padding: EdgeInsets.all(25),
-                    shadowColor: Colors.red,
-                    elevation: 10,
-                  ),
+                  style: ThemeStyle.getDrawerStyle(),
                 ),
               ),
               Positioned(
@@ -602,13 +589,7 @@ class TestAppState extends State<TestApp> {
                     'Session Summary',
                     style: TextStyle(fontSize: 18),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
-                    onPrimary: Colors.black,
-                    padding: EdgeInsets.all(25),
-                    shadowColor: Colors.red,
-                    elevation: 10,
-                  ),
+                  style: ThemeStyle.getDrawerStyle(),
                 ),
               ),
               Positioned(
@@ -623,13 +604,7 @@ class TestAppState extends State<TestApp> {
                     'Efficiency',
                     style: TextStyle(fontSize: 20),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
-                    onPrimary: Colors.black,
-                    padding: EdgeInsets.all(25),
-                    shadowColor: Colors.red,
-                    elevation: 10,
-                  ),
+                  style: ThemeStyle.getDrawerStyle(),
                 ),
               )
             ],
