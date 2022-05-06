@@ -5,19 +5,21 @@ import '../home screen/TestApp.dart';
 import '../main.dart';
 import '../home screen/TestAppState.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:async';
 
-class FlutterFireAuthService  {
+class FlutterFireAuthService {
   final FirebaseAuth _firebaseAuth;
-  FlutterFireAuthService(this._firebaseAuth) ;
+  FlutterFireAuthService(this._firebaseAuth);
 
-  Stream<User?>get authStateChanges => _firebaseAuth.idTokenChanges();
+  Stream<User?> get authStateChanges => _firebaseAuth.idTokenChanges();
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
-
   }
 
-  Future<String?> signIn (
-      {required String email, required String password, required BuildContext context}) async {
+  Future<String?> signIn(
+      {required String email,
+      required String password,
+      required BuildContext context}) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -36,13 +38,17 @@ class FlutterFireAuthService  {
       return "Success";
     } on FirebaseAuthException catch (e) {
       print(e.toString());
-      Fluttertoast.showToast(msg: "Username or Pasword entered is invalid",backgroundColor: Colors.blue);
+      Fluttertoast.showToast(
+          msg: "Username or Pasword entered is invalid",
+          backgroundColor: Colors.blue);
       return e.message;
     }
   }
 
   Future<String?> signUp(
-      {required String email, required String password, required BuildContext context}) async {
+      {required String email,
+      required String password,
+      required BuildContext context}) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -55,7 +61,9 @@ class FlutterFireAuthService  {
       return "Success";
     } on FirebaseAuthException catch (e) {
       print(e.toString());
-      Fluttertoast.showToast(msg: "Username or Password entered is invalid",backgroundColor: Colors.blue);
+      Fluttertoast.showToast(
+          msg: "Username or Password entered is invalid",
+          backgroundColor: Colors.blue);
       return e.message;
     }
   }

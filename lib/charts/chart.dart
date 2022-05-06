@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-
 class Session_Object {
   final int value;
   final String xaxis;
@@ -64,6 +63,7 @@ class _SessionState extends State<Session> {
     // TODO: implement build
 
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Session Summary'),
       ),
@@ -111,7 +111,10 @@ class _SessionState extends State<Session> {
           child: Column(
             children: <Widget>[
               if (session.isNotEmpty)
-                Text('Session ends at :  ' + session[1].time),
+                Text(
+                  'Session ends at :  ' + session[1].time,
+                  style: TextStyle(color: Colors.white),
+                ),
               TextField(
                 controller: controller,
               ),
@@ -140,6 +143,19 @@ class _SessionState extends State<Session> {
                 _seriesBarData,
                 animate: true,
                 animationDuration: Duration(seconds: 3),
+                domainAxis: new charts.OrdinalAxisSpec(
+                    renderSpec: new charts.SmallTickRendererSpec(
+                  labelStyle: new charts.TextStyleSpec(
+                      fontSize: 18, // size in Pts.
+                      color: charts.MaterialPalette.blue.shadeDefault),
+                )),
+                primaryMeasureAxis: new charts.NumericAxisSpec(
+                    renderSpec: new charts.SmallTickRendererSpec(
+                  labelStyle: new charts.TextStyleSpec(
+                    fontSize: 18,
+                    color: charts.MaterialPalette.blue.shadeDefault,
+                  ),
+                )),
               )),
             ],
           ),

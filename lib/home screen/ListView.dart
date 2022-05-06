@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:proda/Themes.dart';
+import 'package:proda/FirebaseCommands.dart';
 
 import '../main.dart';
 import 'dart:async';
@@ -18,7 +20,7 @@ class AddList_State extends StatelessWidget {
   MaterialColor color;
 
   Stream<QuerySnapshot> taskQuery;
-
+  var FirebaseCommand = FirebaseCommands();
   createAlertDialog(
       BuildContext,
       context,
@@ -118,6 +120,10 @@ class AddList_State extends StatelessWidget {
                           FirebaseAuth auth = FirebaseAuth.instance;
                           String uid = auth.currentUser!.uid;
                           CollectionReference moveQuadrant;
+                          DocumentReference PrimarySessionReference =
+                              FirebaseCommand.getQuadrant1_Session(uid);
+                          DocumentReference SecondarySessionReference =
+                              FirebaseCommand.getQuadrant2_Session(uid);
                           if (flag == 0)
                             moveQuadrant = FirebaseFirestore.instance
                                 .collection('Users')
@@ -145,6 +151,17 @@ class AddList_State extends StatelessWidget {
                             "date": date_controller.text.trim(),
                             "time": time_controller.text.trim(),
                           });
+                          if (flag == 0) {
+                            FirebaseCommand.UpdateSession(
+                                PrimarySessionReference, 1);
+                            FirebaseCommand.UpdateSession(
+                                SecondarySessionReference, -1);
+                          } else if (flag != 0) {
+                            FirebaseCommand.UpdateSession(
+                                PrimarySessionReference, -1);
+                            FirebaseCommand.UpdateSession(
+                                SecondarySessionReference, 1);
+                          }
                           document.reference.delete();
                           date_controller.clear();
                           time_controller.clear();
@@ -194,6 +211,7 @@ class AddList_State extends StatelessWidget {
     required this.timeController,
     required this.color,
   });
+  var ThemeStyle = ThemeStyles();
   List list1 = [''];
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -342,11 +360,14 @@ class AddList_State extends StatelessWidget {
                                     end: Alignment.topLeft,
                                     colors: [
                                       flag == 0
-                                          ? Color.fromARGB(218, 149, 243, 243)
-                                          : Color.fromARGB(207, 132, 155, 255),
+                                          ? ThemeStyle.ListViewColorPrimaryFirst
+                                          : ThemeStyle
+                                              .ListViewColorSecondaryFirst,
                                       flag == 0
-                                          ? Color.fromARGB(235, 11, 189, 233)
-                                          : Color.fromARGB(235, 111, 189, 241)
+                                          ? ThemeStyle
+                                              .ListViewColorPrimarySecond
+                                          : ThemeStyle
+                                              .ListViewColorSecondarySecond
                                     ])),
                             child: Column(
                               children: [
@@ -370,12 +391,19 @@ class AddList_State extends StatelessWidget {
                                                     style: new TextStyle(
                                                         fontSize: 18,
                                                         color: Color.fromARGB(
-                                                            255, 26, 25, 25)),
+                                                            255,
+                                                            252,
+                                                            252,
+                                                            252)),
                                                   ),
                                                 ),
                                                 Transform.scale(
                                                   scale: 1.5,
                                                   child: Checkbox(
+                                                      fillColor:
+                                                          MaterialStateProperty
+                                                              .all(
+                                                                  Colors.white),
                                                       autofocus: true,
                                                       shape: CircleBorder(),
                                                       value: data['ticked'],
@@ -397,7 +425,7 @@ class AddList_State extends StatelessWidget {
                                                   //fontSize: 18,
                                                   fontStyle: FontStyle.normal,
                                                   color: Color.fromARGB(
-                                                      255, 48, 46, 46)),
+                                                      255, 255, 253, 253)),
                                             )
                                         ]),
                                   ),
@@ -406,7 +434,7 @@ class AddList_State extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            height: 5,
+                            height: 1.5,
                           )
                         ],
                       ),

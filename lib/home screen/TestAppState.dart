@@ -220,6 +220,7 @@ class TestAppState extends State<TestApp> {
 
     Future<void> postTasks(String? task, int flag) async {
       if (task != '') {
+        String SetTime;
         FirebaseAuth auth = FirebaseAuth.instance;
         String uid = auth.currentUser!.uid.toString();
         DateTime currentDate = DateTime.now();
@@ -273,12 +274,19 @@ class TestAppState extends State<TestApp> {
           selected_avg_document = avg_q2_document;
         }
 
+        if (_datecontroller.text != '' && _timecontroller.text != '') {
+          SetTime = _datecontroller.text + '    ' + _timecontroller.text;
+        } else if (_datecontroller.text != '') {
+          SetTime = _datecontroller.text;
+        } else
+          SetTime = _timecontroller.text;
+
         selected_doc.doc().set({
           "Name": task,
           "Timestamp": time,
           "difference": time_difference + date_difference,
           "ticked": false,
-          "setTime": _datecontroller.text + '    ' + _timecontroller.text,
+          "setTime": SetTime,
           "displayName": _taskcontroller.text,
           "notification id": _datecontroller.text.trim() +
               _timecontroller.text.trim() +
