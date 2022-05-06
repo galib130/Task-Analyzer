@@ -12,6 +12,7 @@ import '../notification/notification.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Alertdialogue.dart';
 import 'package:proda/Themes.dart';
+import 'package:intl/intl.dart';
 
 List<String> textadd1 = <String>['S/W Lab', 'Maths'];
 final firebaseinstance = FirebaseFirestore.instance;
@@ -357,14 +358,14 @@ class TestAppState extends State<TestApp> {
           "Name": 0,
           "color": '0xFF34c9eb',
           "xaxis": 'Active',
-          "time": time.toDate().toString(),
+          "time": DateFormat('EEEE, d MMM, yyyy  h:mm a').format(time.toDate()),
         });
 
         q2_document.set({
           "Name": 0,
           "color": '0xFFa531e8',
           "xaxis": 'Secondary',
-          "time": time.toDate().toString(),
+          "time": DateFormat('EEEE, d MMM, yyyy  h:mm a').format(time.toDate()),
         });
 
         avg_q1_document.set({
@@ -412,11 +413,8 @@ class TestAppState extends State<TestApp> {
         setState(() {
           currentDate = pickedDate;
           _datecontroller.clear();
-          _datecontroller.text = currentDate.day.toString() +
-              '-' +
-              currentDate.month.toString() +
-              '-' +
-              currentDate.year.toString();
+          _datecontroller.text =
+              DateFormat('EEEE, d MMM, yyyy').format(currentDate);
 
           _secondcontroller.text = DateTime.now().second.toString() +
               DateTime.now().hour.toString() +
@@ -512,6 +510,83 @@ class TestAppState extends State<TestApp> {
             ),
           ],
         ),
+        actions: [
+          PopupMenuButton(
+            color: ThemeStyle.PrimaryDrawerButtonColor,
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                    value: 1,
+                    child: Text(
+                      "Detailed Task",
+                      style: TextStyle(color: Colors.white),
+                    )),
+                PopupMenuItem(
+                    value: 2,
+                    child: Text('Notification',
+                        style: TextStyle(color: Colors.white)))
+              ];
+            },
+            onSelected: (value) async {
+              if (value == 1) {
+                final page = createAlertDialog(
+                    context,
+                    _taskcontroller,
+                    _datecontroller,
+                    _timecontroller,
+                    _descriptioncontroller,
+                    _selectDate,
+                    _selectTime);
+                page;
+              } else if (value == 2) {
+                var get_date_time_data = await set_date_time.get();
+                var date_time_data = get_date_time_data.data() as Map;
+                //ADD button
+                if (_taskcontroller.text.isNotEmpty) {
+                  setState(() {
+                    add();
+                    print(difference.toString() + 'difference');
+                    print(date_time_data['date difference'] * 24 * 3600 +
+                        date_time_data['time difference']);
+                    if (date_difference != 0 || time_difference != 0) {
+                      difference = date_difference + time_difference;
+
+                      NotificationApi.showScheduledNotification(
+                          id: (_datecontroller.text.trim() +
+                                  _timecontroller.text.trim() +
+                                  _secondcontroller.text.trim())
+                              .hashCode,
+                          title: _taskcontroller.text,
+                          body: 'Hey you added this task',
+                          scheduledDate: DateTime.now().add(Duration(
+                              seconds: (date_time_data['date difference'] *
+                                      24 *
+                                      3600 +
+                                  date_time_data['time difference']))));
+
+                      totalDate = compareDate;
+                      date_difference = 0;
+                      time_difference = 0;
+
+                      difference = 0;
+                    } else {
+                      print('not notifying');
+                    }
+                  });
+                }
+                set_date_time.set({
+                  "date difference": 0,
+                  "time difference": 0,
+                });
+                _datecontroller.clear();
+                _timecontroller.clear();
+                _taskcontroller.clear();
+                _secondcontroller.clear();
+                _descriptioncontroller.clear();
+              }
+            },
+          )
+        ],
       ),
       backgroundColor: Color.fromARGB(255, 7, 7, 7),
       drawer: Drawer(
@@ -630,106 +705,6 @@ class TestAppState extends State<TestApp> {
             children: [
               SizedBox(
                 height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlueAccent,
-                      padding: EdgeInsets.all(15),
-                      shadowColor: Colors.red,
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    onPressed: () async {
-                      var get_date_time_data = await set_date_time.get();
-                      var date_time_data = get_date_time_data.data() as Map;
-                      //ADD button
-                      if (_taskcontroller.text.isNotEmpty) {
-                        setState(() {
-                          add();
-                          print(difference.toString() + 'difference');
-                          print(date_time_data['date difference'] * 24 * 3600 +
-                              date_time_data['time difference']);
-                          if (date_difference != 0 || time_difference != 0) {
-                            difference = date_difference + time_difference;
-
-                            NotificationApi.showScheduledNotification(
-                                id: (_datecontroller.text.trim() +
-                                        _timecontroller.text.trim() +
-                                        _secondcontroller.text.trim())
-                                    .hashCode,
-                                title: _taskcontroller.text,
-                                body: 'Hey you added this task',
-                                scheduledDate: DateTime.now().add(Duration(
-                                    seconds: (date_time_data[
-                                                'date difference'] *
-                                            24 *
-                                            3600 +
-                                        date_time_data['time difference']))));
-
-                            totalDate = compareDate;
-                            date_difference = 0;
-                            time_difference = 0;
-
-                            difference = 0;
-                          } else {
-                            print('not notifying');
-                          }
-                        });
-                      }
-                      set_date_time.set({
-                        "date difference": 0,
-                        "time difference": 0,
-                      });
-                      _datecontroller.clear();
-                      _timecontroller.clear();
-                      _taskcontroller.clear();
-                      _secondcontroller.clear();
-                      _descriptioncontroller.clear();
-                    },
-                    child: Text(
-                      'Set Notification',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  //For setting up notification
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlueAccent,
-                      padding: EdgeInsets.all(15),
-                      shadowColor: Colors.red,
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    onPressed: () {
-                      final page = createAlertDialog(
-                          context,
-                          _taskcontroller,
-                          _datecontroller,
-                          _timecontroller,
-                          _descriptioncontroller,
-                          _selectDate,
-                          _selectTime);
-                      page;
-                      // Navigator.of(context).pushNamed(
-                      //     '/detailView');
-                    },
-                    child: Text(
-                      'Detailed Task',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ), //For Detail view
-                ],
               ),
 
               //Type Input Field

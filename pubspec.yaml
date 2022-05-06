@@ -40,6 +40,7 @@ dependencies:
   flutter_ringtone_player: ^3.0.0
   #speech_to_text: ^5.2.0
   timeago: ^3.1.0
+  intl: ^0.17.0
   charts_flutter:
     git:
       url: git://github.com/google/charts.git
