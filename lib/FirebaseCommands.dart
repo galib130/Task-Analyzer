@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:proda/home%20screen/Task.dart';
 
 class FirebaseCommands {
   final firebaseinstance = FirebaseFirestore.instance;
@@ -27,5 +28,32 @@ class FirebaseCommands {
     reference.update({
       "Name": FieldValue.increment(value),
     });
+  }
+
+  CollectionReference GetCompletedList(String uid) {
+    CollectionReference Completed = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .collection("Completed");
+
+    return Completed;
+  }
+
+  void UpdateCompleted(String uid, TaskLoad task) async {
+    DocumentReference Completed = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .collection("Completed")
+        .doc();
+    Completed.set({
+      "Name": task.TaskLoadMap,
+      "Timestamp": task.TaskLoadMap!['Timestamp']
+    });
+  }
+
+  Stream<QuerySnapshot> GetCompletedListStream(String uid) {
+    CollectionReference Completed = GetCompletedList(uid);
+
+    return Completed.orderBy("Timestamp").snapshots();
   }
 }

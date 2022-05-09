@@ -1,6 +1,8 @@
 import 'dart:async';
 // import 'dart:js_util';
 import 'package:flutter/material.dart';
+import 'package:proda/FirebaseCommands.dart';
+import 'package:proda/home%20screen/Task.dart';
 import 'TestApp.dart';
 import 'ListView.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -48,6 +50,8 @@ class TestAppState extends State<TestApp> {
   TimeOfDay pickedTime = TimeOfDay.now();
   int difference = 0;
   static const routename = '/profile';
+  var FirebaseCommand = FirebaseCommands();
+
 //ok
   //call to add complete task and then delete the task
   void checkbox(
@@ -89,12 +93,14 @@ class TestAppState extends State<TestApp> {
         .doc('Quadrant2');
 
     var documentdata = await session.get();
-    var documentuser = documentdata.data() as Map;
+    var documentuser;
+    if (documentdata.data() != null) documentuser = documentdata.data() as Map;
 
     if (change_state == 0) {
       documentSnapshot.reference.update({"ticked": value});
 
-      if (documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
+      if (documentuser != null &&
+          documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
               0 &&
           change_state == 0) {
         collectquadrant1_session.update({"Name": FieldValue.increment(3)});
@@ -107,7 +113,8 @@ class TestAppState extends State<TestApp> {
     } else {
       documentSnapshot.reference.update({"ticked": value});
 
-      if (documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
+      if (documentuser != null &&
+          documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
               0 &&
           change_state == 1) {
         collectquadrant2_session.update({"Name": FieldValue.increment(3)});
@@ -117,6 +124,12 @@ class TestAppState extends State<TestApp> {
         avg_q2_document.update({"Name": FieldValue.increment(3)});
       }
     }
+
+    var CompletedTask;
+
+    CompletedTask = TaskLoad().SetTask(documentSnapshot);
+
+    FirebaseCommand.UpdateCompleted(uid, CompletedTask);
 
     Future.delayed(const Duration(milliseconds: 300), () {
       documentSnapshot.reference.delete();
@@ -299,10 +312,13 @@ class TestAppState extends State<TestApp> {
 
         var documentdata = await session.get();
 
-        var documentuser = documentdata.data() as Map;
+        var documentuser;
+        if (documentdata.data() != null)
+          documentuser = documentdata.data() as Map;
 
-        if (documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
-            0) {
+        if (documentuser != null &&
+            documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
+                0) {
           selected_collectQuadrant.update({
             "Name": FieldValue.increment(-1),
           });
@@ -588,7 +604,7 @@ class TestAppState extends State<TestApp> {
           )
         ],
       ),
-      backgroundColor: Color.fromARGB(255, 7, 7, 7),
+      backgroundColor: Color.fromARGB(255, 11, 63, 122),
       drawer: Drawer(
         child: Container(
           decoration: BoxDecoration(
@@ -598,8 +614,8 @@ class TestAppState extends State<TestApp> {
                   begin: Alignment.topRight,
                   end: Alignment.topLeft,
                   colors: [
-                    Color.fromARGB(255, 2, 1, 19),
-                    Color.fromARGB(255, 2, 1, 19),
+                    Color.fromARGB(255, 11, 63, 122),
+                    Color.fromARGB(255, 12, 7, 95),
                   ])),
           child: Stack(
             children: [
@@ -689,16 +705,27 @@ class TestAppState extends State<TestApp> {
                   ),
                   style: ThemeStyle.getDrawerStyle(),
                 ),
-              )
+              ),
+              Positioned(
+                  top: 580,
+                  left: 50,
+                  right: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/completed');
+                    },
+                    child: Text(
+                      "Completed",
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    style: ThemeStyle.getDrawerStyle(),
+                  ))
             ],
           ),
         ),
       ),
       body: Container(
-        decoration: BoxDecoration(
-            //image:  DecorationImage(image: new AssetImage('assets/gradient.png'),fit: BoxFit.cover)
-
-            color: Color.fromARGB(255, 2, 1, 19)),
+        decoration: ThemeStyle.getBackgroundTheme(),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

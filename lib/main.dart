@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:proda/authentication/backendservice.dart';
+import 'package:proda/home%20screen/CompleteListView.dart';
 // import 'package:jarvia/open.dart';
 import 'authentication/open.dart';
 import 'home screen/TestApp.dart';
@@ -30,10 +32,11 @@ Future<void> _firebaseMassagingBackgroundHandler(RemoteMessage message) async {
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
-
+FirebaseAuth auth = FirebaseAuth.instance;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  String uid = auth.currentUser!.uid;
   final NotificationAppLaunchDetails? notificationAppLaunchDetails =
       await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
   const AndroidInitializationSettings initializationSettingsAndroid =
@@ -95,6 +98,7 @@ class MyApp extends StatelessWidget {
         '/myapp': (context) => MyApp(),
         '/chart': (context) => Session(),
         '/average_chart': (context) => Average_Session(),
+        '/completed': (context) => CompletedListView()
       },
       title: 'Welcome to jarvia',
       home: OpenView(),
