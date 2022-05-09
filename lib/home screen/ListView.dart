@@ -283,8 +283,11 @@ class AddList_State extends StatelessWidget {
 
                       var documentdata = await session.get();
 
-                      var documentuser = documentdata.data() as Map;
+                      var documentuser;
+                      if (documentdata.data() != null)
+                        documentuser = documentdata.data() as Map;
                       if (flag == 0 &&
+                          documentuser != null &&
                           documentuser['time'].compareTo(
                                   Timestamp.fromDate(DateTime.now())) >
                               0) {
@@ -295,6 +298,7 @@ class AddList_State extends StatelessWidget {
                           "Name": FieldValue.increment(1),
                         });
                       } else if (flag == 1 &&
+                          documentuser != null &&
                           documentuser['time'].compareTo(
                                   Timestamp.fromDate(DateTime.now())) >
                               0) {
@@ -367,85 +371,93 @@ class AddList_State extends StatelessWidget {
                       },
                       child: Column(
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                gradient: LinearGradient(
-                                    begin: Alignment.topRight,
-                                    end: Alignment.topLeft,
-                                    colors: [
-                                      flag == 0
-                                          ? ThemeStyle.ListViewColorPrimaryFirst
-                                          : ThemeStyle
-                                              .ListViewColorSecondaryFirst,
-                                      flag == 0
-                                          ? ThemeStyle
-                                              .ListViewColorPrimarySecond
-                                          : ThemeStyle
-                                              .ListViewColorSecondarySecond
-                                    ])),
-                            child: Column(
-                              children: [
-                                ListTile(
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 0.0, horizontal: 30.0),
-                                  title: Container(
-                                    child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Expanded(
-                                                  child: Text(
-                                                    data['displayName']
-                                                        .toString(),
-                                                    style: new TextStyle(
-                                                        fontSize: 18,
-                                                        color: Color.fromARGB(
-                                                            255,
-                                                            252,
-                                                            252,
-                                                            252)),
+                          Card(
+                            elevation: 5,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4),
+                                  gradient: LinearGradient(
+                                      begin: Alignment.topRight,
+                                      end: Alignment.topLeft,
+                                      colors: [
+                                        flag == 0
+                                            ? ThemeStyle
+                                                .ListViewColorPrimaryFirst
+                                            : ThemeStyle
+                                                .ListViewColorSecondaryFirst,
+                                        flag == 0
+                                            ? ThemeStyle
+                                                .ListViewColorPrimarySecond
+                                            : ThemeStyle
+                                                .ListViewColorSecondarySecond
+                                      ])),
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    leading: Icon(Icons.task_rounded),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0.0, horizontal: 30.0),
+                                    title: Container(
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      data['displayName']
+                                                          .toString(),
+                                                      style: new TextStyle(
+                                                          fontSize: 18,
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              252,
+                                                              252,
+                                                              252)),
+                                                    ),
                                                   ),
-                                                ),
-                                                Transform.scale(
-                                                  scale: 1.5,
-                                                  child: Checkbox(
-                                                      fillColor:
-                                                          MaterialStateProperty
-                                                              .all(
-                                                                  Colors.white),
-                                                      autofocus: true,
-                                                      shape: CircleBorder(),
-                                                      value: data['ticked'],
-                                                      onChanged: (bool? value) {
-                                                        checkBox(
-                                                            data['displayName'],
-                                                            value!,
-                                                            document);
-                                                      }),
-                                                ),
-                                              ]),
-                                          if (data.containsValue(
-                                                  data['setTime']) &&
-                                              data['setTime'] != '    ' &&
-                                              data['setTime'] != '  ')
-                                            Text(
-                                              data['setTime'].toString(),
-                                              style: TextStyle(
-                                                  //fontSize: 18,
-                                                  fontStyle: FontStyle.normal,
-                                                  color: Color.fromARGB(
-                                                      255, 255, 253, 253)),
-                                            )
-                                        ]),
+                                                  Transform.scale(
+                                                    scale: 1.5,
+                                                    child: Checkbox(
+                                                        fillColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors
+                                                                    .white),
+                                                        autofocus: true,
+                                                        shape: CircleBorder(),
+                                                        value: data['ticked'],
+                                                        onChanged:
+                                                            (bool? value) {
+                                                          checkBox(
+                                                              data[
+                                                                  'displayName'],
+                                                              value!,
+                                                              document);
+                                                        }),
+                                                  ),
+                                                ]),
+                                            if (data.containsValue(
+                                                    data['setTime']) &&
+                                                data['setTime'] != '    ' &&
+                                                data['setTime'] != '  ')
+                                              Text(
+                                                data['setTime'].toString(),
+                                                style: TextStyle(
+                                                    //fontSize: 18,
+                                                    fontSize: 17,
+                                                    fontStyle: FontStyle.normal,
+                                                    color: Color.fromARGB(
+                                                        255, 255, 253, 253)),
+                                              )
+                                          ]),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                           SizedBox(

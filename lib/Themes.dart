@@ -31,5 +31,16 @@ class ThemeStyles {
     return AppButtonStyle;
   }
 
-  ThemeStyles();
+  BoxDecoration? getBackgroundTheme() {
+    return BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        //image:  DecorationImage(image: new AssetImage('assets/listtile.jpg'),fit: BoxFit.cover)
+        gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.topLeft,
+            colors: [
+              Color.fromARGB(255, 11, 63, 122),
+              Color.fromARGB(255, 12, 7, 95),
+            ]));
+  }
 }
