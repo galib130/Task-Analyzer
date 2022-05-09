@@ -698,7 +698,7 @@ class TestAppState extends State<TestApp> {
         decoration: BoxDecoration(
             //image:  DecorationImage(image: new AssetImage('assets/gradient.png'),fit: BoxFit.cover)
 
-            color: Color.fromARGB(255, 8, 2, 44)),
+            color: Color.fromARGB(255, 2, 1, 19)),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

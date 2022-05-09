@@ -36,10 +36,8 @@ class AddList_State extends StatelessWidget {
     TextEditingController description_controller = TextEditingController();
     update_controller.text = data;
     description_controller.text = description;
-    if (map_data.containsValue(map_data['date']))
-      date_controller.text = map_data['date'];
-    if (map_data.containsValue(map_data['time']))
-      time_controller.text = map_data['time'];
+    date_controller.text = map_data['date'];
+    time_controller.text = map_data['time'];
 
     return showDialog(
         context: context,
@@ -74,7 +72,6 @@ class AddList_State extends StatelessWidget {
                       Expanded(
                         child: TextField(
                           maxLines: 1,
-                          //d
                           controller: description_controller,
                         ),
                       ),
@@ -137,13 +134,22 @@ class AddList_State extends StatelessWidget {
 
                           DateTime currentDate = DateTime.now();
                           Timestamp time = Timestamp.fromDate(currentDate);
+                          String SetTime;
+                          if (date_controller.text != '' &&
+                              time_controller.text != '') {
+                            SetTime = date_controller.text +
+                                '    ' +
+                                time_controller.text;
+                          } else if (date_controller.text != '') {
+                            SetTime = date_controller.text;
+                          } else
+                            SetTime = time_controller.text;
+
                           moveQuadrant.doc().set({
                             "Name": update_controller.text.trim(),
                             "Timestamp": time,
                             "ticked": false,
-                            "setTime": time_controller.text +
-                                '    ' +
-                                date_controller.text,
+                            "setTime": SetTime,
                             "displayName": update_controller.text.trim(),
                             "difference": map_data['difference'],
                             "notification id": map_data['notification id'],
@@ -175,6 +181,17 @@ class AddList_State extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () {
+                          String SetTime;
+                          if (date_controller.text != '' &&
+                              time_controller.text != '') {
+                            SetTime = date_controller.text +
+                                '    ' +
+                                time_controller.text;
+                          } else if (date_controller.text != '') {
+                            SetTime = date_controller.text;
+                          } else
+                            SetTime = time_controller.text;
+
                           //update(update_controller.text,data);
                           document.reference.update({
                             "Name": update_controller.text,
@@ -182,9 +199,7 @@ class AddList_State extends StatelessWidget {
                             "description": description_controller.text,
                             "time": time_controller.text,
                             "date": date_controller.text,
-                            "setTime": date_controller.text +
-                                '  ' +
-                                time_controller.text
+                            "setTime": SetTime
                           });
                           date_controller.clear();
                           time_controller.clear();

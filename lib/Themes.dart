@@ -2,13 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ThemeStyles {
-  Color PrimaryDrawerButtonColor = Color.fromARGB(255, 10, 2, 49);
+  Color PrimaryDrawerButtonColor = Color.fromARGB(157, 10, 2, 49);
   Color OnPrimaryDrawerButtonColor = Color.fromARGB(255, 247, 244, 244);
   Color ShadowDrawerButtonColor = Color.fromARGB(255, 20, 2, 61);
   double Drawerelevation = 10;
-  Color ListViewColorPrimaryFirst = Color.fromARGB(235, 3, 14, 117);
+  Color ListViewColorPrimaryFirst = Color.fromARGB(178, 4, 70, 100);
   Color ListViewColorSecondaryFirst = Color.fromARGB(207, 99, 127, 255);
-  Color ListViewColorPrimarySecond = Color.fromARGB(235, 3, 14, 117);
+  Color ListViewColorPrimarySecond = Color.fromARGB(178, 4, 70, 100);
   Color ListViewColorSecondarySecond = Color.fromARGB(207, 99, 127, 255);
   ButtonStyle? DrawerStyle;
 
