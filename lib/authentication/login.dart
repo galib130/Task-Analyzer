@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'firebase.dart';
-class Login extends StatefulWidget{
-  const Login({ Key? key}):super(key: key);
+
+class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
   @override
-  _Login_state createState()=>_Login_state();
+  _Login_state createState() => _Login_state();
 }
 
-
-class _Login_state extends State<Login>{
+class _Login_state extends State<Login> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -18,24 +18,17 @@ class _Login_state extends State<Login>{
     // TODO: implement build
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-            title: Text('Proda log in')
-        ),
+        appBar: AppBar(title: Text('Proda log in')),
         body: Form(
           child: Column(
             children: [
               TextFormField(
                 controller: emailController,
-                decoration: InputDecoration(
-                    labelText:'Email'
-                ),
-
+                decoration: InputDecoration(labelText: 'Email'),
               ),
               TextFormField(
                 controller: passwordController,
-                decoration: InputDecoration(
-                    labelText:'Password'
-                ),
+                decoration: InputDecoration(labelText: 'Password'),
                 obscureText: true,
               )
             ],
@@ -43,17 +36,14 @@ class _Login_state extends State<Login>{
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.save),
-          onPressed: (){
-          context.read<FlutterFireAuthService>().signIn(email: emailController.text.trim(),
-              password: passwordController.text.trim(),
-              context: context);
+          onPressed: () {
+            context.read<FlutterFireAuthService>().signIn(
+                email: emailController.text.trim(),
+                password: passwordController.text.trim(),
+                context: context);
           },
         ),
-
       ),
-
-
     );
   }
-
 }

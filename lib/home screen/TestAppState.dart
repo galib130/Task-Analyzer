@@ -1,4 +1,5 @@
 import 'dart:async';
+// import 'dart:js_util';
 import 'package:flutter/material.dart';
 import 'TestApp.dart';
 import 'ListView.dart';
@@ -10,6 +11,8 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../notification/notification.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'Alertdialogue.dart';
+import 'package:proda/Themes.dart';
+import 'package:intl/intl.dart';
 
 List<String> textadd1 = <String>['S/W Lab', 'Maths'];
 final firebaseinstance = FirebaseFirestore.instance;
@@ -20,6 +23,7 @@ FirebaseAuth auth = FirebaseAuth.instance;
 
 class TestAppState extends State<TestApp> {
   String uid = auth.currentUser!.uid;
+  var ThemeStyle = ThemeStyles();
   var date_picked = 1;
   var time_picked = 1;
   var date_difference = 0;
@@ -181,6 +185,7 @@ class TestAppState extends State<TestApp> {
 
   Widget build(BuildContext context) {
     final suggestList = [];
+
     //call suggestlist
     setState(() {
       suggestList.clear();
@@ -216,6 +221,7 @@ class TestAppState extends State<TestApp> {
 
     Future<void> postTasks(String? task, int flag) async {
       if (task != '') {
+        String SetTime;
         FirebaseAuth auth = FirebaseAuth.instance;
         String uid = auth.currentUser!.uid.toString();
         DateTime currentDate = DateTime.now();
@@ -269,12 +275,19 @@ class TestAppState extends State<TestApp> {
           selected_avg_document = avg_q2_document;
         }
 
+        if (_datecontroller.text != '' && _timecontroller.text != '') {
+          SetTime = _datecontroller.text + '    ' + _timecontroller.text;
+        } else if (_datecontroller.text != '') {
+          SetTime = _datecontroller.text;
+        } else
+          SetTime = _timecontroller.text;
+
         selected_doc.doc().set({
           "Name": task,
           "Timestamp": time,
           "difference": time_difference + date_difference,
           "ticked": false,
-          "setTime": _datecontroller.text + '    ' + _timecontroller.text,
+          "setTime": SetTime,
           "displayName": _taskcontroller.text,
           "notification id": _datecontroller.text.trim() +
               _timecontroller.text.trim() +
@@ -345,14 +358,14 @@ class TestAppState extends State<TestApp> {
           "Name": 0,
           "color": '0xFF34c9eb',
           "xaxis": 'Active',
-          "time": time.toDate().toString(),
+          "time": DateFormat('EEEE, d MMM, yyyy  h:mm a').format(time.toDate()),
         });
 
         q2_document.set({
           "Name": 0,
           "color": '0xFFa531e8',
           "xaxis": 'Secondary',
-          "time": time.toDate().toString(),
+          "time": DateFormat('EEEE, d MMM, yyyy  h:mm a').format(time.toDate()),
         });
 
         avg_q1_document.set({
@@ -400,11 +413,8 @@ class TestAppState extends State<TestApp> {
         setState(() {
           currentDate = pickedDate;
           _datecontroller.clear();
-          _datecontroller.text = currentDate.day.toString() +
-              '-' +
-              currentDate.month.toString() +
-              '-' +
-              currentDate.year.toString();
+          _datecontroller.text =
+              DateFormat('EEEE, d MMM, yyyy').format(currentDate);
 
           _secondcontroller.text = DateTime.now().second.toString() +
               DateTime.now().hour.toString() +
@@ -478,6 +488,7 @@ class TestAppState extends State<TestApp> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: ThemeStyle.PrimaryDrawerButtonColor,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -485,6 +496,7 @@ class TestAppState extends State<TestApp> {
             Align(
               alignment: Alignment.topRight,
               child: ElevatedButton(
+                style: ThemeStyle.getAppButtonStyle(),
                 onPressed: () {
                   setState(() {
                     context.read<FlutterFireAuthService>().signOut();
@@ -498,6 +510,83 @@ class TestAppState extends State<TestApp> {
             ),
           ],
         ),
+        actions: [
+          PopupMenuButton(
+            color: ThemeStyle.PrimaryDrawerButtonColor,
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                    value: 1,
+                    child: Text(
+                      "Detailed Task",
+                      style: TextStyle(color: Colors.white),
+                    )),
+                PopupMenuItem(
+                    value: 2,
+                    child: Text('Notification',
+                        style: TextStyle(color: Colors.white)))
+              ];
+            },
+            onSelected: (value) async {
+              if (value == 1) {
+                final page = createAlertDialog(
+                    context,
+                    _taskcontroller,
+                    _datecontroller,
+                    _timecontroller,
+                    _descriptioncontroller,
+                    _selectDate,
+                    _selectTime);
+                page;
+              } else if (value == 2) {
+                var get_date_time_data = await set_date_time.get();
+                var date_time_data = get_date_time_data.data() as Map;
+                //ADD button
+                if (_taskcontroller.text.isNotEmpty) {
+                  setState(() {
+                    add();
+                    print(difference.toString() + 'difference');
+                    print(date_time_data['date difference'] * 24 * 3600 +
+                        date_time_data['time difference']);
+                    if (date_difference != 0 || time_difference != 0) {
+                      difference = date_difference + time_difference;
+
+                      NotificationApi.showScheduledNotification(
+                          id: (_datecontroller.text.trim() +
+                                  _timecontroller.text.trim() +
+                                  _secondcontroller.text.trim())
+                              .hashCode,
+                          title: _taskcontroller.text,
+                          body: 'Hey you added this task',
+                          scheduledDate: DateTime.now().add(Duration(
+                              seconds: (date_time_data['date difference'] *
+                                      24 *
+                                      3600 +
+                                  date_time_data['time difference']))));
+
+                      totalDate = compareDate;
+                      date_difference = 0;
+                      time_difference = 0;
+
+                      difference = 0;
+                    } else {
+                      print('not notifying');
+                    }
+                  });
+                }
+                set_date_time.set({
+                  "date difference": 0,
+                  "time difference": 0,
+                });
+                _datecontroller.clear();
+                _timecontroller.clear();
+                _taskcontroller.clear();
+                _secondcontroller.clear();
+                _descriptioncontroller.clear();
+              }
+            },
+          )
+        ],
       ),
       backgroundColor: Color.fromARGB(255, 7, 7, 7),
       drawer: Drawer(
@@ -531,12 +620,7 @@ class TestAppState extends State<TestApp> {
                         fontSize: 20,
                       ),
                     ),
-                    style: ElevatedButton.styleFrom(
-                        primary: Color.fromARGB(255, 10, 2, 49),
-                        onPrimary: Color.fromARGB(255, 247, 244, 244),
-                        shadowColor: Color.fromARGB(255, 216, 244, 54),
-                        elevation: 10,
-                        padding: EdgeInsets.all(25)),
+                    style: ThemeStyle.getDrawerStyle(),
                   )),
               Positioned(
                   top: 180,
@@ -556,13 +640,7 @@ class TestAppState extends State<TestApp> {
                       'Secondary',
                       style: TextStyle(fontSize: 20),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.blue,
-                      onPrimary: Colors.black,
-                      padding: EdgeInsets.all(25),
-                      shadowColor: Colors.red,
-                      elevation: 10,
-                    ),
+                    style: ThemeStyle.getDrawerStyle(),
                   )),
               Positioned(
                 top: 280,
@@ -570,24 +648,16 @@ class TestAppState extends State<TestApp> {
                 right: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      uid = auth.currentUser!.uid;
-                      setSession();
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/profile', (Route<dynamic> route) => false);
-                    });
+                    //uid = auth.currentUser!.uid;
+                    setSession();
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/profile', (Route<dynamic> route) => false);
                   },
                   child: Text(
                     'Set Session',
                     style: TextStyle(fontSize: 20),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
-                    onPrimary: Colors.black,
-                    padding: EdgeInsets.all(25),
-                    shadowColor: Colors.red,
-                    elevation: 10,
-                  ),
+                  style: ThemeStyle.getDrawerStyle(),
                 ),
               ),
               Positioned(
@@ -602,13 +672,7 @@ class TestAppState extends State<TestApp> {
                     'Session Summary',
                     style: TextStyle(fontSize: 18),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
-                    onPrimary: Colors.black,
-                    padding: EdgeInsets.all(25),
-                    shadowColor: Colors.red,
-                    elevation: 10,
-                  ),
+                  style: ThemeStyle.getDrawerStyle(),
                 ),
               ),
               Positioned(
@@ -623,13 +687,7 @@ class TestAppState extends State<TestApp> {
                     'Efficiency',
                     style: TextStyle(fontSize: 20),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
-                    onPrimary: Colors.black,
-                    padding: EdgeInsets.all(25),
-                    shadowColor: Colors.red,
-                    elevation: 10,
-                  ),
+                  style: ThemeStyle.getDrawerStyle(),
                 ),
               )
             ],
@@ -640,113 +698,13 @@ class TestAppState extends State<TestApp> {
         decoration: BoxDecoration(
             //image:  DecorationImage(image: new AssetImage('assets/gradient.png'),fit: BoxFit.cover)
 
-            color: Color.fromARGB(255, 8, 2, 44)),
+            color: Color.fromARGB(255, 2, 1, 19)),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlueAccent,
-                      padding: EdgeInsets.all(15),
-                      shadowColor: Colors.red,
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    onPressed: () async {
-                      var get_date_time_data = await set_date_time.get();
-                      var date_time_data = get_date_time_data.data() as Map;
-                      //ADD button
-                      if (_taskcontroller.text.isNotEmpty) {
-                        setState(() {
-                          add();
-                          print(difference.toString() + 'difference');
-                          print(date_time_data['date difference'] * 24 * 3600 +
-                              date_time_data['time difference']);
-                          if (date_difference != 0 || time_difference != 0) {
-                            difference = date_difference + time_difference;
-
-                            NotificationApi.showScheduledNotification(
-                                id: (_datecontroller.text.trim() +
-                                        _timecontroller.text.trim() +
-                                        _secondcontroller.text.trim())
-                                    .hashCode,
-                                title: _taskcontroller.text,
-                                body: 'Hey you added this task',
-                                scheduledDate: DateTime.now().add(Duration(
-                                    seconds: (date_time_data[
-                                                'date difference'] *
-                                            24 *
-                                            3600 +
-                                        date_time_data['time difference']))));
-
-                            totalDate = compareDate;
-                            date_difference = 0;
-                            time_difference = 0;
-
-                            difference = 0;
-                          } else {
-                            print('not notifying');
-                          }
-                        });
-                      }
-                      set_date_time.set({
-                        "date difference": 0,
-                        "time difference": 0,
-                      });
-                      _datecontroller.clear();
-                      _timecontroller.clear();
-                      _taskcontroller.clear();
-                      _secondcontroller.clear();
-                      _descriptioncontroller.clear();
-                    },
-                    child: Text(
-                      'Set Notification',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  //For setting up notification
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.lightBlueAccent,
-                      padding: EdgeInsets.all(15),
-                      shadowColor: Colors.red,
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    onPressed: () {
-                      final page = createAlertDialog(
-                          context,
-                          _taskcontroller,
-                          _datecontroller,
-                          _timecontroller,
-                          _descriptioncontroller,
-                          _selectDate,
-                          _selectTime);
-                      page;
-                      // Navigator.of(context).pushNamed(
-                      //     '/detailView');
-                    },
-                    child: Text(
-                      'Detailed Task',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ), //For Detail view
-                ],
               ),
 
               //Type Input Field

@@ -15,7 +15,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'charts/average_chart.dart';
-
+import 'dart:async';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
@@ -95,7 +95,6 @@ class MyApp extends StatelessWidget {
         '/myapp': (context) => MyApp(),
         '/chart': (context) => Session(),
         '/average_chart': (context) => Average_Session(),
-        
       },
       title: 'Welcome to jarvia',
       home: OpenView(),
