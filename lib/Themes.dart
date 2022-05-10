@@ -43,4 +43,24 @@ class ThemeStyles {
               Color.fromARGB(255, 12, 7, 95),
             ]));
   }
+
+  TextStyle? getFeedbackLabelTextStyle() {
+    return TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
+  }
+
+  TextStyle? getFeedbackSecondaryTextStyle() {
+    return TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w900,
+      color: Color.fromARGB(255, 42, 3, 109),
+    );
+  }
+
+  TextStyle? getFeedbackWorkLoadTextStyle() {
+    return TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w900,
+      color: Color.fromARGB(255, 42, 9, 230),
+    );
+  }
 }

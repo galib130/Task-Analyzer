@@ -168,9 +168,12 @@ class AddList_State extends StatelessWidget {
                             FirebaseCommand.UpdateSession(
                                 SecondarySessionReference, 1);
                           }
+                          FirebaseCommand.UpdateMetaData(uid, flag, 'Subtract');
+                          FirebaseCommand.UpdateMetaData(uid, flag - 1, 'Add');
                           document.reference.delete();
                           date_controller.clear();
                           time_controller.clear();
+
                           Navigator.pop(context);
                         },
                         child: Text(moveButton),
@@ -314,6 +317,8 @@ class AddList_State extends StatelessWidget {
                       await flutterLocalNotificationsPlugin
                           .cancel(data['notification id'].hashCode);
                       document.reference.delete();
+                      FirebaseCommand.UpdateMetaData(
+                          auth.currentUser!.uid, flag, "Subtract");
                     },
                     child: GestureDetector(
                       onTap: () {

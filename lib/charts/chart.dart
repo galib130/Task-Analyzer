@@ -114,11 +114,11 @@ class _SessionState extends State<Session> {
               if (session.isNotEmpty)
                 Text(
                   'Session ends at :  ' + session[1].time,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
                 ),
-              TextField(
-                controller: controller,
-              ),
               Row(
                 children: [
                   RaisedButton(
