@@ -1,10 +1,10 @@
-String AnalyzeTaskPad(int Primary, int Secondary) {
+List<String> AnalyzeTaskPad(int Primary, int Secondary) {
   String TotalAnalyze;
   String DifferenceAnalyze = "Difference is stable";
   String PrimaryAnalyze = "Status: stable";
   String SecondaryAnalyze = "Status: stable";
   int difference = (Primary - Secondary).abs();
-
+  List<String> Analysis = [];
   if (difference >= 5) {
     switch (Primary > Secondary) {
       case true:
@@ -56,5 +56,10 @@ String AnalyzeTaskPad(int Primary, int Secondary) {
       "\n\n" +
       "Workload balance: " +
       DifferenceAnalyze;
-  return TotalAnalyze;
+
+  Analysis.add(PrimaryAnalyze);
+  Analysis.add(SecondaryAnalyze);
+  Analysis.add(DifferenceAnalyze);
+
+  return Analysis;
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:proda/FirebaseCommands.dart';
+import 'package:proda/Themes.dart';
 import 'package:proda/home%20screen/Analysis.dart';
 
 Future<void> Createfeedback(BuildContext context) async {
@@ -11,7 +12,8 @@ Future<void> Createfeedback(BuildContext context) async {
   String uid = auth.currentUser!.uid.toString();
   var MetaDataUser;
   var FirebaseCommand = FirebaseCommands();
-  String Analysis = '';
+  var ThemeStyle = ThemeStyles();
+  List<String> Analysis = [];
   DocumentReference MetaData = FirebaseCommand.GetMetaData(uid);
 
   var GetMetaData = await FirebaseCommand.GetMetaData(uid).get();
@@ -38,9 +40,37 @@ Future<void> Createfeedback(BuildContext context) async {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   if (MetaDataUser != null)
-                    Text(Analysis,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold))
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text('Status of Primary',
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold)),
+                            Icon(Icons.add_alert_sharp),
+                          ],
+                        ),
+                        Text(Analysis.elementAt(0) + '\n\n',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                              color: Color.fromARGB(255, 1, 65, 17),
+                            )),
+                        Text('Status of Secondary',
+                            style: ThemeStyle.getFeedbackLabelTextStyle()),
+                        Text(Analysis.elementAt(1) + '\n\n',
+                            style: ThemeStyle.getFeedbackSecondaryTextStyle()),
+                        Text(
+                          'Workload Balance',
+                          style: ThemeStyle.getFeedbackLabelTextStyle(),
+                        ),
+                        Text(
+                          Analysis.elementAt(2),
+                          style: ThemeStyle.getFeedbackWorkLoadTextStyle(),
+                        )
+                      ],
+                    )
                   else
                     Text(
                       "Start Adding Task",
