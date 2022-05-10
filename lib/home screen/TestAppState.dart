@@ -2,6 +2,7 @@ import 'dart:async';
 // import 'dart:js_util';
 import 'package:flutter/material.dart';
 import 'package:proda/FirebaseCommands.dart';
+import 'package:proda/home%20screen/Feedback.dart';
 import 'package:proda/home%20screen/Task.dart';
 import 'TestApp.dart';
 import 'ListView.dart';
@@ -95,7 +96,7 @@ class TestAppState extends State<TestApp> {
     var documentdata = await session.get();
     var documentuser;
     if (documentdata.data() != null) documentuser = documentdata.data() as Map;
-
+    FirebaseCommand.UpdateMetaData(uid, change_state, "Subtract");
     if (change_state == 0) {
       documentSnapshot.reference.update({"ticked": value});
 
@@ -273,6 +274,8 @@ class TestAppState extends State<TestApp> {
             .doc(uid)
             .collection("average_session")
             .doc('Quadrant2');
+
+        DocumentReference MetaData = FirebaseCommand.GetMetaData(uid);
         CollectionReference selected_doc;
         DocumentReference selected_collectQuadrant;
         DocumentReference selected_avg_document;
@@ -282,10 +285,14 @@ class TestAppState extends State<TestApp> {
 
           selected_collectQuadrant = collectQuadrant1;
           selected_avg_document = avg_q1_document;
+          MetaData.set(
+              {"Primary": FieldValue.increment(1)}, SetOptions(merge: true));
         } else {
           selected_doc = quadrant2;
           selected_collectQuadrant = collectQuadrant2;
           selected_avg_document = avg_q2_document;
+          MetaData.set(
+              {"Secondary": FieldValue.increment(1)}, SetOptions(merge: true));
         }
 
         if (_datecontroller.text != '' && _timecontroller.text != '') {
@@ -540,7 +547,13 @@ class TestAppState extends State<TestApp> {
                 PopupMenuItem(
                     value: 2,
                     child: Text('Notification',
-                        style: TextStyle(color: Colors.white)))
+                        style: TextStyle(color: Colors.white))),
+                PopupMenuItem(
+                    value: 3,
+                    child: Text(
+                      "Feedback",
+                      style: TextStyle(color: Colors.white),
+                    ))
               ];
             },
             onSelected: (value) async {
@@ -599,6 +612,8 @@ class TestAppState extends State<TestApp> {
                 _taskcontroller.clear();
                 _secondcontroller.clear();
                 _descriptioncontroller.clear();
+              } else if (value == 3) {
+                Createfeedback(context);
               }
             },
           )

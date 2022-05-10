@@ -5,7 +5,6 @@ import 'package:proda/home%20screen/Task.dart';
 class FirebaseCommands {
   final firebaseinstance = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
-
   DocumentReference getQuadrant1_Session(String uid) {
     DocumentReference collectquadrant1_session = FirebaseFirestore.instance
         .collection('Users')
@@ -55,5 +54,29 @@ class FirebaseCommands {
     CollectionReference Completed = GetCompletedList(uid);
 
     return Completed.orderBy("Timestamp").snapshots();
+  }
+
+  DocumentReference GetMetaData(String uid) {
+    return FirebaseFirestore.instance
+        .collection("Users")
+        .doc(uid)
+        .collection("MetaData")
+        .doc("MetaData");
+  }
+
+  void UpdateMetaData(String uid, int flag, String status) {
+    DocumentReference MetaData = GetMetaData(uid);
+    int value;
+    String mode;
+    if (flag == 0)
+      mode = "Primary";
+    else
+      mode = "Secondary";
+    if (status == "Add")
+      value = 1;
+    else
+      value = -1;
+
+    MetaData.set({mode: FieldValue.increment(value)}, SetOptions(merge: true));
   }
 }
