@@ -162,11 +162,28 @@ class AddList_State extends StatelessWidget {
                                 PrimarySessionReference, 1);
                             FirebaseCommand.UpdateSession(
                                 SecondarySessionReference, -1);
+                            FirebaseCommand.UpdateAverageSession(
+                                FirebaseCommand.getQuadrant1_Average_Session(
+                                    uid),
+                                1);
+                            FirebaseCommand.UpdateAverageSession(
+                                FirebaseCommand.getQuadrant2_Average_Session(
+                                    uid),
+                                -1);
                           } else if (flag != 0) {
                             FirebaseCommand.UpdateSession(
                                 PrimarySessionReference, -1);
                             FirebaseCommand.UpdateSession(
                                 SecondarySessionReference, 1);
+
+                            FirebaseCommand.UpdateAverageSession(
+                                FirebaseCommand.getQuadrant1_Average_Session(
+                                    uid),
+                                -1);
+                            FirebaseCommand.UpdateAverageSession(
+                                FirebaseCommand.getQuadrant2_Average_Session(
+                                    uid),
+                                1);
                           }
                           FirebaseCommand.UpdateMetaData(uid, flag, 'Subtract');
                           FirebaseCommand.UpdateMetaData(uid, flag - 1, 'Add');

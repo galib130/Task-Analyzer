@@ -63,4 +63,11 @@ class ThemeStyles {
       color: Color.fromARGB(255, 42, 9, 230),
     );
   }
+
+  Text? getDropDownText(String textcontent) {
+    return Text(
+      textcontent,
+      style: TextStyle(color: Colors.white),
+    );
+  }
 }
