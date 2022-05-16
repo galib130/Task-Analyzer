@@ -3,11 +3,14 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:proda/Drawer.dart';
+import '../Analysis Functions/Analysis.dart';
 import '../authentication/firebase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
 import '../home screen/TestAppState.dart';
+import 'PopUpMenu.dart';
 
 class Average_Session_Object {
   final int value;
@@ -70,9 +73,12 @@ class _Average_SessionState extends State<Average_Session> {
     // TODO: implement build
 
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Efficiency of Quadrants'),
+        actions: [GetPopUpMenu(context, Status.efficiency)],
       ),
+      drawer: getDrawer(context),
       body: _average_buildbody(context),
     );
   }
@@ -118,25 +124,10 @@ class _Average_SessionState extends State<Average_Session> {
           child: Column(
             children: <Widget>[
               if (session.isNotEmpty)
-                Text('No. of session : ' + session[1].session.toString()),
-              Row(
-                children: [
-                  RaisedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/profile', (Route<dynamic> route) => false);
-                    },
-                    child: Text('Add'),
-                  ),
-                  RaisedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/chart', (Route<dynamic> route) => false);
-                    },
-                    child: Text('Session Summary'),
-                  ),
-                ],
-              ),
+                Text(
+                  'No. of session : ' + session[1].session.toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
               SizedBox(
                 height: 5.0,
               ),
@@ -145,6 +136,19 @@ class _Average_SessionState extends State<Average_Session> {
                 _seriesBarData,
                 animate: true,
                 animationDuration: Duration(seconds: 3),
+                domainAxis: new charts.OrdinalAxisSpec(
+                    renderSpec: new charts.SmallTickRendererSpec(
+                  labelStyle: new charts.TextStyleSpec(
+                      fontSize: 18, // size in Pts.
+                      color: charts.MaterialPalette.blue.shadeDefault),
+                )),
+                primaryMeasureAxis: new charts.NumericAxisSpec(
+                    renderSpec: new charts.SmallTickRendererSpec(
+                  labelStyle: new charts.TextStyleSpec(
+                    fontSize: 18,
+                    color: charts.MaterialPalette.blue.shadeDefault,
+                  ),
+                )),
               )),
             ],
           ),

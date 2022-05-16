@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:proda/authentication/backendservice.dart';
+import 'package:proda/globalstatemanagement/ChangeState.dart';
 import 'package:proda/home%20screen/CompleteListView.dart';
 // import 'package:jarvia/open.dart';
 import 'authentication/open.dart';
@@ -18,6 +19,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'charts/average_chart.dart';
 import 'dart:async';
+import 'home screen/TestAppState.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
@@ -73,7 +75,8 @@ Future<void> main() async {
           create: (context) =>
               context.read<FlutterFireAuthService>().authStateChanges,
           initialData: null,
-        )
+        ),
+        ChangeNotifierProvider(create: (_) => ChangeState())
       ],
       builder: (context, _) {
         return MyApp();

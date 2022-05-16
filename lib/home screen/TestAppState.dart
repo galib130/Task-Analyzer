@@ -1,8 +1,10 @@
 import 'dart:async';
 // import 'dart:js_util';
 import 'package:flutter/material.dart';
+import 'package:proda/Analysis%20Functions/Analysis.dart';
 import 'package:proda/FirebaseCommands.dart';
-import 'package:proda/home%20screen/Feedback.dart';
+import 'package:proda/globalstatemanagement/ChangeState.dart';
+import 'package:proda/home%20screen/FeedbackDialog.dart';
 import 'package:proda/home%20screen/Task.dart';
 import 'TestApp.dart';
 import 'ListView.dart';
@@ -198,6 +200,7 @@ class TestAppState extends State<TestApp> {
       .doc('date and time set');
 
   Widget build(BuildContext context) {
+    change_state = context.watch<ChangeState>().flag;
     final suggestList = [];
 
     //call suggestlist
@@ -515,7 +518,12 @@ class TestAppState extends State<TestApp> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            change_state == 0 ? Text("Primary") : Text("Secondary"),
+            change_state == 0
+                ? Text(
+                    "Primary",
+                    style: TextStyle(fontSize: 20),
+                  )
+                : Text("Secondary"),
             Align(
               alignment: Alignment.topRight,
               child: ElevatedButton(
@@ -540,20 +548,14 @@ class TestAppState extends State<TestApp> {
               return [
                 PopupMenuItem(
                     value: 1,
-                    child: Text(
-                      "Detailed Task",
-                      style: TextStyle(color: Colors.white),
-                    )),
+                    child: ThemeStyle.getDropDownText("Detailed Task")),
                 PopupMenuItem(
                     value: 2,
-                    child: Text('Notification',
-                        style: TextStyle(color: Colors.white))),
+                    child: ThemeStyle.getDropDownText("Set Notification")),
                 PopupMenuItem(
-                    value: 3,
-                    child: Text(
-                      "Feedback",
-                      style: TextStyle(color: Colors.white),
-                    ))
+                    value: 3, child: ThemeStyle.getDropDownText("Feedback")),
+                PopupMenuItem(
+                    value: 4, child: ThemeStyle.getDropDownText("Set Session"))
               ];
             },
             onSelected: (value) async {
@@ -613,7 +615,9 @@ class TestAppState extends State<TestApp> {
                 _secondcontroller.clear();
                 _descriptioncontroller.clear();
               } else if (value == 3) {
-                Createfeedback(context);
+                Createfeedback(context, Status.tab);
+              } else if (value == 4) {
+                setSession();
               }
             },
           )
@@ -641,7 +645,8 @@ class TestAppState extends State<TestApp> {
                   child: ElevatedButton(
                     onPressed: () {
                       //ADD button
-                      change(0);
+                      context.read<ChangeState>().change_state(0);
+                      //change(0);
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           '/profile', (Route<dynamic> route) => false);
                     },
@@ -660,7 +665,7 @@ class TestAppState extends State<TestApp> {
                   child: ElevatedButton(
                     onPressed: () {
                       //ADD button
-                      change(1);
+                      context.read<ChangeState>().change_state(1);
                       //print(textadd[addquest-1]);
                       print(change_state);
                       Navigator.of(context).pushNamedAndRemoveUntil(
@@ -679,14 +684,12 @@ class TestAppState extends State<TestApp> {
                 right: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    //uid = auth.currentUser!.uid;
-                    setSession();
                     Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/profile', (Route<dynamic> route) => false);
+                        '/chart', (Route<dynamic> route) => false);
                   },
                   child: Text(
-                    'Set Session',
-                    style: TextStyle(fontSize: 20),
+                    'Session Summary',
+                    style: TextStyle(fontSize: 18),
                   ),
                   style: ThemeStyle.getDrawerStyle(),
                 ),
@@ -697,22 +700,8 @@ class TestAppState extends State<TestApp> {
                 right: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/chart');
-                  },
-                  child: Text(
-                    'Session Summary',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  style: ThemeStyle.getDrawerStyle(),
-                ),
-              ),
-              Positioned(
-                top: 480,
-                left: 50,
-                right: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/average_chart');
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        '/average_chart', (Route<dynamic> route) => false);
                   },
                   child: Text(
                     'Efficiency',
@@ -722,7 +711,7 @@ class TestAppState extends State<TestApp> {
                 ),
               ),
               Positioned(
-                  top: 580,
+                  top: 480,
                   left: 50,
                   right: 50,
                   child: ElevatedButton(

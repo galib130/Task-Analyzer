@@ -5,8 +5,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:proda/Analysis%20Functions/Analysis.dart';
+import 'package:proda/Drawer.dart';
+import 'package:proda/charts/ChartTheme.dart';
+import 'package:proda/charts/PopUpMenu.dart';
+import 'package:proda/globalstatemanagement/ChangeState.dart';
+import 'package:proda/home%20screen/FeedbackDialog.dart';
+import 'package:provider/provider.dart';
 
 class Session_Object {
+  var bar = Barchart();
   final int value;
   final String xaxis;
   final String color;
@@ -67,7 +75,9 @@ class _SessionState extends State<Session> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Session Summary'),
+        actions: [GetPopUpMenu(context, Status.session)],
       ),
+      drawer: getDrawer(context),
       body: _buildbody(context),
     );
   }
@@ -113,29 +123,12 @@ class _SessionState extends State<Session> {
             children: <Widget>[
               if (session.isNotEmpty)
                 Text(
-                  'Session ends at :  ' + session[1].time,
+                  'Session ends at :\n' + session[1].time,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold),
                 ),
-              Row(
-                children: [
-                  RaisedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/profile', (Route<dynamic> route) => false);
-                    },
-                    child: Text('Add'),
-                  ),
-                  RaisedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/average_chart');
-                    },
-                    child: Text('Efficiency'),
-                  ),
-                ],
-              ),
               SizedBox(
                 height: 5.0,
               ),

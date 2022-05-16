@@ -13,27 +13,28 @@ class CompletedListView extends StatelessWidget {
   FirebaseAuth auth = FirebaseAuth.instance;
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: ThemeStyle.ShadowDrawerButtonColor,
-          title: Container(
-            child: Text("Completed List"),
-          ),
+      appBar: AppBar(
+        backgroundColor: ThemeStyle.ShadowDrawerButtonColor,
+        title: Container(
+          child: Text("Completed List"),
         ),
-        body: Column(
-          children: [
-            Container(
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseCommand.GetCompletedListStream(
-                        auth.currentUser!.uid),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('Something went wrong');
-                      } else if (snapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return Text("Loading");
-                      } else {
-                        items.add(snapshot.data!.docs);
-                        return ListView.builder(
+      ),
+      body: Column(
+        children: [
+          Container(
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseCommand.GetCompletedListStream(
+                      auth.currentUser!.uid),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Something went wrong');
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return Text("Loading");
+                    } else {
+                      items.add(snapshot.data!.docs);
+                      return Expanded(
+                        child: ListView.builder(
                           shrinkWrap: true,
                           itemCount: snapshot.data!.docs.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -84,10 +85,12 @@ class CompletedListView extends StatelessWidget {
                               ),
                             );
                           },
-                        );
-                      }
-                    })),
-          ],
-        ));
+                        ),
+                      );
+                    }
+                  }))
+        ],
+      ),
+    );
   }
 }

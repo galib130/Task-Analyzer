@@ -162,11 +162,28 @@ class AddList_State extends StatelessWidget {
                                 PrimarySessionReference, 1);
                             FirebaseCommand.UpdateSession(
                                 SecondarySessionReference, -1);
+                            FirebaseCommand.UpdateAverageSession(
+                                FirebaseCommand.getQuadrant1_Average_Session(
+                                    uid),
+                                1);
+                            FirebaseCommand.UpdateAverageSession(
+                                FirebaseCommand.getQuadrant2_Average_Session(
+                                    uid),
+                                -1);
                           } else if (flag != 0) {
                             FirebaseCommand.UpdateSession(
                                 PrimarySessionReference, -1);
                             FirebaseCommand.UpdateSession(
                                 SecondarySessionReference, 1);
+
+                            FirebaseCommand.UpdateAverageSession(
+                                FirebaseCommand.getQuadrant1_Average_Session(
+                                    uid),
+                                -1);
+                            FirebaseCommand.UpdateAverageSession(
+                                FirebaseCommand.getQuadrant2_Average_Session(
+                                    uid),
+                                1);
                           }
                           FirebaseCommand.UpdateMetaData(uid, flag, 'Subtract');
                           FirebaseCommand.UpdateMetaData(uid, flag - 1, 'Add');
@@ -401,7 +418,7 @@ class AddList_State extends StatelessWidget {
                                   ListTile(
                                     leading: Icon(Icons.task_rounded),
                                     contentPadding: EdgeInsets.symmetric(
-                                        vertical: 0.0, horizontal: 30.0),
+                                        vertical: 13.00, horizontal: 18.0),
                                     title: Container(
                                       child: Column(
                                           crossAxisAlignment:
@@ -418,6 +435,8 @@ class AddList_State extends StatelessWidget {
                                                           .toString(),
                                                       style: new TextStyle(
                                                           fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                           color: Color.fromARGB(
                                                               255,
                                                               252,
@@ -448,7 +467,8 @@ class AddList_State extends StatelessWidget {
                                             if (data.containsValue(
                                                     data['setTime']) &&
                                                 data['setTime'] != '    ' &&
-                                                data['setTime'] != '  ')
+                                                data['setTime'] != '  ' &&
+                                                data['setTime'] != '')
                                               Text(
                                                 data['setTime'].toString(),
                                                 style: TextStyle(

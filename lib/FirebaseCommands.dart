@@ -23,7 +23,31 @@ class FirebaseCommands {
     return collectQuadrant2_session;
   }
 
+  DocumentReference getQuadrant1_Average_Session(String uid) {
+    DocumentReference collectquadrant1_session = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .collection("average_session")
+        .doc('Quadrant1');
+    return collectquadrant1_session;
+  }
+
+  DocumentReference getQuadrant2_Average_Session(String uid) {
+    DocumentReference collectquadrant1_session = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .collection("average_session")
+        .doc('Quadrant2');
+    return collectquadrant1_session;
+  }
+
   void UpdateSession(DocumentReference reference, int value) {
+    reference.update({
+      "Name": FieldValue.increment(value),
+    });
+  }
+
+  void UpdateAverageSession(DocumentReference reference, int value) {
     reference.update({
       "Name": FieldValue.increment(value),
     });
@@ -53,7 +77,7 @@ class FirebaseCommands {
   Stream<QuerySnapshot> GetCompletedListStream(String uid) {
     CollectionReference Completed = GetCompletedList(uid);
 
-    return Completed.orderBy("Timestamp").snapshots();
+    return Completed.orderBy("Timestamp", descending: true).snapshots();
   }
 
   DocumentReference GetMetaData(String uid) {
