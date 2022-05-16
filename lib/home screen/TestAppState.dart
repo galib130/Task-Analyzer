@@ -518,7 +518,12 @@ class TestAppState extends State<TestApp> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            change_state == 0 ? Text("Primary") : Text("Secondary"),
+            change_state == 0
+                ? Text(
+                    "Primary",
+                    style: TextStyle(fontSize: 20),
+                  )
+                : Text("Secondary"),
             Align(
               alignment: Alignment.topRight,
               child: ElevatedButton(

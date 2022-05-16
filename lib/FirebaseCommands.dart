@@ -77,7 +77,7 @@ class FirebaseCommands {
   Stream<QuerySnapshot> GetCompletedListStream(String uid) {
     CollectionReference Completed = GetCompletedList(uid);
 
-    return Completed.orderBy("Timestamp").snapshots();
+    return Completed.orderBy("Timestamp", descending: true).snapshots();
   }
 
   DocumentReference GetMetaData(String uid) {

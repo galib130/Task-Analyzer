@@ -62,17 +62,17 @@ class SessionAnalysis implements Analysis {
         "Too much focus spent on completing Primary Tasks compared to Secondary Tasks\nNeed to make mored time to focus on completing Secondary Tasks\n Could be due to procrastination or bad scheduling";
 
     String DifferenceAnalyzeSecondaryHigh =
-        "Primary tasks not given enough importance\nImportant tasks left alone might hamper overall result more than if the situation was reversed\nINFERENCE: Could be due to procastination or bad scheduling";
+        "Primary tasks not given enough importance\nImportant tasks left alone might hamper overall result more than if the situation was reversed\nInference: Could be due to procastination or bad scheduling";
 
     String DifferenceAnalyzeBalanced =
         "Task management seems to be up to the mark";
 
     String High =
-        "Efficiency: HIGH\n\n Feedback: Well done! Keep it up in the next session!";
+        "Efficiency: HIGH\n\nFeedback: Well done! Keep it up in the next session!";
     String VeryHigh =
         "Efficiency: VERY HIGH\n\nFeedback: Might consider adding more tasks outside your comfort zone";
     String Low =
-        "Efficiency: LOW\n\nFeedback: Need to step it up and make more time to complete more tasks\nINFERENCE: May be due to lack of initiative or procrastination";
+        "Efficiency: LOW\n\nFeedback: Need to step it up and make more time to complete more tasks\nInference: May be due to lack of initiative or procrastination";
 
     List<String> Feedback = [
       DifferenceAnalyzePrimaryHigh,
@@ -112,11 +112,11 @@ class EfficiencyAnalysis implements Analysis {
         "Task management seems to be up to the mark consistently";
 
     String High =
-        "Avg Efficicency: HIGH\n\n Feedback: Well done! Keep it up Consistency is key!";
+        "Avg Efficicency: HIGH\n\nFeedback: Well done! Keep it up Consistency is key!";
     String VeryHigh =
         "Avg Efficiency: VERY HIGH\n\nFeedback: Might consider adding more tasks outside your comfort zone";
     String Low =
-        "Avg Efficiency: LOW\n\nFeedback: Work harder and try for improvements by bigger margins to get the Avg Efficicency up\n\nINFERENCE: May be due to lack of initiative or procrastination";
+        "Avg Efficiency: LOW\n\nFeedback: Work harder and try for improvements by bigger margins to get the Avg Efficicency up\n\nInference: May be due to lack of initiative or procrastination";
 
     List<String> Feedback = [
       DifferenceAnalyzePrimaryHigh,

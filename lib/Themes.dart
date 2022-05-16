@@ -70,4 +70,17 @@ class ThemeStyles {
       style: TextStyle(color: Colors.white),
     );
   }
+
+  BoxDecoration? getBackgroundBoxDecoration() {
+    var ThemeStyle = ThemeStyles();
+    return BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.topLeft,
+            colors: [
+              ThemeStyle.ListViewColorPrimaryFirst,
+              ThemeStyle.ListViewColorSecondaryFirst
+            ]));
+  }
 }
