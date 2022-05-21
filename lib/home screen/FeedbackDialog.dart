@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:proda/Analysis%20Functions/Analysis.dart';
 import 'dart:async';
 
-import 'package:proda/FirebaseCommands.dart';
+import 'package:proda/backend/FirebaseCommands.dart';
 import 'package:proda/Themes.dart';
 import 'package:proda/Analysis%20Functions/ProvideAnalysis.dart';
 

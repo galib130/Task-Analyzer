@@ -2,14 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proda/Themes.dart';
-import 'package:proda/FirebaseCommands.dart';
+import 'package:proda/backend/FirebaseCommands.dart';
+import 'package:proda/backend/Task.dart';
 
 import '../main.dart';
 import 'dart:async';
 
 class AddList_State extends StatelessWidget {
   bool _value = false;
-
+  var TaskCommand = TaskCommands();
   Function(String, bool, DocumentSnapshot) checkBox;
   Function setDate;
   Function setTime;
@@ -34,10 +35,10 @@ class AddList_State extends StatelessWidget {
       String moveButton) {
     TextEditingController update_controller = TextEditingController();
     TextEditingController description_controller = TextEditingController();
-    update_controller.text = map_data['displayName'];
-    description_controller.text = map_data['description'];
-    date_controller.text = map_data['date'];
-    time_controller.text = map_data['time'];
+    update_controller.text = map_data['Task']['displayName'];
+    description_controller.text = map_data['Task']['description'];
+    date_controller.text = map_data['Task']['date'];
+    time_controller.text = map_data['Task']['time'];
 
     return showDialog(
         context: context,
@@ -151,8 +152,9 @@ class AddList_State extends StatelessWidget {
                             "ticked": false,
                             "setTime": SetTime,
                             "displayName": update_controller.text.trim(),
-                            "difference": map_data['difference'],
-                            "notification id": map_data['notification id'],
+                            "difference": map_data['Task']['difference'],
+                            "notification id": map_data['Task']
+                                ['notification id'],
                             "description": description_controller.text.trim(),
                             "date": date_controller.text.trim(),
                             "time": time_controller.text.trim(),
@@ -212,15 +214,18 @@ class AddList_State extends StatelessWidget {
                           } else
                             SetTime = time_controller.text;
 
-                          //update(update_controller.text,data);
-                          document.reference.update({
+                          Map<dynamic, dynamic> taskMap;
+                          taskMap = {
                             "Name": update_controller.text,
                             "displayName": update_controller.text,
                             "description": description_controller.text,
                             "time": time_controller.text,
                             "date": date_controller.text,
                             "setTime": SetTime
-                          });
+                          };
+
+                          //update(update_controller.text,data);
+                          TaskCommand.updateTask(taskMap, document);
                           date_controller.clear();
                           time_controller.clear();
                           Navigator.pop(context);
@@ -294,8 +299,8 @@ class AddList_State extends StatelessWidget {
               },
               children: snapshot.data!.docs.map((DocumentSnapshot document) {
                 Map<dynamic, dynamic> data =
-                    document.data()! as Map<dynamic, dynamic>;
-
+                    document.data() as Map<dynamic, dynamic>;
+                print(document.data().toString() + 'today');
                 return Dismissible(
                     key: Key('$data'),
                     onDismissed: (DismissDirection) async {
@@ -332,7 +337,7 @@ class AddList_State extends StatelessWidget {
                       }
 
                       await flutterLocalNotificationsPlugin
-                          .cancel(data['notification id'].hashCode);
+                          .cancel(data['Task']['notification id'].hashCode);
                       document.reference.delete();
                       FirebaseCommand.UpdateMetaData(
                           auth.currentUser!.uid, flag, "Subtract");
@@ -340,13 +345,13 @@ class AddList_State extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () {
                         if (flag == 0) {
-                          if (data.containsValue(data['description']))
+                          if (data.containsValue(data['Task']['description']))
                             createEditDialog(
                                 BuildContext,
                                 context,
-                                data['displayName'].toString(),
+                                data['Task']['displayName'].toString(),
                                 document,
-                                data['description'],
+                                data['Task']['description'],
                                 data,
                                 dateController,
                                 timeController,
@@ -356,7 +361,7 @@ class AddList_State extends StatelessWidget {
                             createEditDialog(
                                 BuildContext,
                                 context,
-                                data['displayName'].toString(),
+                                data['Task']['displayName'].toString(),
                                 document,
                                 '',
                                 data,
@@ -365,13 +370,13 @@ class AddList_State extends StatelessWidget {
                                 flag,
                                 'Move task to Secondary');
                         } else {
-                          if (data.containsValue(data['description']))
+                          if (data.containsValue(data['Task']['description']))
                             createEditDialog(
                                 BuildContext,
                                 context,
-                                data['displayName'].toString(),
+                                data['Task']['displayName'].toString(),
                                 document,
-                                data['description'],
+                                data['Task']['description'],
                                 data,
                                 dateController,
                                 timeController,
@@ -381,7 +386,7 @@ class AddList_State extends StatelessWidget {
                             createEditDialog(
                                 BuildContext,
                                 context,
-                                data['displayName'].toString(),
+                                data['Task']['displayName'].toString(),
                                 document,
                                 '',
                                 data,
@@ -431,7 +436,8 @@ class AddList_State extends StatelessWidget {
                                                 children: [
                                                   Expanded(
                                                     child: Text(
-                                                      data['displayName']
+                                                      data['Task']
+                                                              ['displayName']
                                                           .toString(),
                                                       style: new TextStyle(
                                                           fontSize: 18,
@@ -453,24 +459,28 @@ class AddList_State extends StatelessWidget {
                                                                     .white),
                                                         autofocus: true,
                                                         shape: CircleBorder(),
-                                                        value: data['ticked'],
+                                                        value: data['Task']
+                                                            ['ticked'],
                                                         onChanged:
                                                             (bool? value) {
                                                           checkBox(
-                                                              data[
+                                                              data['Task'][
                                                                   'displayName'],
                                                               value!,
                                                               document);
                                                         }),
                                                   ),
                                                 ]),
-                                            if (data.containsValue(
-                                                    data['setTime']) &&
-                                                data['setTime'] != '    ' &&
-                                                data['setTime'] != '  ' &&
-                                                data['setTime'] != '')
+                                            if (data['Task'].containsValue(
+                                                    data['Task']['setTime']) &&
+                                                data['Task']['setTime'] !=
+                                                    '    ' &&
+                                                data['Task']['setTime'] !=
+                                                    '  ' &&
+                                                data['Task']['setTime'] != '')
                                               Text(
-                                                data['setTime'].toString(),
+                                                data['Task']['setTime']
+                                                    .toString(),
                                                 style: TextStyle(
                                                     //fontSize: 18,
                                                     fontSize: 17,

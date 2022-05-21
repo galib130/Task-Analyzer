@@ -20,17 +20,20 @@ class TaskCommands {
   }
 
   Future<void> setTask(Map<dynamic, dynamic> taskData) async {
-    tabCollection!.doc().set({
-      "Name": taskData["Name"],
-      "Timestamp": taskData["Timestamp"],
-      "difference": taskData['difference'],
-      "ticked": false,
-      "setTime": taskData['setTime'],
-      "displayName": taskData['displayName'],
-      "notification id": taskData['notification id'],
-      "description": taskData['description'],
-      "date": taskData['date'],
-      "time": taskData['time'],
-    }, SetOptions(merge: true));
+    tabCollection!.doc().set(
+        {"Task": taskData, "Timestamp": taskData['Timestamp']},
+        SetOptions(merge: true));
+  }
+
+  Future<void> updateTask(
+      Map<dynamic, dynamic> taskData, DocumentSnapshot document) async {
+    document.reference.update({
+      "Task.Name": taskData["Name"],
+      "Task.displayName": taskData["displayName"],
+      "Task.description": taskData['description'],
+      "Task.time": taskData["time"],
+      "Task.date": taskData["date"],
+      "Task.setTime": taskData["setTime"]
+    });
   }
 }
