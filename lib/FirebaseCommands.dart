@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:proda/home%20screen/Task.dart';
+import 'package:proda/home%20screen/completedTask.dart';
 
 class FirebaseCommands {
   final firebaseinstance = FirebaseFirestore.instance;

@@ -8,7 +8,7 @@ import 'package:proda/FirebaseCommands.dart';
 import 'package:proda/Themes.dart';
 import 'package:proda/Analysis%20Functions/ProvideAnalysis.dart';
 
-Future<void> Createfeedback(BuildContext context, Status status) async {
+Future<void> Createfeedback(BuildContext context, SessionStatus status) async {
   FirebaseAuth auth = FirebaseAuth.instance;
   String uid = auth.currentUser!.uid.toString();
   var MetaDataUser;
@@ -18,7 +18,7 @@ Future<void> Createfeedback(BuildContext context, Status status) async {
   List<String> Analysis = [];
   DocumentReference MetaData = FirebaseCommand.GetMetaData(uid);
 
-  if (status == Status.tab) {
+  if (status == SessionStatus.tab) {
     var GetMetaData = await FirebaseCommand.GetMetaData(uid).get();
 
     if (GetMetaData.data() != null) {
@@ -29,7 +29,7 @@ Future<void> Createfeedback(BuildContext context, Status status) async {
       var tabanalysis = TabAnalysis();
       Analysis = ProvideAnalysis(Primary, Secondary, tabanalysis.getFeedback());
     }
-  } else if (status == Status.session) {
+  } else if (status == SessionStatus.session) {
     var sessionanalysis = SessionAnalysis();
     var GetMetaData =
         await sessionanalysis.GetMetaData(uid).doc("Quadrant1").get();
@@ -45,7 +45,7 @@ Future<void> Createfeedback(BuildContext context, Status status) async {
       Analysis =
           ProvideAnalysis(Primary, Secondary, sessionanalysis.getFeedback());
     }
-  } else if (status == Status.efficiency) {
+  } else if (status == SessionStatus.efficiency) {
     var efficiency = EfficiencyAnalysis();
     var GetMetaData = await efficiency.GetMetaData(uid).doc("Quadrant1").get();
     if (GetMetaData.data() != null) {

@@ -21,7 +21,7 @@ class AddList_State extends StatelessWidget {
 
   Stream<QuerySnapshot> taskQuery;
   var FirebaseCommand = FirebaseCommands();
-  createAlertDialog(
+  createEditDialog(
       BuildContext,
       context,
       String data,
@@ -34,8 +34,8 @@ class AddList_State extends StatelessWidget {
       String moveButton) {
     TextEditingController update_controller = TextEditingController();
     TextEditingController description_controller = TextEditingController();
-    update_controller.text = data;
-    description_controller.text = description;
+    update_controller.text = map_data['displayName'];
+    description_controller.text = map_data['description'];
     date_controller.text = map_data['date'];
     time_controller.text = map_data['time'];
 
@@ -341,7 +341,7 @@ class AddList_State extends StatelessWidget {
                       onTap: () {
                         if (flag == 0) {
                           if (data.containsValue(data['description']))
-                            createAlertDialog(
+                            createEditDialog(
                                 BuildContext,
                                 context,
                                 data['displayName'].toString(),
@@ -353,7 +353,7 @@ class AddList_State extends StatelessWidget {
                                 flag,
                                 "Move task to Secondary");
                           else
-                            createAlertDialog(
+                            createEditDialog(
                                 BuildContext,
                                 context,
                                 data['displayName'].toString(),
@@ -366,7 +366,7 @@ class AddList_State extends StatelessWidget {
                                 'Move task to Secondary');
                         } else {
                           if (data.containsValue(data['description']))
-                            createAlertDialog(
+                            createEditDialog(
                                 BuildContext,
                                 context,
                                 data['displayName'].toString(),
@@ -378,7 +378,7 @@ class AddList_State extends StatelessWidget {
                                 flag,
                                 "Move task to Primary");
                           else
-                            createAlertDialog(
+                            createEditDialog(
                                 BuildContext,
                                 context,
                                 data['displayName'].toString(),
