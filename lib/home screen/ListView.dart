@@ -123,16 +123,11 @@ class AddList_State extends StatelessWidget {
                           DocumentReference SecondarySessionReference =
                               FirebaseCommand.getQuadrant2_Session(uid);
                           if (flag == 0)
-                            moveQuadrant = FirebaseFirestore.instance
-                                .collection('Users')
-                                .doc(uid)
-                                .collection('Quadrant2');
+                            TaskCommand.setTaskCollection(
+                                tabStatus.Secondary, uid);
                           else
-                            moveQuadrant = FirebaseFirestore.instance
-                                .collection('Users')
-                                .doc(uid)
-                                .collection('Mytask');
-
+                            TaskCommand.setTaskCollection(
+                                tabStatus.Primary, uid);
                           DateTime currentDate = DateTime.now();
                           Timestamp time = Timestamp.fromDate(currentDate);
                           String SetTime;
@@ -145,8 +140,7 @@ class AddList_State extends StatelessWidget {
                             SetTime = date_controller.text;
                           } else
                             SetTime = time_controller.text;
-
-                          moveQuadrant.doc().set({
+                          Map<dynamic, dynamic> taskMap = {
                             "Name": update_controller.text.trim(),
                             "Timestamp": time,
                             "ticked": false,
@@ -158,7 +152,9 @@ class AddList_State extends StatelessWidget {
                             "description": description_controller.text.trim(),
                             "date": date_controller.text.trim(),
                             "time": time_controller.text.trim(),
-                          });
+                          };
+                          TaskCommand.setTask(taskMap);
+
                           if (flag == 0) {
                             FirebaseCommand.UpdateSession(
                                 PrimarySessionReference, 1);
@@ -189,7 +185,7 @@ class AddList_State extends StatelessWidget {
                           }
                           FirebaseCommand.UpdateMetaData(uid, flag, 'Subtract');
                           FirebaseCommand.UpdateMetaData(uid, flag - 1, 'Add');
-                          document.reference.delete();
+                          TaskCommand.deleteTask(document);
                           date_controller.clear();
                           time_controller.clear();
 
