@@ -75,7 +75,7 @@ class _SessionState extends State<Session> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Session Summary'),
-        actions: [GetPopUpMenu(context, Status.session)],
+        actions: [GetPopUpMenu(context, SessionStatus.session)],
       ),
       drawer: getDrawer(context),
       body: _buildbody(context),
@@ -116,7 +116,7 @@ class _SessionState extends State<Session> {
     //print(get_last_sesion_date);
 
     return Padding(
-      padding: EdgeInsets.all(5.0),
+      padding: EdgeInsets.all(10.0),
       child: Container(
         child: Center(
           child: Column(
@@ -140,13 +140,13 @@ class _SessionState extends State<Session> {
                 domainAxis: new charts.OrdinalAxisSpec(
                     renderSpec: new charts.SmallTickRendererSpec(
                   labelStyle: new charts.TextStyleSpec(
-                      fontSize: 18, // size in Pts.
+                      fontSize: 20, // size in Pts.
                       color: charts.MaterialPalette.blue.shadeDefault),
                 )),
                 primaryMeasureAxis: new charts.NumericAxisSpec(
                     renderSpec: new charts.SmallTickRendererSpec(
                   labelStyle: new charts.TextStyleSpec(
-                    fontSize: 18,
+                    fontSize: 24,
                     color: charts.MaterialPalette.blue.shadeDefault,
                   ),
                 )),

@@ -76,7 +76,7 @@ class _Average_SessionState extends State<Average_Session> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Efficiency of Quadrants'),
-        actions: [GetPopUpMenu(context, Status.efficiency)],
+        actions: [GetPopUpMenu(context, SessionStatus.efficiency)],
       ),
       drawer: getDrawer(context),
       body: _average_buildbody(context),

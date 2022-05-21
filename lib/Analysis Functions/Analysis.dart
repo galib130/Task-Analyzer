@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum Status { tab, session, efficiency }
+enum SessionStatus { tab, session, efficiency }
 
 abstract class Analysis {
   List<String> getFeedback();
@@ -25,7 +25,7 @@ class TabAnalysis implements Analysis {
         "Might consider making some time to focus on completing some Secondary tasks";
 
     String DifferenceAnalyzeBalanced =
-        "Workload seems to be balanced at the moment\n Might consider mixing focus between Secondary and Primary";
+        "Workload seems to be balanced at the moment\nMight consider mixing focus between Secondary and Primary";
 
     String High =
         "Workload: HIGH\n\nFeedback: More effort needed in completing tasks";

@@ -3,9 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:proda/Analysis%20Functions/Analysis.dart';
 import 'package:proda/FirebaseCommands.dart';
+import 'package:proda/Task.dart';
 import 'package:proda/globalstatemanagement/ChangeState.dart';
 import 'package:proda/home%20screen/FeedbackDialog.dart';
-import 'package:proda/home%20screen/Task.dart';
+import 'package:proda/home%20screen/completedTask.dart';
 import 'TestApp.dart';
 import 'ListView.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -54,7 +55,7 @@ class TestAppState extends State<TestApp> {
   int difference = 0;
   static const routename = '/profile';
   var FirebaseCommand = FirebaseCommands();
-
+  var TaskCommand = TaskCommands();
 //ok
   //call to add complete task and then delete the task
   void checkbox(
@@ -238,6 +239,7 @@ class TestAppState extends State<TestApp> {
 
     Future<void> postTasks(String? task, int flag) async {
       if (task != '') {
+        Map<dynamic, dynamic> taskMap;
         String SetTime;
         FirebaseAuth auth = FirebaseAuth.instance;
         String uid = auth.currentUser!.uid.toString();
@@ -279,19 +281,20 @@ class TestAppState extends State<TestApp> {
             .doc('Quadrant2');
 
         DocumentReference MetaData = FirebaseCommand.GetMetaData(uid);
-        CollectionReference selected_doc;
+        //CollectionReference selected_tab;
         DocumentReference selected_collectQuadrant;
         DocumentReference selected_avg_document;
-        flag == 0 ? selected_doc = users : selected_doc = quadrant2;
+        //flag == 0 ? selected_tab = users : selected_tab = quadrant2;
         if (flag == 0) {
-          selected_doc = users;
-
+          //selected_tab = users;
+          TaskCommand.setTaskCollection(tabStatus.Primary, uid);
           selected_collectQuadrant = collectQuadrant1;
           selected_avg_document = avg_q1_document;
           MetaData.set(
               {"Primary": FieldValue.increment(1)}, SetOptions(merge: true));
         } else {
-          selected_doc = quadrant2;
+          //selected_tab = quadrant2;
+          TaskCommand.setTaskCollection(tabStatus.Secondary, uid);
           selected_collectQuadrant = collectQuadrant2;
           selected_avg_document = avg_q2_document;
           MetaData.set(
@@ -304,8 +307,7 @@ class TestAppState extends State<TestApp> {
           SetTime = _datecontroller.text;
         } else
           SetTime = _timecontroller.text;
-
-        selected_doc.doc().set({
+        taskMap = {
           "Name": task,
           "Timestamp": time,
           "difference": time_difference + date_difference,
@@ -318,8 +320,8 @@ class TestAppState extends State<TestApp> {
           "description": _descriptioncontroller.text.trim(),
           "date": _datecontroller.text.trim(),
           "time": _timecontroller.text.trim(),
-        }, SetOptions(merge: true));
-
+        };
+        TaskCommand.setTask(taskMap);
         var documentdata = await session.get();
 
         var documentuser;
@@ -383,7 +385,7 @@ class TestAppState extends State<TestApp> {
         q1_document.set({
           "Name": 0,
           "color": '0xFF34c9eb',
-          "xaxis": 'Active',
+          "xaxis": 'Primary',
           "time": DateFormat('EEEE, d MMM, yyyy  h:mm a').format(time.toDate()),
         });
 
@@ -397,7 +399,7 @@ class TestAppState extends State<TestApp> {
         avg_q1_document.set({
           "Name": FieldValue.increment(0),
           "color": '0xFFa531e8',
-          "xaxis": 'Active',
+          "xaxis": 'Primary',
           "session": FieldValue.increment(1),
         }, SetOptions(merge: true));
         avg_q2_document.set({
@@ -615,7 +617,7 @@ class TestAppState extends State<TestApp> {
                 _secondcontroller.clear();
                 _descriptioncontroller.clear();
               } else if (value == 3) {
-                Createfeedback(context, Status.tab);
+                Createfeedback(context, SessionStatus.tab);
               } else if (value == 4) {
                 setSession();
               }
