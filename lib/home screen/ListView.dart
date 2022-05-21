@@ -338,7 +338,8 @@ class AddList_State extends StatelessWidget {
 
                       await flutterLocalNotificationsPlugin
                           .cancel(data['Task']['notification id'].hashCode);
-                      document.reference.delete();
+                      TaskCommand.deleteTask(document);
+
                       FirebaseCommand.UpdateMetaData(
                           auth.currentUser!.uid, flag, "Subtract");
                     },

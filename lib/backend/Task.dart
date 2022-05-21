@@ -36,4 +36,8 @@ class TaskCommands {
       "Task.setTime": taskData["setTime"]
     });
   }
+
+  Future<void> deleteTask(DocumentSnapshot document) async {
+    document.reference.delete();
+  }
 }
