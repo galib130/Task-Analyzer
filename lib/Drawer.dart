@@ -104,6 +104,20 @@ Drawer? getDrawer(BuildContext context) {
                   style: TextStyle(fontSize: 20),
                 ),
                 style: ThemeStyle.getDrawerStyle(),
+              )),
+          Positioned(
+              top: 580,
+              left: 50,
+              right: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/heartbeat');
+                },
+                child: Text(
+                  "HeartBeat",
+                  style: TextStyle(fontSize: 20),
+                ),
+                style: ThemeStyle.getDrawerStyle(),
               ))
         ],
       ),

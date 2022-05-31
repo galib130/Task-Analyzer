@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:proda/HeartRate/HeartRate.dart';
 import 'package:proda/authentication/backendservice.dart';
 import 'package:proda/globalstatemanagement/ChangeState.dart';
 import 'package:proda/home%20screen/CompleteListView.dart';
@@ -101,7 +102,8 @@ class MyApp extends StatelessWidget {
         '/myapp': (context) => MyApp(),
         '/chart': (context) => Session(),
         '/average_chart': (context) => Average_Session(),
-        '/completed': (context) => CompletedListView()
+        '/completed': (context) => CompletedListView(),
+        '/heartbeat': (context) => HeartBeat()
       },
       title: 'Welcome to jarvia',
       home: OpenView(),

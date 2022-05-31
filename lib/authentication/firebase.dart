@@ -27,14 +27,6 @@ class FlutterFireAuthService {
       Navigator.of(context)
           .pushNamedAndRemoveUntil('/profile', (Route<dynamic> route) => false);
 
-      // Navigator.pushAndRemoveUntil<void>(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => TestApp(),
-      //   ),
-      //     //ModalRoute.withName('/profile'),
-      //         (_) => false
-      // );
       return "Success";
     } on FirebaseAuthException catch (e) {
       print(e.toString());
