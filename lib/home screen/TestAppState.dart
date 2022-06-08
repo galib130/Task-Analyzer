@@ -2,11 +2,10 @@ import 'dart:async';
 // import 'dart:js_util';
 import 'package:flutter/material.dart';
 import 'package:proda/Analysis%20Functions/Analysis.dart';
-import 'package:proda/backend/FirebaseCommands.dart';
-import 'package:proda/backend/Task.dart';
+import 'package:proda/Controller/FirebaseCommands.dart';
+import 'package:proda/Controller/Task.dart';
 import 'package:proda/globalstatemanagement/ChangeState.dart';
 import 'package:proda/home%20screen/FeedbackDialog.dart';
-import 'package:proda/home%20screen/completedTask.dart';
 import 'TestApp.dart';
 import 'ListView.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -58,86 +57,10 @@ class TestAppState extends State<TestApp> {
   var TaskCommand = TaskCommands();
 //ok
   //call to add complete task and then delete the task
-  void checkbox(
-      String documnent, bool? value, DocumentSnapshot documentSnapshot) async {
-    CollectionReference completed_quadrant1 = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(uid)
-        .collection('Quadrant1_Complete');
-    CollectionReference completed_quadrant2 = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(uid)
-        .collection('Quadrant2_Complete');
-    DateTime currentDate = DateTime.now();
-    Timestamp time = Timestamp.fromDate(currentDate);
-    DocumentReference session = FirebaseFirestore.instance
-        .collection("Users")
-        .doc(uid)
-        .collection("session_time")
-        .doc("time");
-    DocumentReference collectquadrant2_session = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(uid)
-        .collection("session")
-        .doc('Quadrant2');
-    DocumentReference collectquadrant1_session = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(uid)
-        .collection("session")
-        .doc('Quadrant1');
-    DocumentReference avg_q1_document = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(uid)
-        .collection("average_session")
-        .doc('Quadrant1');
-    DocumentReference avg_q2_document = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(uid)
-        .collection("average_session")
-        .doc('Quadrant2');
-
-    var documentdata = await session.get();
-    var documentuser;
-    if (documentdata.data() != null) documentuser = documentdata.data() as Map;
-    FirebaseCommand.UpdateMetaData(uid, change_state, "Subtract");
-    if (change_state == 0) {
-      documentSnapshot.reference.update({"ticked": value});
-
-      if (documentuser != null &&
-          documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
-              0 &&
-          change_state == 0) {
-        collectquadrant1_session.update({"Name": FieldValue.increment(3)});
-
-        completed_quadrant1
-            .doc(documnent)
-            .set({"Name": documnent, "Timestamp": time, "ticked": false});
-        avg_q1_document.update({"Name": FieldValue.increment(3)});
-      }
-    } else {
-      documentSnapshot.reference.update({"ticked": value});
-
-      if (documentuser != null &&
-          documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
-              0 &&
-          change_state == 1) {
-        collectquadrant2_session.update({"Name": FieldValue.increment(3)});
-        completed_quadrant2
-            .doc(documnent)
-            .set({"Name": documnent, "Timestamp": time, "ticked": false});
-        avg_q2_document.update({"Name": FieldValue.increment(3)});
-      }
-    }
-
-    var CompletedTask;
-
-    CompletedTask = TaskLoad().SetTask(documentSnapshot);
-
-    FirebaseCommand.UpdateCompleted(uid, CompletedTask);
-
-    Future.delayed(const Duration(milliseconds: 300), () {
-      documentSnapshot.reference.delete();
-    });
+  void checkbox(String documnent, bool? value,
+      DocumentSnapshot documentSnapshot, Map<dynamic, dynamic> data) async {
+    TaskCommand.checkbox(
+        documnent, value, documentSnapshot, uid, change_state, data);
   }
 
   StreamController user_controller = StreamController();
@@ -245,15 +168,6 @@ class TestAppState extends State<TestApp> {
         String uid = auth.currentUser!.uid.toString();
         DateTime currentDate = DateTime.now();
         Timestamp time = Timestamp.fromDate(currentDate);
-        CollectionReference users = FirebaseFirestore.instance
-            .collection('Users')
-            .doc(uid)
-            .collection('Mytask');
-
-        CollectionReference quadrant2 = FirebaseFirestore.instance
-            .collection('Users')
-            .doc(uid)
-            .collection('Quadrant2');
         DocumentReference session = FirebaseFirestore.instance
             .collection("Users")
             .doc(uid)
@@ -424,11 +338,11 @@ class TestAppState extends State<TestApp> {
     }
 
     //Function to change quadrants
-    void change(int state) {
-      setState(() {
-        change_state = state;
-      });
-    }
+    // void change(int state) {
+    //   setState(() {
+    //     change_state = state;
+    //   });
+    // }
 
     //Function to select date
     Future<Null> _selectDate(BuildContext context) async {

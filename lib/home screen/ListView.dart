@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proda/Themes.dart';
-import 'package:proda/backend/FirebaseCommands.dart';
-import 'package:proda/backend/Task.dart';
+import 'package:proda/Controller/FirebaseCommands.dart';
+import 'package:proda/Controller/Task.dart';
 
 import '../main.dart';
 import 'dart:async';
@@ -11,7 +11,7 @@ import 'dart:async';
 class AddList_State extends StatelessWidget {
   bool _value = false;
   var TaskCommand = TaskCommands();
-  Function(String, bool, DocumentSnapshot) checkBox;
+  Function(String, bool, DocumentSnapshot, Map<dynamic, dynamic>) checkBox;
   Function setDate;
   Function setTime;
   Function(AsyncSnapshot<QuerySnapshot>, int, int) reorder;
@@ -464,7 +464,8 @@ class AddList_State extends StatelessWidget {
                                                               data['Task'][
                                                                   'displayName'],
                                                               value!,
-                                                              document);
+                                                              document,
+                                                              data);
                                                         }),
                                                   ),
                                                 ]),

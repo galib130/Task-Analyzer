@@ -72,6 +72,7 @@ class FirebaseCommands {
       "Name": task.TaskLoadMap,
       "Timestamp": task.TaskLoadMap!['Timestamp']
     });
+    print('never give up');
   }
 
   Stream<QuerySnapshot> GetCompletedListStream(String uid) {

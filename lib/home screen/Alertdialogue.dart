@@ -15,7 +15,7 @@ Future<void> createAlertDialog(
       builder: (context) {
         return AlertDialog(
             title: Text("Details"),
-            backgroundColor: Colors.cyan,
+            backgroundColor: Colors.lightBlue.shade300,
             content: Container(
               child: Column(
                 mainAxisSize: MainAxisSize.max,

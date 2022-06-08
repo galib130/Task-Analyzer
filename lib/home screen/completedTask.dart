@@ -13,8 +13,8 @@ class TaskLoad {
   String? Time;
   String? CompletionTime;
   Map<dynamic, dynamic>? TaskLoadMap;
-  TaskLoad SetTask(DocumentSnapshot snapshot) {
-    TaskLoadMap = snapshot.data() as Map;
+  TaskLoad SetTask(Map<dynamic, dynamic> data) {
+    TaskLoadMap = data['Task'];
 
     return this;
   }
