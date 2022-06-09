@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:proda/Models/Task.dart';
 import 'dart:async';
 
+import 'package:proda/Providers/TaskProvider.dart';
+import 'package:provider/src/provider.dart';
+
+var taskCommand = TaskCommands();
 Future<void> createAlertDialog(
-  BuildContext context,
-  TextEditingController _namecontroller,
-  TextEditingController _datecontroller,
-  TextEditingController _timecontroller,
-  TextEditingController _descriptioncontroller,
-  Function _selectDate,
-  Function _selectTime,
-) async {
+    BuildContext context,
+    TextEditingController _namecontroller,
+    TextEditingController _datecontroller,
+    TextEditingController _timecontroller,
+    TextEditingController _descriptioncontroller,
+    TextEditingController _secondcontroller,
+    Function _selectDate,
+    Function _selectTime,
+    String uid) async {
   return showDialog(
       context: context,
       builder: (context) {
@@ -46,7 +52,9 @@ Future<void> createAlertDialog(
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      _selectDate(context);
+                      // _selectDate(context);
+                      context.read<TaskProvider>().selectDate(
+                          context, _datecontroller, _secondcontroller, uid);
                     },
                     child: Text('Select Date'),
                     style: ElevatedButton.styleFrom(
@@ -80,7 +88,7 @@ Future<void> createAlertDialog(
                   ElevatedButton(
                     onPressed: () {
                       //update(update_controller.text,data);
-
+                      //context.read<TextControllers>().printcontroller();
                       Navigator.pop(context);
                     },
                     child: Text('Done'),

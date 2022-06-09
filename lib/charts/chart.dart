@@ -9,9 +9,6 @@ import 'package:proda/Analysis%20Functions/Analysis.dart';
 import 'package:proda/Drawer.dart';
 import 'package:proda/charts/ChartTheme.dart';
 import 'package:proda/charts/PopUpMenu.dart';
-import 'package:proda/globalstatemanagement/ChangeState.dart';
-import 'package:proda/home%20screen/FeedbackDialog.dart';
-import 'package:provider/provider.dart';
 
 class Session_Object {
   var bar = Barchart();

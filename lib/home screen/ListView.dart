@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proda/Themes.dart';
-import 'package:proda/Controller/FirebaseCommands.dart';
-import 'package:proda/Controller/Task.dart';
+import 'package:proda/Models/FirebaseCommands.dart';
+import 'package:proda/Models/Task.dart';
 
 import '../main.dart';
 import 'dart:async';
@@ -153,7 +153,7 @@ class AddList_State extends StatelessWidget {
                             "date": date_controller.text.trim(),
                             "time": time_controller.text.trim(),
                           };
-                          TaskCommand.setTask(taskMap);
+                          TaskCommand.setTask(taskMap, flag, uid);
 
                           if (flag == 0) {
                             FirebaseCommand.UpdateSession(

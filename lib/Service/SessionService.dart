@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SessionService {
-  Future<DocumentSnapshot> getSessionReference(String uid) async {
+  Future<DocumentSnapshot> getSessionTimeReference(String uid) async {
     return FirebaseFirestore.instance
         .collection("Users")
         .doc(uid)
@@ -22,8 +22,14 @@ class SessionService {
         .doc('Quadrant2');
   }
 
-  void updateSession(DocumentReference document) {
+  void updateSessionValueComplete(DocumentReference document) {
     document.update({"Name": FieldValue.increment(3)});
+  }
+
+  void updateSessionValueAdd(DocumentReference document) {
+    document.update({
+      "Name": FieldValue.increment(-1),
+    });
   }
 
   DocumentReference getPrimarySession(String uid) {

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:proda/Controller/Task.dart';
+import 'package:proda/Models/Task.dart';
 
 class TaskService {
   void updateTask(Map<dynamic, dynamic> taskData, DocumentSnapshot document) {
@@ -57,5 +57,17 @@ class TaskService {
         .collection('Users')
         .doc(uid)
         .collection('Quadrant2_Complete');
+  }
+
+  void setDate(String uid, int value) {
+    DocumentReference setDateReference = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .collection('date and time ')
+        .doc('date and time set');
+
+    setDateReference.set({
+      "date difference": value,
+    }, SetOptions(merge: true));
   }
 }

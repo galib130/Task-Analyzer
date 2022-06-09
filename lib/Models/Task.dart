@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:proda/Controller/FirebaseCommands.dart';
-import 'package:proda/Controller/Session.dart';
+import 'package:proda/Models/FirebaseCommands.dart';
+import 'package:proda/Models/Session.dart';
 import 'package:proda/Service/TaskService.dart';
 import 'package:proda/home%20screen/completedTask.dart';
 
@@ -15,7 +15,12 @@ class TaskCommands {
     tabCollection = taskService.setTaskCollection(status, uid);
   }
 
-  Future<void> setTask(Map<dynamic, dynamic> taskData) async {
+  Future<void> setTask(
+      Map<dynamic, dynamic> taskData, int flag, String uid) async {
+    if (flag == 0)
+      tabCollection = taskService.setTaskCollection(tabStatus.Primary, uid);
+    else
+      tabCollection = taskService.setTaskCollection(tabStatus.Secondary, uid);
     taskService.setTask(taskData, tabCollection!);
   }
 
@@ -53,7 +58,7 @@ class TaskCommands {
         taskService.getSecondaryCompleted(uid);
     DateTime currentDate = DateTime.now();
     Timestamp time = Timestamp.fromDate(currentDate);
-    var documentdata = await sessionCommand.getSessionReference(uid);
+    var documentdata = await sessionCommand.getSessionTimeReference(uid);
     var documentuser;
     if (documentdata.data() != null) documentuser = documentdata.data() as Map;
     FirebaseCommand.UpdateMetaData(uid, change_state, "Subtract");
@@ -61,20 +66,18 @@ class TaskCommands {
     if (change_state == 0) {
       if (documentuser != null &&
           documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
-              0 &&
-          change_state == 0) {
-        sessionCommand.updatePrmarySession(uid);
+              0) {
+        sessionCommand.updatePrmarySessionCompleteTask(uid);
         taskService.updateCompletedTask(completed_quadrant1, documnent, time);
-        sessionCommand.updatePrimaryAverageSession(uid);
+        sessionCommand.updatePrimaryAverageSessionCompleteTask(uid);
       }
     } else {
       if (documentuser != null &&
           documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
-              0 &&
-          change_state == 1) {
+              0) {
         sessionCommand.updateSecondarySession(uid);
         taskService.updateCompletedTask(completed_quadrant2, documnent, time);
-        sessionCommand.updateSecondaryAverageSession(uid);
+        sessionCommand.updateSecondaryAverageSessionCompleteTask(uid);
       }
     }
 
@@ -87,5 +90,9 @@ class TaskCommands {
     Future.delayed(const Duration(milliseconds: 300), () {
       taskService.deleteTask(documentSnapshot);
     });
+  }
+
+  void setTaskDate(String uid, int value) {
+    taskService.setDate(uid, value);
   }
 }

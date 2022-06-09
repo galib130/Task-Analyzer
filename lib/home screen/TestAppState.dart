@@ -2,9 +2,10 @@ import 'dart:async';
 // import 'dart:js_util';
 import 'package:flutter/material.dart';
 import 'package:proda/Analysis%20Functions/Analysis.dart';
-import 'package:proda/Controller/FirebaseCommands.dart';
-import 'package:proda/Controller/Task.dart';
-import 'package:proda/globalstatemanagement/ChangeState.dart';
+import 'package:proda/Models/FirebaseCommands.dart';
+import 'package:proda/Models/Task.dart';
+import 'package:proda/Providers/ChangeState.dart';
+import 'package:proda/Providers/TaskProvider.dart';
 import 'package:proda/home%20screen/FeedbackDialog.dart';
 import 'TestApp.dart';
 import 'ListView.dart';
@@ -158,108 +159,6 @@ class TestAppState extends State<TestApp> {
       return lastlist;
     }
 
-    //Function to add data to backend
-
-    Future<void> postTasks(String? task, int flag) async {
-      if (task != '') {
-        Map<dynamic, dynamic> taskMap;
-        String SetTime;
-        FirebaseAuth auth = FirebaseAuth.instance;
-        String uid = auth.currentUser!.uid.toString();
-        DateTime currentDate = DateTime.now();
-        Timestamp time = Timestamp.fromDate(currentDate);
-        DocumentReference session = FirebaseFirestore.instance
-            .collection("Users")
-            .doc(uid)
-            .collection("session_time")
-            .doc("time");
-        DocumentReference collectQuadrant2 = FirebaseFirestore.instance
-            .collection('Users')
-            .doc(uid)
-            .collection("session")
-            .doc('Quadrant2');
-        DocumentReference collectQuadrant1 = FirebaseFirestore.instance
-            .collection('Users')
-            .doc(uid)
-            .collection("session")
-            .doc('Quadrant1');
-        DocumentReference avg_q1_document = FirebaseFirestore.instance
-            .collection('Users')
-            .doc(uid)
-            .collection("average_session")
-            .doc('Quadrant1');
-        DocumentReference avg_q2_document = FirebaseFirestore.instance
-            .collection('Users')
-            .doc(uid)
-            .collection("average_session")
-            .doc('Quadrant2');
-
-        DocumentReference MetaData = FirebaseCommand.GetMetaData(uid);
-        //CollectionReference selected_tab;
-        DocumentReference selected_collectQuadrant;
-        DocumentReference selected_avg_document;
-        //flag == 0 ? selected_tab = users : selected_tab = quadrant2;
-        if (flag == 0) {
-          //selected_tab = users;
-          TaskCommand.setTaskCollection(tabStatus.Primary, uid);
-          selected_collectQuadrant = collectQuadrant1;
-          selected_avg_document = avg_q1_document;
-          MetaData.set(
-              {"Primary": FieldValue.increment(1)}, SetOptions(merge: true));
-        } else {
-          //selected_tab = quadrant2;
-          TaskCommand.setTaskCollection(tabStatus.Secondary, uid);
-          selected_collectQuadrant = collectQuadrant2;
-          selected_avg_document = avg_q2_document;
-          MetaData.set(
-              {"Secondary": FieldValue.increment(1)}, SetOptions(merge: true));
-        }
-
-        if (_datecontroller.text != '' && _timecontroller.text != '') {
-          SetTime = _datecontroller.text + '    ' + _timecontroller.text;
-        } else if (_datecontroller.text != '') {
-          SetTime = _datecontroller.text;
-        } else
-          SetTime = _timecontroller.text;
-        taskMap = {
-          "Name": task,
-          "Timestamp": time,
-          "difference": time_difference + date_difference,
-          "ticked": false,
-          "setTime": SetTime,
-          "displayName": _taskcontroller.text,
-          "notification id": _datecontroller.text.trim() +
-              _timecontroller.text.trim() +
-              _secondcontroller.text.trim(),
-          "description": _descriptioncontroller.text.trim(),
-          "date": _datecontroller.text.trim(),
-          "time": _timecontroller.text.trim(),
-        };
-        TaskCommand.setTask(taskMap);
-        var documentdata = await session.get();
-
-        var documentuser;
-        if (documentdata.data() != null)
-          documentuser = documentdata.data() as Map;
-
-        if (documentuser != null &&
-            documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
-                0) {
-          selected_collectQuadrant.update({
-            "Name": FieldValue.increment(-1),
-          });
-          selected_avg_document.update({
-            "Name": FieldValue.increment(-1),
-          });
-        } else
-          print(time.toDate());
-      } else {
-        Fluttertoast.showToast(
-            msg: "Please enter a non empty task", backgroundColor: Colors.blue);
-      }
-      return;
-    }
-
     //Function to set a new session
     void setSession() async {
       setState(() {
@@ -329,61 +228,27 @@ class TestAppState extends State<TestApp> {
 
     //Function to initially add a task
     void add() {
-      //flag 0 for quadrant 1
-      postTasks(
+// calls the function which adds to firebase
+      context.read<TaskProvider>().postTasks(
           _taskcontroller.text.trim() +
               _datecontroller.text.trim() +
               _timecontroller.text.trim(),
-          change_state); // calls the function which adds to firebase
+          uid,
+          _taskcontroller,
+          _descriptioncontroller,
+          _datecontroller,
+          _timecontroller,
+          _secondcontroller,
+          time_difference,
+          date_difference,
+          change_state);
     }
-
-    //Function to change quadrants
-    // void change(int state) {
-    //   setState(() {
-    //     change_state = state;
-    //   });
-    // }
 
     //Function to select date
     Future<Null> _selectDate(BuildContext context) async {
-      final pickedDate = await showDatePicker(
-          context: context,
-          initialDate: currentDate,
-          firstDate: DateTime.now().subtract(Duration(days: 4)),
-          lastDate: DateTime(2023));
-      if (pickedDate != null && pickedDate != currentDate)
-        setState(() {
-          currentDate = pickedDate;
-          _datecontroller.clear();
-          _datecontroller.text =
-              DateFormat('EEEE, d MMM, yyyy').format(currentDate);
-
-          _secondcontroller.text = DateTime.now().second.toString() +
-              DateTime.now().hour.toString() +
-              DateTime.now().minute.toString() +
-              DateTime.now().millisecond.toString() +
-              TimeOfDay.now().period.toString();
-          DateTime datenow = DateTime.now();
-          date_picked = 0;
-
-          date_difference = 0;
-          if (currentDate.day != DateTime.now().day) {
-            date_difference = currentDate.difference(datenow).inSeconds;
-            // set_date_time.set({
-            //   "date difference": currentDate.difference(datenow).inDays,
-            // }, SetOptions(merge: true));
-            set_date_time.set({
-              "date difference": currentDate.day - datenow.day,
-            }, SetOptions(merge: true));
-
-            totalDate =
-                totalDate.add(Duration(seconds: date_difference as int));
-          } else {
-            set_date_time.set({"date difference": 0}, SetOptions(merge: true));
-          }
-          print(date_difference.toString() + 'date difference');
-          currentDate = DateTime.now().subtract(Duration(days: 3));
-        });
+      context
+          .read<TaskProvider>()
+          .selectDate(context, _datecontroller, _secondcontroller, uid);
     }
 
     // Function to select time
@@ -482,8 +347,10 @@ class TestAppState extends State<TestApp> {
                     _datecontroller,
                     _timecontroller,
                     _descriptioncontroller,
+                    _secondcontroller,
                     _selectDate,
-                    _selectTime);
+                    _selectTime,
+                    uid);
                 page;
               } else if (value == 2) {
                 var get_date_time_data = await set_date_time.get();

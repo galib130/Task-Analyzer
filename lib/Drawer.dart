@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proda/Themes.dart';
-import 'package:proda/globalstatemanagement/ChangeState.dart';
+import 'package:proda/Providers/ChangeState.dart';
 import 'package:provider/provider.dart';
 
 var ThemeStyle = ThemeStyles();
