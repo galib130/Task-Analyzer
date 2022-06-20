@@ -2,15 +2,13 @@
 
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:proda/Drawer.dart';
+import 'package:proda/Providers/SessionProvider.dart';
 import '../Analysis Functions/Analysis.dart';
-import '../authentication/firebase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../main.dart';
-import '../home screen/TestAppState.dart';
 import 'PopUpMenu.dart';
+import 'package:provider/provider.dart';
 
 class Average_Session_Object {
   final int value;
@@ -70,8 +68,8 @@ class _Average_SessionState extends State<Average_Session> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-
+    Stream<QuerySnapshot> averageSessionStream =
+        context.read<SessionProvider>().getAverageSessionStream(uid);
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -79,18 +77,13 @@ class _Average_SessionState extends State<Average_Session> {
         actions: [GetPopUpMenu(context, SessionStatus.efficiency)],
       ),
       drawer: getDrawer(context),
-      body: _average_buildbody(context),
+      body: _average_buildbody(context, averageSessionStream),
     );
   }
 
-  Widget _average_buildbody(context) {
-    String uid = auth.currentUser!.uid;
+  Widget _average_buildbody(context, averageSessionStream) {
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection("Users")
-            .doc(uid)
-            .collection("average_session")
-            .snapshots(),
+        stream: averageSessionStream,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Text('Nothing to show');

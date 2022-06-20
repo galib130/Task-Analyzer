@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:proda/HeartRate/HeartRate.dart';
 import 'package:proda/Providers/ChangeState.dart';
+import 'package:proda/Providers/SessionProvider.dart';
 import 'package:proda/Providers/TaskProvider.dart';
 import 'package:proda/home%20screen/CompleteListView.dart';
 // import 'package:jarvia/open.dart';
@@ -38,9 +39,7 @@ FirebaseAuth auth = FirebaseAuth.instance;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  String uid = auth.currentUser!.uid;
-  final NotificationAppLaunchDetails? notificationAppLaunchDetails =
-      await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
   final InitializationSettings initializationSettings = InitializationSettings(
@@ -58,7 +57,6 @@ Future<void> main() async {
   });
 
   tz.initializeTimeZones();
-  final Future<FirebaseApp> fbapp = Firebase.initializeApp();
 
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
@@ -68,8 +66,6 @@ Future<void> main() async {
       providers: [
         Provider<FlutterFireAuthService>(
           create: (_) => FlutterFireAuthService(FirebaseAuth.instance),
-
-          // builder: (context) => FlutterFireAuthService(_firebaseAuth),
         ),
         StreamProvider(
           create: (context) =>
@@ -77,7 +73,8 @@ Future<void> main() async {
           initialData: null,
         ),
         ChangeNotifierProvider(create: (_) => ChangeState()),
-        ChangeNotifierProvider(create: (_) => TaskProvider())
+        ChangeNotifierProvider(create: (_) => TaskProvider()),
+        ChangeNotifierProvider(create: (_) => SessionProvider())
       ],
       builder: (context, _) {
         return MyApp();
@@ -108,7 +105,5 @@ class MyApp extends StatelessWidget {
       title: 'Welcome to jarvia',
       home: OpenView(),
     );
-
-// ok
   }
 }

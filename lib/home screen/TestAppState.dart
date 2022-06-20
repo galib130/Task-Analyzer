@@ -1,12 +1,16 @@
 import 'dart:async';
-// import 'dart:js_util';
 import 'package:flutter/material.dart';
 import 'package:proda/Analysis%20Functions/Analysis.dart';
+import 'package:proda/Drawer.dart';
 import 'package:proda/Models/FirebaseCommands.dart';
 import 'package:proda/Models/Task.dart';
 import 'package:proda/Providers/ChangeState.dart';
+import 'package:proda/Providers/SessionProvider.dart';
 import 'package:proda/Providers/TaskProvider.dart';
+import 'package:proda/home%20screen/Alertdialogue.dart';
 import 'package:proda/home%20screen/FeedbackDialog.dart';
+// import 'Alertdialogue.dart';
+// import 'FeedbackDialog.dart';
 import 'TestApp.dart';
 import 'ListView.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,11 +18,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import '../authentication/firebase.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import '../notification/notification.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'Alertdialogue.dart';
 import 'package:proda/Themes.dart';
-import 'package:intl/intl.dart';
 
 List<String> textadd1 = <String>['S/W Lab', 'Maths'];
 final firebaseinstance = FirebaseFirestore.instance;
@@ -60,7 +60,10 @@ class TestAppState extends State<TestApp> {
   //call to add complete task and then delete the task
   void checkbox(String documnent, bool? value,
       DocumentSnapshot documentSnapshot, Map<dynamic, dynamic> data) async {
-    TaskCommand.checkbox(
+    context
+        .read<TaskProvider>()
+        .TaskComplete(value, documentSnapshot, uid, data);
+    context.read<SessionProvider>().updateSessionComplete(
         documnent, value, documentSnapshot, uid, change_state, data);
   }
 
@@ -118,11 +121,6 @@ class TestAppState extends State<TestApp> {
       .collection('Users')
       .doc(auth.currentUser!.uid)
       .collection('Quadrant2_Complete');
-  DocumentReference set_date_time = FirebaseFirestore.instance
-      .collection('Users')
-      .doc(auth.currentUser!.uid)
-      .collection('date and time ')
-      .doc('date and time set');
 
   Widget build(BuildContext context) {
     change_state = context.watch<ChangeState>().flag;
@@ -161,69 +159,7 @@ class TestAppState extends State<TestApp> {
 
     //Function to set a new session
     void setSession() async {
-      setState(() {
-        DocumentReference session_time = FirebaseFirestore.instance
-            .collection("Users")
-            .doc(uid)
-            .collection("session_time")
-            .doc("time");
-        DocumentReference q1_document = FirebaseFirestore.instance
-            .collection('Users')
-            .doc(uid)
-            .collection("session")
-            .doc('Quadrant1');
-        DocumentReference q2_document = FirebaseFirestore.instance
-            .collection('Users')
-            .doc(uid)
-            .collection("session")
-            .doc('Quadrant2');
-        DocumentReference avg_q1_document = FirebaseFirestore.instance
-            .collection('Users')
-            .doc(uid)
-            .collection("average_session")
-            .doc('Quadrant1');
-        DocumentReference avg_q2_document = FirebaseFirestore.instance
-            .collection('Users')
-            .doc(uid)
-            .collection("average_session")
-            .doc('Quadrant2');
-        addwithtoday = today.add(new Duration(days: 7));
-        DateTime currentdate = DateTime.now();
-        addwithtoday = currentdate.add(new Duration(days: 7));
-        Timestamp time = Timestamp.fromDate(addwithtoday);
-
-        print(time.toString());
-        session_time.set({"time": time});
-
-        q1_document.set({
-          "Name": 0,
-          "color": '0xFF34c9eb',
-          "xaxis": 'Primary',
-          "time": DateFormat('EEEE, d MMM, yyyy  h:mm a').format(time.toDate()),
-        });
-
-        q2_document.set({
-          "Name": 0,
-          "color": '0xFFa531e8',
-          "xaxis": 'Secondary',
-          "time": DateFormat('EEEE, d MMM, yyyy  h:mm a').format(time.toDate()),
-        });
-
-        avg_q1_document.set({
-          "Name": FieldValue.increment(0),
-          "color": '0xFFa531e8',
-          "xaxis": 'Primary',
-          "session": FieldValue.increment(1),
-        }, SetOptions(merge: true));
-        avg_q2_document.set({
-          "Name": FieldValue.increment(0),
-          "color": '0xFF34c9eb',
-          "xaxis": 'Secondary',
-          "session": FieldValue.increment(1),
-        }, SetOptions(merge: true));
-        Fluttertoast.showToast(
-            msg: "New Session Added", backgroundColor: Colors.blue);
-      });
+      context.read<SessionProvider>().setSession(uid);
     }
 
     //Function to initially add a task
@@ -239,9 +175,10 @@ class TestAppState extends State<TestApp> {
           _datecontroller,
           _timecontroller,
           _secondcontroller,
-          time_difference,
-          date_difference,
           change_state);
+      context
+          .read<SessionProvider>()
+          .updateSessionAdd(uid, change_state, _taskcontroller.text);
     }
 
     //Function to select date
@@ -253,44 +190,9 @@ class TestAppState extends State<TestApp> {
 
     // Function to select time
     Future<Null> _selectTime(BuildContext context) async {
-      var temp = TimeOfDay.now();
-
-      final TimeOfDay? pickedTime =
-          await showTimePicker(context: context, initialTime: temp);
-      if (pickedTime != null && pickedTime != time)
-        setState(() {
-          time = pickedTime;
-          int datenow =
-              TimeOfDay.now().hour * 3600 + TimeOfDay.now().minute * 60;
-
-          _timecontroller.clear();
-          if (time.period.toString() == 'DayPeriod.am')
-            _timecontroller.text =
-                time.hour.toString() + ':' + time.minute.toString() + 'am';
-          if (time.period.toString() == 'DayPeriod.pm')
-            _timecontroller.text =
-                time.hour.toString() + ':' + time.minute.toString() + 'pm';
-          time_difference = 0;
-          print(totalDate);
-          time_picked = 0;
-          // time_difference= difference;
-
-          time_difference = (time.minute * 60 + time.hour * 3600) - datenow;
-          _secondcontroller.text = DateTime.now().second.toString() +
-              DateTime.now().hour.toString() +
-              DateTime.now().minute.toString() +
-              DateTime.now().millisecond.toString() +
-              TimeOfDay.now().period.toString();
-          set_date_time.set({
-            "time difference": (time.minute * 60 + time.hour * 3600) - datenow,
-          }, SetOptions(merge: true));
-
-          totalDate = totalDate.add(Duration(seconds: time_difference as int));
-          //print(difference.toString() + "time");
-          print(time_difference.toString() + 'time difference');
-
-          time = time.replacing(hour: time.hour, minute: time.minute - 2);
-        });
+      context
+          .read<TaskProvider>()
+          .selectTime(context, _timecontroller, _secondcontroller, uid);
     }
 
     return Scaffold(
@@ -339,7 +241,7 @@ class TestAppState extends State<TestApp> {
                     value: 4, child: ThemeStyle.getDropDownText("Set Session"))
               ];
             },
-            onSelected: (value) async {
+            onSelected: (value) {
               if (value == 1) {
                 final page = createAlertDialog(
                     context,
@@ -353,45 +255,16 @@ class TestAppState extends State<TestApp> {
                     uid);
                 page;
               } else if (value == 2) {
-                var get_date_time_data = await set_date_time.get();
-                var date_time_data = get_date_time_data.data() as Map;
-                //ADD button
+                context.read<TaskProvider>().setNotification(
+                      _datecontroller.text,
+                      _timecontroller.text,
+                      _secondcontroller.text,
+                      _taskcontroller.text,
+                      uid,
+                    );
                 if (_taskcontroller.text.isNotEmpty) {
-                  setState(() {
-                    add();
-                    print(difference.toString() + 'difference');
-                    print(date_time_data['date difference'] * 24 * 3600 +
-                        date_time_data['time difference']);
-                    if (date_difference != 0 || time_difference != 0) {
-                      difference = date_difference + time_difference;
-
-                      NotificationApi.showScheduledNotification(
-                          id: (_datecontroller.text.trim() +
-                                  _timecontroller.text.trim() +
-                                  _secondcontroller.text.trim())
-                              .hashCode,
-                          title: _taskcontroller.text,
-                          body: 'Hey you added this task',
-                          scheduledDate: DateTime.now().add(Duration(
-                              seconds: (date_time_data['date difference'] *
-                                      24 *
-                                      3600 +
-                                  date_time_data['time difference']))));
-
-                      totalDate = compareDate;
-                      date_difference = 0;
-                      time_difference = 0;
-
-                      difference = 0;
-                    } else {
-                      print('not notifying');
-                    }
-                  });
+                  add();
                 }
-                set_date_time.set({
-                  "date difference": 0,
-                  "time difference": 0,
-                });
                 _datecontroller.clear();
                 _timecontroller.clear();
                 _taskcontroller.clear();
@@ -407,110 +280,7 @@ class TestAppState extends State<TestApp> {
         ],
       ),
       backgroundColor: Color.fromARGB(255, 11, 63, 122),
-      drawer: Drawer(
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              //image:  DecorationImage(image: new AssetImage('assets/listtile.jpg'),fit: BoxFit.cover)
-              gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.topLeft,
-                  colors: [
-                    Color.fromARGB(255, 11, 63, 122),
-                    Color.fromARGB(255, 12, 7, 95),
-                  ])),
-          child: Stack(
-            children: [
-              Positioned(
-                  top: 80,
-                  left: 50,
-                  right: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      //ADD button
-                      context.read<ChangeState>().change_state(0);
-                      //change(0);
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/profile', (Route<dynamic> route) => false);
-                    },
-                    child: Text(
-                      'Primary',
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                    style: ThemeStyle.getDrawerStyle(),
-                  )),
-              Positioned(
-                  top: 180,
-                  left: 50,
-                  right: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      //ADD button
-                      context.read<ChangeState>().change_state(1);
-                      //print(textadd[addquest-1]);
-                      print(change_state);
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/profile', (Route<dynamic> route) => false);
-                      // Navigator.of(context).pop();
-                    },
-                    child: Text(
-                      'Secondary',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    style: ThemeStyle.getDrawerStyle(),
-                  )),
-              Positioned(
-                top: 280,
-                left: 50,
-                right: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/chart', (Route<dynamic> route) => false);
-                  },
-                  child: Text(
-                    'Session Summary',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  style: ThemeStyle.getDrawerStyle(),
-                ),
-              ),
-              Positioned(
-                top: 380,
-                left: 50,
-                right: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/average_chart', (Route<dynamic> route) => false);
-                  },
-                  child: Text(
-                    'Efficiency',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  style: ThemeStyle.getDrawerStyle(),
-                ),
-              ),
-              Positioned(
-                  top: 480,
-                  left: 50,
-                  right: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/completed');
-                    },
-                    child: Text(
-                      "Completed",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    style: ThemeStyle.getDrawerStyle(),
-                  ))
-            ],
-          ),
-        ),
-      ),
+      drawer: Drawer(child: getDrawer(context)),
       body: Container(
         decoration: ThemeStyle.getBackgroundTheme(),
         child: Column(
@@ -549,6 +319,7 @@ class TestAppState extends State<TestApp> {
                             horizontal: 30, vertical: 2),
                         onPressed: () {
                           add();
+                          print("ready");
                           _taskcontroller.clear();
                           _timecontroller.clear();
                           _datecontroller.clear();

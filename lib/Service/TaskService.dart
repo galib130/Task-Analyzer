@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:proda/Models/Task.dart';
 
 class TaskService {
@@ -69,5 +70,37 @@ class TaskService {
     setDateReference.set({
       "date difference": value,
     }, SetOptions(merge: true));
+  }
+
+  setTime(String uid, TimeOfDay time, int datenow) {
+    DocumentReference setTimeReference = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .collection('date and time ')
+        .doc('date and time set');
+    setTimeReference.set({
+      "time difference": (time.minute * 60 + time.hour * 3600) - datenow,
+    }, SetOptions(merge: true));
+  }
+
+  DocumentReference getDateTime(String uid) {
+    print("I am service");
+    return FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .collection('date and time ')
+        .doc('date and time set');
+  }
+
+  void resetDateTime(String uid) {
+    DocumentReference dateTime = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .collection('date and time ')
+        .doc('date and time set');
+    dateTime.set({
+      "date difference": 0,
+      "time difference": 0,
+    });
   }
 }

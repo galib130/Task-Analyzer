@@ -9,7 +9,6 @@ import '../main.dart';
 import 'dart:async';
 
 class AddList_State extends StatelessWidget {
-  bool _value = false;
   var TaskCommand = TaskCommands();
   Function(String, bool, DocumentSnapshot, Map<dynamic, dynamic>) checkBox;
   Function setDate;
@@ -39,7 +38,6 @@ class AddList_State extends StatelessWidget {
     description_controller.text = map_data['Task']['description'];
     date_controller.text = map_data['Task']['date'];
     time_controller.text = map_data['Task']['time'];
-
     return showDialog(
         context: context,
         builder: (context) {
@@ -117,17 +115,11 @@ class AddList_State extends StatelessWidget {
                         onPressed: () {
                           FirebaseAuth auth = FirebaseAuth.instance;
                           String uid = auth.currentUser!.uid;
-                          CollectionReference moveQuadrant;
                           DocumentReference PrimarySessionReference =
                               FirebaseCommand.getQuadrant1_Session(uid);
                           DocumentReference SecondarySessionReference =
                               FirebaseCommand.getQuadrant2_Session(uid);
-                          if (flag == 0)
-                            TaskCommand.setTaskCollection(
-                                tabStatus.Secondary, uid);
-                          else
-                            TaskCommand.setTaskCollection(
-                                tabStatus.Primary, uid);
+
                           DateTime currentDate = DateTime.now();
                           Timestamp time = Timestamp.fromDate(currentDate);
                           String SetTime;
@@ -153,7 +145,7 @@ class AddList_State extends StatelessWidget {
                             "date": date_controller.text.trim(),
                             "time": time_controller.text.trim(),
                           };
-                          TaskCommand.setTask(taskMap, flag, uid);
+                          TaskCommand.setTask(taskMap, flag - 1, uid);
 
                           if (flag == 0) {
                             FirebaseCommand.UpdateSession(
@@ -296,7 +288,7 @@ class AddList_State extends StatelessWidget {
               children: snapshot.data!.docs.map((DocumentSnapshot document) {
                 Map<dynamic, dynamic> data =
                     document.data() as Map<dynamic, dynamic>;
-                print(document.data().toString() + 'today');
+                print(document.data().toString() + 'today right now');
                 return Dismissible(
                     key: Key('$data'),
                     onDismissed: (DismissDirection) async {

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proda/Analysis%20Functions/Analysis.dart';
@@ -16,7 +15,6 @@ Future<void> Createfeedback(BuildContext context, SessionStatus status) async {
   var FirebaseCommand = FirebaseCommands();
   var ThemeStyle = ThemeStyles();
   List<String> Analysis = [];
-  DocumentReference MetaData = FirebaseCommand.GetMetaData(uid);
 
   if (status == SessionStatus.tab) {
     var GetMetaData = await FirebaseCommand.GetMetaData(uid).get();
@@ -60,7 +58,6 @@ Future<void> Createfeedback(BuildContext context, SessionStatus status) async {
       Analysis = ProvideAnalysis(Primary, Secondary, efficiency.getFeedback());
     }
   }
-  int PrimaryDataLength = 3;
 
   return showDialog(
       context: context,

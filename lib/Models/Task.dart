@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:proda/Models/FirebaseCommands.dart';
 import 'package:proda/Models/Session.dart';
 import 'package:proda/Service/TaskService.dart';
@@ -43,44 +44,10 @@ class TaskCommands {
     return taskService.getSecondaryCompleted(uid);
   }
 
-  void checkbox(
-      String documnent,
-      bool? value,
-      DocumentSnapshot documentSnapshot,
-      String uid,
-      int change_state,
+  void checkbox(bool? value, DocumentSnapshot documentSnapshot, String uid,
       Map<dynamic, dynamic> data) async {
     var taskload = TaskLoad();
     var FirebaseCommand = FirebaseCommands();
-    CollectionReference completed_quadrant1 =
-        taskService.getPrimaryCompleted(uid);
-    CollectionReference completed_quadrant2 =
-        taskService.getSecondaryCompleted(uid);
-    DateTime currentDate = DateTime.now();
-    Timestamp time = Timestamp.fromDate(currentDate);
-    var documentdata = await sessionCommand.getSessionTimeReference(uid);
-    var documentuser;
-    if (documentdata.data() != null) documentuser = documentdata.data() as Map;
-    FirebaseCommand.UpdateMetaData(uid, change_state, "Subtract");
-    sessionCommand.updateSessionTick(documentSnapshot, value);
-    if (change_state == 0) {
-      if (documentuser != null &&
-          documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
-              0) {
-        sessionCommand.updatePrmarySessionCompleteTask(uid);
-        taskService.updateCompletedTask(completed_quadrant1, documnent, time);
-        sessionCommand.updatePrimaryAverageSessionCompleteTask(uid);
-      }
-    } else {
-      if (documentuser != null &&
-          documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
-              0) {
-        sessionCommand.updateSecondarySession(uid);
-        taskService.updateCompletedTask(completed_quadrant2, documnent, time);
-        sessionCommand.updateSecondaryAverageSessionCompleteTask(uid);
-      }
-    }
-
     var CompletedTask;
 
     CompletedTask = taskload.SetTask(data);
@@ -94,5 +61,18 @@ class TaskCommands {
 
   void setTaskDate(String uid, int value) {
     taskService.setDate(uid, value);
+  }
+
+  void setTaskTime(String uid, TimeOfDay time, int datenow) {
+    taskService.setTime(uid, time, datenow);
+  }
+
+  DocumentReference getDateTime(String uid) {
+    print("i AM TASK");
+    return taskService.getDateTime(uid);
+  }
+
+  void resetDateTime(String uid) {
+    taskService.resetDateTime(uid);
   }
 }

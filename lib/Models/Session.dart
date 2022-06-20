@@ -52,4 +52,39 @@ class SessionCommand {
     sessionService.updateSessionValueAdd(collectSecondarySession);
     sessionService.updateSessionValueAdd(collectSecondaryAverageSession);
   }
+
+  CollectionReference getPrimaryCompleted(String uid) {
+    return sessionService.getPrimaryCompleted(uid);
+  }
+
+  CollectionReference getSecondaryCompleted(String uid) {
+    return sessionService.getSecondaryCompleted(uid);
+  }
+
+  void updateCompletedTask(
+      CollectionReference collection, String documnent, Timestamp time) {
+    sessionService.updateCompletedTask(collection, documnent, time);
+  }
+
+  void setNewSession(String uid, Timestamp time) async {
+    DocumentReference collectSessionTime = sessionService.getSessionTime(uid);
+    DocumentReference collectPrimarySession =
+        sessionService.getPrimarySession(uid);
+    DocumentReference collectSecondarySession =
+        sessionService.getSecondarySession(uid);
+    DocumentReference collectPrimaryAvgSession =
+        sessionService.getPrimaryAverageSession(uid);
+    DocumentReference collectSecondaryAvgSession =
+        sessionService.getSecondaryAverageSession(uid);
+
+    sessionService.setSessionTime(collectSessionTime, time);
+    sessionService.setPrimarySession(collectPrimarySession, time);
+    sessionService.setSecondarySession(collectSecondarySession, time);
+    sessionService.setPrimaryAvgSession(collectPrimaryAvgSession);
+    sessionService.setSecondaryAvgSession(collectSecondaryAvgSession);
+  }
+
+  Stream<QuerySnapshot> getAverageSessionSnapshot(String uid) {
+    return sessionService.getAverageSessionSnapshot(uid);
+  }
 }

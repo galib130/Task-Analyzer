@@ -1,15 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'login.dart';
 import 'sign_in.dart';
 import '../home screen/TestApp.dart';
-import '../main.dart';
-import 'firebase.dart';
-
-// import 'package:jarvia/TestAppState.dart';
-import '../home screen/TestAppState.dart';
 
 class OpenView extends StatefulWidget {
   OpenView({Key? key}) : super(key: key);
@@ -20,7 +14,6 @@ class OpenView extends StatefulWidget {
 class _OpenViewState extends State<OpenView> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final firebaseUser = context.watch<User?>();
     if (firebaseUser != null) {
       print("Home View");
