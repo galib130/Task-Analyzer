@@ -1,0 +1,1 @@
+enum categories { primary, secondary }

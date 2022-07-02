@@ -102,4 +102,8 @@ class SessionProvider with ChangeNotifier {
   Stream<QuerySnapshot> getAverageSessionStream(String uid) {
     return sessionCommands.getAverageSessionSnapshot(uid);
   }
+
+  void updateSessionMove(String uid, int flag) {
+    sessionCommands.updateSessionMove(uid, flag);
+  }
 }

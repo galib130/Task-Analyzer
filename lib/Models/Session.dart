@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:proda/Service/SessionService.dart';
+import 'package:proda/enums.dart';
 
 class SessionCommand {
   var sessionService = SessionService();
@@ -86,5 +87,19 @@ class SessionCommand {
 
   Stream<QuerySnapshot> getAverageSessionSnapshot(String uid) {
     return sessionService.getAverageSessionSnapshot(uid);
+  }
+
+  void updateSessionMove(String uid, int flag) {
+    if (flag == 0) {
+      sessionService.updateSessionMoveValue(categories.primary, uid, 1);
+      sessionService.updateSessionMoveValue(categories.secondary, uid, -1);
+      sessionService.updateAverageSessionMove(categories.primary, uid, 1);
+      sessionService.updateAverageSessionMove(categories.secondary, uid, -1);
+    } else {
+      sessionService.updateSessionMoveValue(categories.secondary, uid, 1);
+      sessionService.updateSessionMoveValue(categories.primary, uid, -1);
+      sessionService.updateAverageSessionMove(categories.secondary, uid, 1);
+      sessionService.updateAverageSessionMove(categories.primary, uid, -1);
+    }
   }
 }

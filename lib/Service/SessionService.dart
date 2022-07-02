@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:proda/enums.dart';
 
 class SessionService {
   Future<DocumentSnapshot> getSessionTimeReference(String uid) async {
@@ -133,5 +134,40 @@ class SessionService {
         .doc(uid)
         .collection("average_session")
         .snapshots();
+  }
+
+  void updateSessionValue(DocumentReference documentReference, int value) {
+    documentReference.update({
+      "Name": FieldValue.increment(value),
+    });
+  }
+
+  void updateSessionMoveValue(categories category, String uid, int value) {
+    if (category == categories.primary) {
+      DocumentReference collectquadrant1_session = getPrimarySession(uid);
+
+      collectquadrant1_session.update({
+        "Name": FieldValue.increment(value),
+      });
+    } else {
+      DocumentReference collectQuadrant2_session = getSecondarySession(uid);
+      collectQuadrant2_session.update({
+        "Name": FieldValue.increment(value),
+      });
+    }
+  }
+
+  void updateAverageSessionMove(categories category, String uid, value) {
+    if (category == categories.primary) {
+      DocumentReference avgQuadrant1Session = getPrimaryAverageSession(uid);
+      avgQuadrant1Session.update({
+        "Name": FieldValue.increment(value),
+      });
+    } else {
+      DocumentReference avgQuadrant2Session = getSecondaryAverageSession(uid);
+      avgQuadrant2Session.update({
+        "Name": FieldValue.increment(value),
+      });
+    }
   }
 }

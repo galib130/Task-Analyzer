@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:proda/Providers/SessionProvider.dart';
 import 'package:proda/Themes.dart';
 import 'package:proda/Models/FirebaseCommands.dart';
 import 'package:proda/Models/Task.dart';
-
+import 'package:proda/Providers/TaskProvider.dart';
+import 'package:provider/provider.dart';
 import '../main.dart';
 import 'dart:async';
 
@@ -115,11 +117,6 @@ class AddList_State extends StatelessWidget {
                         onPressed: () {
                           FirebaseAuth auth = FirebaseAuth.instance;
                           String uid = auth.currentUser!.uid;
-                          DocumentReference PrimarySessionReference =
-                              FirebaseCommand.getQuadrant1_Session(uid);
-                          DocumentReference SecondarySessionReference =
-                              FirebaseCommand.getQuadrant2_Session(uid);
-
                           DateTime currentDate = DateTime.now();
                           Timestamp time = Timestamp.fromDate(currentDate);
                           String SetTime;
@@ -145,39 +142,15 @@ class AddList_State extends StatelessWidget {
                             "date": date_controller.text.trim(),
                             "time": time_controller.text.trim(),
                           };
-                          TaskCommand.setTask(taskMap, flag - 1, uid);
 
-                          if (flag == 0) {
-                            FirebaseCommand.UpdateSession(
-                                PrimarySessionReference, 1);
-                            FirebaseCommand.UpdateSession(
-                                SecondarySessionReference, -1);
-                            FirebaseCommand.UpdateAverageSession(
-                                FirebaseCommand.getQuadrant1_Average_Session(
-                                    uid),
-                                1);
-                            FirebaseCommand.UpdateAverageSession(
-                                FirebaseCommand.getQuadrant2_Average_Session(
-                                    uid),
-                                -1);
-                          } else if (flag != 0) {
-                            FirebaseCommand.UpdateSession(
-                                PrimarySessionReference, -1);
-                            FirebaseCommand.UpdateSession(
-                                SecondarySessionReference, 1);
-
-                            FirebaseCommand.UpdateAverageSession(
-                                FirebaseCommand.getQuadrant1_Average_Session(
-                                    uid),
-                                -1);
-                            FirebaseCommand.UpdateAverageSession(
-                                FirebaseCommand.getQuadrant2_Average_Session(
-                                    uid),
-                                1);
-                          }
+                          context
+                              .read<TaskProvider>()
+                              .moveTask(uid, taskMap, document, flag);
+                          context
+                              .read<SessionProvider>()
+                              .updateSessionMove(uid, flag);
                           FirebaseCommand.UpdateMetaData(uid, flag, 'Subtract');
                           FirebaseCommand.UpdateMetaData(uid, flag - 1, 'Add');
-                          TaskCommand.deleteTask(document);
                           date_controller.clear();
                           time_controller.clear();
 
@@ -213,7 +186,10 @@ class AddList_State extends StatelessWidget {
                           };
 
                           //update(update_controller.text,data);
-                          TaskCommand.updateTask(taskMap, document);
+                          context
+                              .read<TaskProvider>()
+                              .TaskUpdate(taskMap, document);
+
                           date_controller.clear();
                           time_controller.clear();
                           Navigator.pop(context);

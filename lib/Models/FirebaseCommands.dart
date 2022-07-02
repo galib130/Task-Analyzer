@@ -41,18 +41,6 @@ class FirebaseCommands {
     return collectquadrant1_session;
   }
 
-  void UpdateSession(DocumentReference reference, int value) {
-    reference.update({
-      "Name": FieldValue.increment(value),
-    });
-  }
-
-  void UpdateAverageSession(DocumentReference reference, int value) {
-    reference.update({
-      "Name": FieldValue.increment(value),
-    });
-  }
-
   CollectionReference GetCompletedList(String uid) {
     CollectionReference Completed = FirebaseFirestore.instance
         .collection('Users')

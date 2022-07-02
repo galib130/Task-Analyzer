@@ -118,6 +118,10 @@ class TaskProvider with ChangeNotifier {
     taskCommand.checkbox(value, documentSnapshot, uid, data);
   }
 
+  void TaskUpdate(Map<dynamic, dynamic> taskMap, DocumentSnapshot document) {
+    taskCommand.updateTask(taskMap, document);
+  }
+
   Future<Null> selectTime(
       BuildContext context,
       TextEditingController timecontroller,
@@ -189,5 +193,11 @@ class TaskProvider with ChangeNotifier {
     taskCommand.resetDateTime(uid);
   }
 
-  void resetDateTime(String uid) {}
+  //void resetDateTime(String uid) {}
+
+  void moveTask(String uid, Map<dynamic, dynamic> taskMap,
+      DocumentSnapshot document, int value) {
+    taskCommand.setTask(taskMap, value - 1, uid);
+    taskCommand.deleteTask(document);
+  }
 }
