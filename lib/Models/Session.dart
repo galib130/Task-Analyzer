@@ -102,4 +102,32 @@ class SessionCommand {
       sessionService.updateAverageSessionMove(categories.primary, uid, -1);
     }
   }
+
+  CollectionReference getSessionData(String uid) {
+    return sessionService.getSessionData(uid);
+  }
+
+  CollectionReference getAverageSessionData(String uid) {
+    return sessionService.getAverageSessionData(uid);
+  }
+
+  DocumentReference getPrimarySession(String uid) {
+    return sessionService.getPrimarySession(uid);
+  }
+
+  DocumentReference getSecondarySession(String uid) {
+    return sessionService.getSecondarySession(uid);
+  }
+
+  DocumentReference getPrimaryAverageSession(String uid) {
+    return sessionService.getPrimaryAverageSession(uid);
+  }
+
+  DocumentReference getSecondaryAverageSession(String uid) {
+    return sessionService.getSecondaryAverageSession(uid);
+  }
+
+  DocumentReference getSessionTime(String uid) {
+    return sessionService.getSessionTime(uid);
+  }
 }

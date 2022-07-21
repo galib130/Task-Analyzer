@@ -4,24 +4,23 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:proda/Analysis%20Functions/Analysis.dart';
 import 'package:proda/Drawer.dart';
 import 'package:proda/charts/ChartTheme.dart';
 import 'package:proda/charts/PopUpMenu.dart';
 
-class Session_Object {
+class SessionObject {
   var bar = Barchart();
   final int value;
   final String xaxis;
   final String color;
   final String time;
-  Session_Object(
+  SessionObject(
       {required this.value,
       required this.xaxis,
       required this.color,
       required this.time});
-  Session_Object.fromMap(
+  SessionObject.fromMap(
     Map<String, dynamic> map,
   )   : assert(map['Name'] != null),
         assert(map['xaxis'] != null),
@@ -43,20 +42,20 @@ class Session extends StatefulWidget {
 }
 
 class _SessionState extends State<Session> {
-  List<charts.Series<Session_Object, String>> _seriesBarData = [];
+  List<charts.Series<SessionObject, String>> _seriesBarData = [];
   String uid = auth.currentUser!.uid;
-  Timestamp session_timestamp = Timestamp.now();
-  List<Session_Object> mydata = [];
-  DateTime session_day = DateTime.now();
+  Timestamp sessionTimestamp = Timestamp.now();
+  List<SessionObject> mydata = [];
+  DateTime sessionDay = DateTime.now();
   TextEditingController controller = TextEditingController();
   _generatechart(mydata) {
     _seriesBarData.add(charts.Series(
-        domainFn: (Session_Object session_axis, _) =>
-            session_axis.xaxis.toString(),
-        measureFn: (Session_Object session_axis, _) => session_axis.value,
-        colorFn: (Session_Object session_axis, _) =>
+        domainFn: (SessionObject sessionAxis, _) =>
+            sessionAxis.xaxis.toString(),
+        measureFn: (SessionObject sessionAxis, _) => sessionAxis.value,
+        colorFn: (SessionObject sessionAxis, _) =>
             charts.ColorUtil.fromDartColor(
-              Color(int.parse(session_axis.color)),
+              Color(int.parse(sessionAxis.color)),
             ),
         data: mydata,
         id: 'Session'));
@@ -66,13 +65,11 @@ class _SessionState extends State<Session> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Session Summary'),
-        actions: [GetPopUpMenu(context, SessionStatus.session)],
+        actions: [getPopUpMenu(context, SessionStatus.session)],
       ),
       drawer: getDrawer(context),
       body: _buildbody(context),
@@ -93,8 +90,8 @@ class _SessionState extends State<Session> {
           } else if (!snapshot.hasData) {
             return LinearProgressIndicator();
           } else {
-            List<Session_Object> session = snapshot.data!.docs
-                .map((DocumentSnapshot snapshot) => Session_Object.fromMap(
+            List<SessionObject> session = snapshot.data!.docs
+                .map((DocumentSnapshot snapshot) => SessionObject.fromMap(
                     snapshot.data() as Map<String, dynamic>))
                 .toList();
 
@@ -105,7 +102,7 @@ class _SessionState extends State<Session> {
 
   Widget _buildChart(
     BuildContext context,
-    List<Session_Object> session,
+    List<SessionObject> session,
   ) {
     mydata = session;
     _generatechart(mydata);

@@ -12,50 +12,50 @@ Future<void> Createfeedback(BuildContext context, SessionStatus status) async {
   String uid = auth.currentUser!.uid.toString();
   var MetaDataUser;
 
-  var FirebaseCommand = FirebaseCommands();
-  var ThemeStyle = ThemeStyles();
-  List<String> Analysis = [];
+  var firebaseCommand = FirebaseCommands();
+  var themeStyle = ThemeStyles();
+  List<String> analysis = [];
 
   if (status == SessionStatus.tab) {
-    var GetMetaData = await FirebaseCommand.GetMetaData(uid).get();
+    var getMetaData = await firebaseCommand.GetMetaData(uid).get();
 
-    if (GetMetaData.data() != null) {
-      MetaDataUser = GetMetaData.data() as Map;
-      int Primary = MetaDataUser['Primary'];
-      int Secondary = MetaDataUser['Secondary'];
+    if (getMetaData.data() != null) {
+      MetaDataUser = getMetaData.data() as Map;
+      int primary = MetaDataUser['Primary'];
+      int secondary = MetaDataUser['Secondary'];
 
       var tabanalysis = TabAnalysis();
-      Analysis = ProvideAnalysis(Primary, Secondary, tabanalysis.getFeedback());
+      analysis = provideAnalysis(primary, secondary, tabanalysis.getFeedback());
     }
   } else if (status == SessionStatus.session) {
     var sessionanalysis = SessionAnalysis();
-    var GetMetaData =
-        await sessionanalysis.GetMetaData(uid).doc("Quadrant1").get();
-    if (GetMetaData.data() != null) {
-      MetaDataUser = GetMetaData.data() as Map;
-      int Primary = MetaDataUser["Name"];
-      var GetSecondaryMetaData =
-          await sessionanalysis.GetMetaData(uid).doc("Quadrant2").get();
-      var MetadataSecondaryUser = GetSecondaryMetaData.data() as Map;
+    var getMetaData =
+        await sessionanalysis.getMetaData(uid).doc("Quadrant1").get();
+    if (getMetaData.data() != null) {
+      MetaDataUser = getMetaData.data() as Map;
+      int primary = MetaDataUser["Name"];
+      var getSecondaryMetaData =
+          await sessionanalysis.getMetaData(uid).doc("Quadrant2").get();
+      var metadataSecondaryUser = getSecondaryMetaData.data() as Map;
 
-      int Secondary = MetadataSecondaryUser["Name"];
+      int secondary = metadataSecondaryUser["Name"];
 
-      Analysis =
-          ProvideAnalysis(Primary, Secondary, sessionanalysis.getFeedback());
+      analysis =
+          provideAnalysis(primary, secondary, sessionanalysis.getFeedback());
     }
   } else if (status == SessionStatus.efficiency) {
     var efficiency = EfficiencyAnalysis();
-    var GetMetaData = await efficiency.GetMetaData(uid).doc("Quadrant1").get();
-    if (GetMetaData.data() != null) {
-      MetaDataUser = GetMetaData.data() as Map;
-      int Primary = (MetaDataUser["Name"] / MetaDataUser["session"]).ceil();
-      var GetSecondaryMetaData =
-          await efficiency.GetMetaData(uid).doc("Quadrant2").get();
-      var MetadataSecondaryUser = GetSecondaryMetaData.data() as Map;
-      int Secondary =
-          (MetadataSecondaryUser["Name"] / MetadataSecondaryUser["session"])
+    var getMetaData = await efficiency.getMetaData(uid).doc("Quadrant1").get();
+    if (getMetaData.data() != null) {
+      MetaDataUser = getMetaData.data() as Map;
+      int primary = (MetaDataUser["Name"] / MetaDataUser["session"]).ceil();
+      var getSecondaryMetaData =
+          await efficiency.getMetaData(uid).doc("Quadrant2").get();
+      var metadataSecondaryUser = getSecondaryMetaData.data() as Map;
+      int secondary =
+          (metadataSecondaryUser["Name"] / metadataSecondaryUser["session"])
               .ceil();
-      Analysis = ProvideAnalysis(Primary, Secondary, efficiency.getFeedback());
+      analysis = provideAnalysis(primary, secondary, efficiency.getFeedback());
     }
   }
 
@@ -82,23 +82,23 @@ Future<void> Createfeedback(BuildContext context, SessionStatus status) async {
                             Icon(Icons.add_alert_sharp),
                           ],
                         ),
-                        Text(Analysis.elementAt(0) + '\n\n',
+                        Text(analysis.elementAt(0) + '\n\n',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w900,
                               color: Color.fromARGB(255, 1, 65, 17),
                             )),
                         Text('Status of Secondary',
-                            style: ThemeStyle.getFeedbackLabelTextStyle()),
-                        Text(Analysis.elementAt(1) + '\n\n',
-                            style: ThemeStyle.getFeedbackSecondaryTextStyle()),
+                            style: themeStyle.getFeedbackLabelTextStyle()),
+                        Text(analysis.elementAt(1) + '\n\n',
+                            style: themeStyle.getFeedbackSecondaryTextStyle()),
                         Text(
                           'Workload Balance',
-                          style: ThemeStyle.getFeedbackLabelTextStyle(),
+                          style: themeStyle.getFeedbackLabelTextStyle(),
                         ),
                         Text(
-                          Analysis.elementAt(2),
-                          style: ThemeStyle.getFeedbackWorkLoadTextStyle(),
+                          analysis.elementAt(2),
+                          style: themeStyle.getFeedbackWorkLoadTextStyle(),
                         )
                       ],
                     )

@@ -170,4 +170,18 @@ class SessionService {
       });
     }
   }
+
+  CollectionReference getSessionData(String uid) {
+    return FirebaseFirestore.instance
+        .collection("Users")
+        .doc(uid)
+        .collection("session");
+  }
+
+  CollectionReference getAverageSessionData(String uid) {
+    return FirebaseFirestore.instance
+        .collection("Users")
+        .doc(uid)
+        .collection("average_session");
+  }
 }

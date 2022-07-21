@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'firebase.dart';
 
-class Sign_in extends StatefulWidget {
-  const Sign_in({Key? key}) : super(key: key);
+class SignIn extends StatefulWidget {
+  const SignIn({Key? key}) : super(key: key);
   @override
-  _Sign_in_state createState() => _Sign_in_state();
+  _SignInState createState() => _SignInState();
 }
 
-class _Sign_in_state extends State<Sign_in> {
+class _SignInState extends State<SignIn> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 

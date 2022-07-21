@@ -10,18 +10,18 @@ import 'package:flutter/material.dart';
 import 'PopUpMenu.dart';
 import 'package:provider/provider.dart';
 
-class Average_Session_Object {
+class AverageSessionObject {
   final int value;
   final String xaxis;
   final String color;
   final String session;
 
-  Average_Session_Object(
+  AverageSessionObject(
       {required this.value,
       required this.xaxis,
       required this.color,
       required this.session});
-  Average_Session_Object.fromMap(
+  AverageSessionObject.fromMap(
     Map<String, dynamic> map,
   )   : assert(map['Name'] != null),
         assert(map['xaxis'] != null),
@@ -38,27 +38,27 @@ class Average_Session_Object {
 
 FirebaseAuth auth = FirebaseAuth.instance;
 
-class Average_Session extends StatefulWidget {
-  _Average_SessionState createState() => _Average_SessionState();
+class AverageSession extends StatefulWidget {
+  _AverageSessionState createState() => _AverageSessionState();
 }
 //fsafd
 
-class _Average_SessionState extends State<Average_Session> {
-  List<charts.Series<Average_Session_Object, String>> _seriesBarData = [];
+class _AverageSessionState extends State<AverageSession> {
+  List<charts.Series<AverageSessionObject, String>> _seriesBarData = [];
   String uid = auth.currentUser!.uid;
-  Timestamp session_timestamp = Timestamp.now();
-  List<Average_Session_Object> mydata = [];
-  DateTime session_day = DateTime.now();
+  Timestamp sessionTimestamp = Timestamp.now();
+  List<AverageSessionObject> mydata = [];
+  DateTime sessionDay = DateTime.now();
 
-  _average_generatechart(mydata) {
+  _averageGenerateChart(mydata) {
     _seriesBarData.add(charts.Series(
-        domainFn: (Average_Session_Object session_axis, _) =>
-            session_axis.xaxis.toString(),
-        measureFn: (Average_Session_Object session_axis, _) =>
-            session_axis.value / int.parse(session_axis.session),
-        colorFn: (Average_Session_Object session_axis, _) =>
+        domainFn: (AverageSessionObject sessionAxis, _) =>
+            sessionAxis.xaxis.toString(),
+        measureFn: (AverageSessionObject sessionAxis, _) =>
+            sessionAxis.value / int.parse(sessionAxis.session),
+        colorFn: (AverageSessionObject sessionAxis, _) =>
             charts.ColorUtil.fromDartColor(
-              Color(int.parse(session_axis.color)),
+              Color(int.parse(sessionAxis.color)),
             ),
         data: mydata,
         id: 'Session'));
@@ -74,14 +74,14 @@ class _Average_SessionState extends State<Average_Session> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Efficiency of Quadrants'),
-        actions: [GetPopUpMenu(context, SessionStatus.efficiency)],
+        actions: [getPopUpMenu(context, SessionStatus.efficiency)],
       ),
       drawer: getDrawer(context),
-      body: _average_buildbody(context, averageSessionStream),
+      body: _averageBuildbody(context, averageSessionStream),
     );
   }
 
-  Widget _average_buildbody(context, averageSessionStream) {
+  Widget _averageBuildbody(context, averageSessionStream) {
     return StreamBuilder<QuerySnapshot>(
         stream: averageSessionStream,
         builder: (context, snapshot) {
@@ -90,23 +90,23 @@ class _Average_SessionState extends State<Average_Session> {
           } else if (!snapshot.hasData) {
             return LinearProgressIndicator();
           } else {
-            List<Average_Session_Object> session = snapshot.data!.docs
+            List<AverageSessionObject> session = snapshot.data!.docs
                 .map((DocumentSnapshot snapshot) =>
-                    Average_Session_Object.fromMap(
+                    AverageSessionObject.fromMap(
                         snapshot.data() as Map<String, dynamic>))
                 .toList();
 
-            return _average_buildChart(context, session);
+            return _averageBuildChart(context, session);
           }
         });
   }
 
-  Widget _average_buildChart(
+  Widget _averageBuildChart(
     BuildContext context,
-    List<Average_Session_Object> session,
+    List<AverageSessionObject> session,
   ) {
     mydata = session;
-    _average_generatechart(mydata);
+    _averageGenerateChart(mydata);
 
     //print(get_last_sesion_date);
 

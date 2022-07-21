@@ -98,7 +98,7 @@ class MyApp extends StatelessWidget {
         '/openview': (context) => OpenView(),
         '/myapp': (context) => MyApp(),
         '/chart': (context) => Session(),
-        '/average_chart': (context) => Average_Session(),
+        '/average_chart': (context) => AverageSession(),
         '/completed': (context) => CompletedListView(),
         '/heartbeat': (context) => HeartBeat()
       },

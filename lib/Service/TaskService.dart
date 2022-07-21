@@ -103,4 +103,64 @@ class TaskService {
       "time difference": 0,
     });
   }
+
+  Stream<QuerySnapshot> getListviewStream(int flag, String uid) {
+    if (flag == 0)
+      return FirebaseFirestore.instance
+          .collection('Users')
+          .doc(uid)
+          .collection('Mytask')
+          .orderBy('Timestamp')
+          .snapshots(includeMetadataChanges: true);
+    else
+      return FirebaseFirestore.instance
+          .collection('Users')
+          .doc(uid)
+          .collection('Quadrant2')
+          .orderBy('Timestamp')
+          .snapshots(includeMetadataChanges: true);
+  }
+
+  CollectionReference suggestionList(int flag, String uid) {
+    if (flag == 0)
+      return FirebaseFirestore.instance
+          .collection('Users')
+          .doc(uid)
+          .collection('Quadrant1_Complete');
+    else
+      return FirebaseFirestore.instance
+          .collection('Users')
+          .doc(uid)
+          .collection('Quadrant2_Complete');
+  }
+
+  Stream<QuerySnapshot> getCompletedListStream(String uid) {
+    return FirebaseFirestore.instance
+        .collection('Users')
+        .doc(uid)
+        .collection("Completed")
+        .orderBy("Timestamp", descending: true)
+        .snapshots();
+  }
+
+  CollectionReference getTabMetaData(String uid) {
+    return FirebaseFirestore.instance
+        .collection("Users")
+        .doc(uid)
+        .collection("MetaData");
+  }
+
+  DocumentReference getMetaData(String uid) {
+    return FirebaseFirestore.instance
+        .collection("Users")
+        .doc(uid)
+        .collection("MetaData")
+        .doc("MetaData");
+  }
+
+  void setMetaData(
+      DocumentReference documentReference, int value, String mode) {
+    documentReference
+        .set({mode: FieldValue.increment(value)}, SetOptions(merge: true));
+  }
 }

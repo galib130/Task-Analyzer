@@ -50,7 +50,7 @@ class TaskCommands {
     var FirebaseCommand = FirebaseCommands();
     var CompletedTask;
 
-    CompletedTask = taskload.SetTask(data);
+    CompletedTask = taskload.setTask(data);
 
     FirebaseCommand.UpdateCompleted(uid, CompletedTask);
 
@@ -74,5 +74,30 @@ class TaskCommands {
 
   void resetDateTime(String uid) {
     taskService.resetDateTime(uid);
+  }
+
+  Stream<QuerySnapshot> getListviewStream(int flag, String uid) {
+    return taskService.getListviewStream(flag, uid);
+  }
+
+  Stream<QuerySnapshot> getCompletedListStream(String uid) {
+    return taskService.getCompletedListStream(uid);
+  }
+
+  CollectionReference suggestionList(int flag, String uid) {
+    return taskService.suggestionList(flag, uid);
+  }
+
+  CollectionReference getTabMetaData(String uid) {
+    return taskService.getTabMetaData(uid);
+  }
+
+  DocumentReference getMetaData(String uid) {
+    return taskService.getMetaData(uid);
+  }
+
+  void setMetaData(
+      DocumentReference documentReference, int value, String mode) {
+    taskService.setMetaData(documentReference, value, mode);
   }
 }

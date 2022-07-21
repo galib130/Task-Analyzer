@@ -5,10 +5,10 @@ import 'firebase.dart';
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
   @override
-  _Login_state createState() => _Login_state();
+  _LoginState createState() => _LoginState();
 }
 
-class _Login_state extends State<Login> {
+class _LoginState extends State<Login> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 

@@ -4,21 +4,21 @@ class TaskLoad {
   String? task;
   Timestamp? time;
   String? difference;
-  String? SetTime;
-  String? DisplayName;
-  String? NotificationId;
-  String? Description;
-  String? Date;
-  String? Time;
-  String? CompletionTime;
-  Map<dynamic, dynamic>? TaskLoadMap;
-  TaskLoad SetTask(Map<dynamic, dynamic> data) {
-    TaskLoadMap = data['Task'];
+  String? setTime;
+  String? displayName;
+  String? notificationId;
+  String? description;
+  String? date;
+  String? timeLine;
+  String? completionTime;
+  Map<dynamic, dynamic>? taskLoadMap;
+  TaskLoad setTask(Map<dynamic, dynamic> data) {
+    taskLoadMap = data['Task'];
 
     return this;
   }
 
   Map<dynamic, dynamic>? getTaskLoadMap() {
-    return TaskLoadMap;
+    return taskLoadMap;
   }
 }

@@ -3,7 +3,7 @@ import 'package:proda/Themes.dart';
 import 'package:proda/Providers/ChangeState.dart';
 import 'package:provider/provider.dart';
 
-var ThemeStyle = ThemeStyles();
+var themeStyle = ThemeStyles();
 Drawer? getDrawer(BuildContext context) {
   return Drawer(
     child: Container(
@@ -37,7 +37,7 @@ Drawer? getDrawer(BuildContext context) {
                     fontSize: 20,
                   ),
                 ),
-                style: ThemeStyle.getDrawerStyle(),
+                style: themeStyle.getDrawerStyle(),
               )),
           Positioned(
               top: 180,
@@ -57,7 +57,7 @@ Drawer? getDrawer(BuildContext context) {
                   'Secondary',
                   style: TextStyle(fontSize: 20),
                 ),
-                style: ThemeStyle.getDrawerStyle(),
+                style: themeStyle.getDrawerStyle(),
               )),
           Positioned(
             top: 280,
@@ -72,7 +72,7 @@ Drawer? getDrawer(BuildContext context) {
                 'Session Summary',
                 style: TextStyle(fontSize: 18),
               ),
-              style: ThemeStyle.getDrawerStyle(),
+              style: themeStyle.getDrawerStyle(),
             ),
           ),
           Positioned(
@@ -88,7 +88,7 @@ Drawer? getDrawer(BuildContext context) {
                 'Efficiency',
                 style: TextStyle(fontSize: 20),
               ),
-              style: ThemeStyle.getDrawerStyle(),
+              style: themeStyle.getDrawerStyle(),
             ),
           ),
           Positioned(
@@ -103,7 +103,7 @@ Drawer? getDrawer(BuildContext context) {
                   "Completed",
                   style: TextStyle(fontSize: 20),
                 ),
-                style: ThemeStyle.getDrawerStyle(),
+                style: themeStyle.getDrawerStyle(),
               )),
           Positioned(
               top: 580,
@@ -117,7 +117,7 @@ Drawer? getDrawer(BuildContext context) {
                   "HeartBeat",
                   style: TextStyle(fontSize: 20),
                 ),
-                style: ThemeStyle.getDrawerStyle(),
+                style: themeStyle.getDrawerStyle(),
               ))
         ],
       ),

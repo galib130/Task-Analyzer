@@ -8,8 +8,6 @@ class NotificationApi {
   static final _notification = FlutterLocalNotificationsPlugin();
 
   static Future _notificationDetails() async {
-    final sound = 'scificlick.wav';
-
     return NotificationDetails(
       android: AndroidNotificationDetails(
         'channel id',

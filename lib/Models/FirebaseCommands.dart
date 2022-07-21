@@ -57,8 +57,8 @@ class FirebaseCommands {
         .collection("Completed")
         .doc();
     Completed.set({
-      "Name": task.TaskLoadMap,
-      "Timestamp": task.TaskLoadMap!['Timestamp']
+      "Name": task.taskLoadMap,
+      "Timestamp": task.taskLoadMap!['Timestamp']
     });
     print('never give up  ');
   }

@@ -1,54 +1,54 @@
-List<String> ProvideAnalysis(
-    int Primary, int Secondary, List<String> Feedback) {
-  String TotalAnalyze;
-  String DifferenceAnalyze = "Difference is stable";
-  String PrimaryAnalyze = "Status: stable";
-  String SecondaryAnalyze = "Status: stable";
-  int difference = (Primary - Secondary).abs();
-  int initial_threshold = 5;
-  int high_threshold = 15;
-  List<String> Analysis = [];
+List<String> provideAnalysis(
+    int primary, int secondary, List<String> feedback) {
+  String totalAnalyze;
+  String differenceAnalyze = "Difference is stable";
+  String primaryAnalyze = "Status: stable";
+  String secondaryAnalyze = "Status: stable";
+  int difference = (primary - secondary).abs();
+  int initialThreshold = 5;
+  int highThreshold = 15;
+  List<String> analysis = [];
 
-  if (difference >= initial_threshold) {
-    switch (Primary > Secondary) {
+  if (difference >= initialThreshold) {
+    switch (primary > secondary) {
       case true:
         {
-          DifferenceAnalyze = Feedback[0];
+          differenceAnalyze = feedback[0];
         }
         break;
 
       case false:
         {
-          if (Secondary > Primary) DifferenceAnalyze = Feedback[1];
+          if (secondary > primary) differenceAnalyze = feedback[1];
         }
         break;
     }
   } else
-    DifferenceAnalyze = Feedback[2];
+    differenceAnalyze = feedback[2];
 
-  if (Primary > initial_threshold) {
-    if (Primary < high_threshold) PrimaryAnalyze = Feedback[3];
-    if (Primary >= high_threshold) PrimaryAnalyze = Feedback[4];
+  if (primary > initialThreshold) {
+    if (primary < highThreshold) primaryAnalyze = feedback[3];
+    if (primary >= highThreshold) primaryAnalyze = feedback[4];
   } else
-    PrimaryAnalyze = Feedback[5];
+    primaryAnalyze = feedback[5];
 
-  if (Secondary > initial_threshold) {
-    if (Secondary < high_threshold) SecondaryAnalyze = Feedback[3];
-    if (Secondary >= high_threshold) SecondaryAnalyze = Feedback[4];
+  if (secondary > initialThreshold) {
+    if (secondary < highThreshold) secondaryAnalyze = feedback[3];
+    if (secondary >= highThreshold) secondaryAnalyze = feedback[4];
   } else
-    SecondaryAnalyze = Feedback[5];
-  TotalAnalyze = "Status of Primary:  " +
-      PrimaryAnalyze +
+    secondaryAnalyze = feedback[5];
+  totalAnalyze = "Status of Primary:  " +
+      primaryAnalyze +
       "\n\n" +
       "Status of Secondary: " +
-      SecondaryAnalyze +
+      secondaryAnalyze +
       "\n\n" +
       "Workload balance: " +
-      DifferenceAnalyze;
+      differenceAnalyze;
 
-  Analysis.add(PrimaryAnalyze);
-  Analysis.add(SecondaryAnalyze);
-  Analysis.add(DifferenceAnalyze);
+  analysis.add(primaryAnalyze);
+  analysis.add(secondaryAnalyze);
+  analysis.add(differenceAnalyze);
 
-  return Analysis;
+  return analysis;
 }

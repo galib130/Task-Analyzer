@@ -5,9 +5,9 @@ class ThemeStyles {
   Color OnPrimaryDrawerButtonColor = Color.fromARGB(255, 247, 244, 244);
   Color ShadowDrawerButtonColor = Color.fromARGB(255, 20, 2, 61);
   double Drawerelevation = 10;
-  Color ListViewColorPrimaryFirst = Color.fromARGB(178, 4, 70, 100);
+  Color ListViewColorPrimaryFirst = Color.fromARGB(177, 6, 117, 196);
   Color ListViewColorSecondaryFirst = Color.fromARGB(207, 99, 127, 255);
-  Color ListViewColorPrimarySecond = Color.fromARGB(178, 4, 70, 100);
+  Color ListViewColorPrimarySecond = Color.fromARGB(177, 6, 117, 196);
   Color ListViewColorSecondarySecond = Color.fromARGB(207, 99, 127, 255);
   ButtonStyle? DrawerStyle;
 

@@ -36,7 +36,7 @@ class SessionProvider with ChangeNotifier {
               documentuser['time']
                       .compareTo(Timestamp.fromDate(DateTime.now())) >
                   0) {
-            sessionCommands.updatePrimarySessionAdd(uid);
+            sessionCommands.updateSecondarySessionAdd(uid);
           }
         }
       }
@@ -105,5 +105,61 @@ class SessionProvider with ChangeNotifier {
 
   void updateSessionMove(String uid, int flag) {
     sessionCommands.updateSessionMove(uid, flag);
+  }
+
+  CollectionReference getSessionData(String uid) {
+    return sessionCommands.getSessionData(uid);
+  }
+
+  CollectionReference getAverageSessionData(String uid) {
+    return sessionCommands.getAverageSessionData(uid);
+  }
+
+  DocumentReference getPrimarySession(String uid) {
+    return sessionCommands.getPrimarySession(uid);
+  }
+
+  DocumentReference getSecondarySession(String uid) {
+    return sessionCommands.getSecondarySession(uid);
+  }
+
+  DocumentReference getPrimaryAverageSession(String uid) {
+    return sessionCommands.getPrimaryAverageSession(uid);
+  }
+
+  DocumentReference getSecondaryAverageSession(String uid) {
+    return sessionCommands.getSecondaryAverageSession(uid);
+  }
+
+  DocumentReference getSessionTime(String uid) {
+    return sessionCommands.getSessionTime(uid);
+  }
+
+  void sessionDataDeleteTask(String uid, int flag) async {
+    var documentdata = await sessionCommands.getSessionTime(uid).get();
+    var documentuser;
+    if (documentdata.data() != null) documentuser = documentdata.data() as Map;
+    if (flag == 0 &&
+        documentuser != null &&
+        documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
+            0) {
+      sessionCommands.getPrimarySession(uid).update({
+        "Name": FieldValue.increment(1),
+      });
+      sessionCommands.getPrimaryAverageSession(uid).update({
+        "Name": FieldValue.increment(1),
+      });
+    } else if (flag == 1 &&
+        documentuser != null &&
+        documentuser['time'].compareTo(Timestamp.fromDate(DateTime.now())) >
+            0) {
+      sessionCommands.getSecondarySession(uid).update({
+        "Name": FieldValue.increment(1),
+        "color": '0xFFa531e8',
+      });
+      sessionCommands.getSecondaryAverageSession(uid).update({
+        "Name": FieldValue.increment(1),
+      });
+    }
   }
 }

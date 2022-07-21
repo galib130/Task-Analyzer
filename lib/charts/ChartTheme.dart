@@ -3,7 +3,7 @@ import 'package:charts_flutter/flutter.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class Barchart {
-  OrdinalAxisSpec GetOrdinalAxisSpec() {
+  OrdinalAxisSpec getOrdinalAxisSpec() {
     return charts.OrdinalAxisSpec(
         renderSpec: new charts.SmallTickRendererSpec(
       labelStyle: new charts.TextStyleSpec(
@@ -12,7 +12,7 @@ class Barchart {
     ));
   }
 
-  NumericAxisSpec GetNumericAxisSpec() {
+  NumericAxisSpec getNumericAxisSpec() {
     return charts.NumericAxisSpec(
         renderSpec: new charts.SmallTickRendererSpec(
       labelStyle: new charts.TextStyleSpec(

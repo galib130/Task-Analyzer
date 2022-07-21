@@ -66,7 +66,7 @@ class _OpenViewState extends State<OpenView> {
                         fontSize: 30, fontWeight: FontWeight.bold)),
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Sign_in()));
+                      MaterialPageRoute(builder: (context) => SignIn()));
                 },
                 child: Text("Sign up"),
               ),

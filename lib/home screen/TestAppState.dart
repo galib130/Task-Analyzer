@@ -29,11 +29,11 @@ FirebaseAuth auth = FirebaseAuth.instance;
 
 class TestAppState extends State<TestApp> {
   String uid = auth.currentUser!.uid;
-  var ThemeStyle = ThemeStyles();
-  var date_picked = 1;
-  var time_picked = 1;
-  var date_difference = 0;
-  var time_difference = 0;
+  var themeStyle = ThemeStyles();
+  var datePicked = 1;
+  var timePicked = 1;
+  var dateDifference = 0;
+  var timeDifference = 0;
 
   var addquest = 0;
   var addquest1 = 0;
@@ -45,7 +45,7 @@ class TestAppState extends State<TestApp> {
   TextEditingController _secondcontroller = TextEditingController();
   TextEditingController _descriptioncontroller = TextEditingController();
 
-  String Task = '';
+  String task = '';
   DateTime currentDate = DateTime.now();
   DateTime pickedDate = DateTime.now();
   DateTime compareDate = DateTime.now();
@@ -54,8 +54,8 @@ class TestAppState extends State<TestApp> {
   TimeOfDay pickedTime = TimeOfDay.now();
   int difference = 0;
   static const routename = '/profile';
-  var FirebaseCommand = FirebaseCommands();
-  var TaskCommand = TaskCommands();
+  var firebaseCommand = FirebaseCommands();
+
 //ok
   //call to add complete task and then delete the task
   void checkbox(String documnent, bool? value,
@@ -66,9 +66,6 @@ class TestAppState extends State<TestApp> {
     context.read<SessionProvider>().updateSessionComplete(
         documnent, value, documentSnapshot, uid, change_state, data);
   }
-
-  StreamController user_controller = StreamController();
-  StreamController quadrant2_controller = StreamController();
 
   @override
   void initState() {
@@ -98,30 +95,6 @@ class TestAppState extends State<TestApp> {
     });
   }
 
-  final Stream<QuerySnapshot> users = FirebaseFirestore.instance
-      .collection('Users')
-      .doc(auth.currentUser!.uid)
-      .collection('Mytask')
-      .orderBy('Timestamp')
-      .snapshots(includeMetadataChanges: true);
-
-  final Stream<QuerySnapshot> quadrant2 = FirebaseFirestore.instance
-      .collection('Users')
-      .doc(auth.currentUser!.uid)
-      .collection('Quadrant2')
-      .orderBy('Timestamp')
-      .snapshots(includeMetadataChanges: true);
-
-  var quadrant1_complete = FirebaseFirestore.instance
-      .collection('Users')
-      .doc(auth.currentUser!.uid)
-      .collection('Quadrant1_Complete');
-
-  var quadrant2_complete = FirebaseFirestore.instance
-      .collection('Users')
-      .doc(auth.currentUser!.uid)
-      .collection('Quadrant2_Complete');
-
   Widget build(BuildContext context) {
     change_state = context.watch<ChangeState>().flag;
     final suggestList = [];
@@ -129,21 +102,16 @@ class TestAppState extends State<TestApp> {
     //call suggestlist
     setState(() {
       suggestList.clear();
-      if (change_state == 0) {
-        quadrant1_complete.get().then((snapshot) {
-          snapshot.docs.forEach((doc) {
-            suggestList.add(doc.id.toString());
-            // print(doc.id);
-          });
+      context
+          .read<TaskProvider>()
+          .suggestionList(change_state, uid)
+          .get()
+          .then((snapshot) {
+        snapshot.docs.forEach((doc) {
+          suggestList.add(doc.id.toString());
+          // print(doc.id);
         });
-      } else {
-        quadrant2_complete.get().then((snapshot) {
-          snapshot.docs.forEach((doc) {
-            suggestList.add(doc.id.toString());
-            // print(doc.id);
-          });
-        });
-      }
+      });
     });
 
     //call autocomplete list
@@ -197,7 +165,7 @@ class TestAppState extends State<TestApp> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ThemeStyle.PrimaryDrawerButtonColor,
+        backgroundColor: themeStyle.PrimaryDrawerButtonColor,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -210,7 +178,7 @@ class TestAppState extends State<TestApp> {
             Align(
               alignment: Alignment.topRight,
               child: ElevatedButton(
-                style: ThemeStyle.getAppButtonStyle(),
+                style: themeStyle.getAppButtonStyle(),
                 onPressed: () {
                   setState(() {
                     context.read<FlutterFireAuthService>().signOut();
@@ -226,19 +194,19 @@ class TestAppState extends State<TestApp> {
         ),
         actions: [
           PopupMenuButton(
-            color: ThemeStyle.PrimaryDrawerButtonColor,
+            color: themeStyle.PrimaryDrawerButtonColor,
             itemBuilder: (context) {
               return [
                 PopupMenuItem(
                     value: 1,
-                    child: ThemeStyle.getDropDownText("Detailed Task")),
+                    child: themeStyle.getDropDownText("Detailed Task")),
                 PopupMenuItem(
                     value: 2,
-                    child: ThemeStyle.getDropDownText("Set Notification")),
+                    child: themeStyle.getDropDownText("Set Notification")),
                 PopupMenuItem(
-                    value: 3, child: ThemeStyle.getDropDownText("Feedback")),
+                    value: 3, child: themeStyle.getDropDownText("Feedback")),
                 PopupMenuItem(
-                    value: 4, child: ThemeStyle.getDropDownText("Set Session"))
+                    value: 4, child: themeStyle.getDropDownText("Set Session"))
               ];
             },
             onSelected: (value) {
@@ -282,7 +250,7 @@ class TestAppState extends State<TestApp> {
       backgroundColor: Color.fromARGB(255, 11, 63, 122),
       drawer: Drawer(child: getDrawer(context)),
       body: Container(
-        decoration: ThemeStyle.getBackgroundTheme(),
+        decoration: themeStyle.getBackgroundTheme(),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -350,23 +318,21 @@ class TestAppState extends State<TestApp> {
                   itemBuilder: (context, suggestion) {
                     return Dismissible(
                       key: UniqueKey(),
-                      onDismissed: (DismissDirection) {
-                        if (change_state == 0) {
-                          var quadrant1AutocompleteData =
-                              quadrant1_complete.doc(suggestion.toString());
-                          quadrant1AutocompleteData.delete();
-                        } else {
-                          var quadrant2AutocompleteData =
-                              quadrant2_complete.doc(suggestion.toString());
-                          quadrant2AutocompleteData.delete();
-                        }
-
+                      onDismissed: (dismissDirection) {
+                        var autocompleteData = context
+                            .read<TaskProvider>()
+                            .suggestionList(change_state, uid)
+                            .doc(suggestion.toString());
+                        autocompleteData.delete();
                         suggestList.remove(suggestion);
                       },
                       child: Container(
                         child: ListTile(
                           tileColor: Colors.cyan,
-                          title: Text(suggestion.toString()),
+                          title: Text(
+                            suggestion.toString(),
+                            style: TextStyle(fontSize: 16),
+                          ),
                         ),
                       ),
                     );
@@ -386,7 +352,9 @@ class TestAppState extends State<TestApp> {
               //See list button depending on state
               // Listview for quadrant 1
               AddList_State(
-                taskQuery: change_state == 0 ? users : quadrant2,
+                taskQuery: context
+                    .read<TaskProvider>()
+                    .getListviewStream(change_state, uid),
                 flag: change_state,
                 checkBox: checkbox,
                 setDate: _selectDate,

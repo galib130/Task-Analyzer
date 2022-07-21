@@ -1,132 +1,129 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:proda/Providers/SessionProvider.dart';
+
+import 'package:proda/Providers/TaskProvider.dart';
 
 enum SessionStatus { tab, session, efficiency }
 
 abstract class Analysis {
   List<String> getFeedback();
-  CollectionReference GetMetaData(String uid);
+  CollectionReference getMetaData(String uid);
 }
 
 class TabAnalysis implements Analysis {
   @override
-  CollectionReference GetMetaData(String uid) {
-    return FirebaseFirestore.instance
-        .collection("Users")
-        .doc(uid)
-        .collection("MetaData");
+  CollectionReference getMetaData(String uid) {
+    CollectionReference collectMetaData = TaskProvider().getTabMetaData(uid);
+    return collectMetaData;
   }
 
   @override
   List<String> getFeedback() {
-    String DifferenceAnalyzePrimaryHigh =
+    String differenceAnalyzePrimaryHigh =
         "Might consider completing the Primary tasks to control the pace of your work";
 
-    String DifferenceAnalyzeSecondaryHigh =
+    String differenceAnalyzeSecondaryHigh =
         "Might consider making some time to focus on completing some Secondary tasks";
 
-    String DifferenceAnalyzeBalanced =
+    String differenceAnalyzeBalanced =
         "Workload seems to be balanced at the moment\nMight consider mixing focus between Secondary and Primary";
 
-    String High =
+    String high =
         "Workload: HIGH\n\nFeedback: More effort needed in completing tasks";
-    String VeryHigh =
+    String veryHigh =
         "Workload: VERY HIGH\n\nFeedback: There is risk of procrastination or being overwhelmed\nNeed to go ballistic mate";
-    String Low =
+    String low =
         "Workload: SMALL\n\nFeedback: Addition of more tasks in the Primary tab is possible";
 
-    List<String> Feedback = [
-      DifferenceAnalyzePrimaryHigh,
-      DifferenceAnalyzeSecondaryHigh,
-      DifferenceAnalyzeBalanced,
-      High,
-      VeryHigh,
-      Low,
+    List<String> feedback = [
+      differenceAnalyzePrimaryHigh,
+      differenceAnalyzeSecondaryHigh,
+      differenceAnalyzeBalanced,
+      high,
+      veryHigh,
+      low,
     ];
 
-    return Feedback;
+    return feedback;
   }
 }
 
 class SessionAnalysis implements Analysis {
   @override
-  CollectionReference GetMetaData(String uid) {
-    return FirebaseFirestore.instance
-        .collection("Users")
-        .doc(uid)
-        .collection("session");
+  CollectionReference getMetaData(String uid) {
+    CollectionReference collect = SessionProvider().getSessionData(uid);
+    return collect;
   }
 
   @override
   List<String> getFeedback() {
-    String DifferenceAnalyzePrimaryHigh =
+    String differenceAnalyzePrimaryHigh =
         "Too much focus spent on completing Primary Tasks compared to Secondary Tasks\nNeed to make mored time to focus on completing Secondary Tasks\n Could be due to procrastination or bad scheduling";
 
-    String DifferenceAnalyzeSecondaryHigh =
+    String differenceAnalyzeSecondaryHigh =
         "Primary tasks not given enough importance\nImportant tasks left alone might hamper overall result more than if the situation was reversed\nInference: Could be due to procastination or bad scheduling";
 
-    String DifferenceAnalyzeBalanced =
+    String differenceAnalyzeBalanced =
         "Task management seems to be up to the mark";
 
-    String High =
+    String high =
         "Efficiency: HIGH\n\nFeedback: Well done! Keep it up in the next session!";
-    String VeryHigh =
+    String veryHigh =
         "Efficiency: VERY HIGH\n\nFeedback: Might consider adding more tasks outside your comfort zone";
-    String Low =
+    String low =
         "Efficiency: LOW\n\nFeedback: Need to step it up and make more time to complete more tasks\nInference: May be due to lack of initiative or procrastination";
 
-    List<String> Feedback = [
-      DifferenceAnalyzePrimaryHigh,
-      DifferenceAnalyzeSecondaryHigh,
-      DifferenceAnalyzeBalanced,
-      High,
-      VeryHigh,
-      Low
+    List<String> feedback = [
+      differenceAnalyzePrimaryHigh,
+      differenceAnalyzeSecondaryHigh,
+      differenceAnalyzeBalanced,
+      high,
+      veryHigh,
+      low
     ];
 
-    return Feedback;
+    return feedback;
   }
 }
 
 class EfficiencyAnalysis implements Analysis {
   @override
-  CollectionReference GetMetaData(String uid) {
-    return FirebaseFirestore.instance
-        .collection("Users")
-        .doc(uid)
-        .collection("average_session");
+  CollectionReference getMetaData(String uid) {
+    CollectionReference collect = SessionProvider().getAverageSessionData(uid);
+    return collect;
   }
 
   @override
   List<String> getFeedback() {
-    String DiffHigh = "Need to work extra harder to get the ";
-    String FeedbackDiffHigh =
+    String diffHigh = "Need to work extra harder to get the ";
+    String feedbackDiffHigh =
         "Might consider finishing some backlog tasks or adding more tasks in ";
-    String DifferenceAnalyzePrimaryHigh = DiffHigh +
+    String differenceAnalyzePrimaryHigh = diffHigh +
         "Secondary avg Efficiency up\n" +
-        FeedbackDiffHigh +
+        feedbackDiffHigh +
         "Secondary";
 
-    String DifferenceAnalyzeSecondaryHigh =
-        DiffHigh + "Primary avg Efficiency up\n" + FeedbackDiffHigh + "Primary";
-    String DifferenceAnalyzeBalanced =
+    String differenceAnalyzeSecondaryHigh =
+        diffHigh + "Primary avg Efficiency up\n" + feedbackDiffHigh + "Primary";
+    String differenceAnalyzeBalanced =
         "Task management seems to be up to the mark consistently";
 
-    String High =
+    String high =
         "Avg Efficicency: HIGH\n\nFeedback: Well done! Keep it up Consistency is key!";
-    String VeryHigh =
+    String veryHigh =
         "Avg Efficiency: VERY HIGH\n\nFeedback: Might consider adding more tasks outside your comfort zone";
-    String Low =
+    String low =
         "Avg Efficiency: LOW\n\nFeedback: Work harder and try for improvements by bigger margins to get the Avg Efficicency up\n\nInference: May be due to lack of initiative or procrastination";
 
-    List<String> Feedback = [
-      DifferenceAnalyzePrimaryHigh,
-      DifferenceAnalyzeSecondaryHigh,
-      DifferenceAnalyzeBalanced,
-      High,
-      VeryHigh,
-      Low
+    List<String> feedback = [
+      differenceAnalyzePrimaryHigh,
+      differenceAnalyzeSecondaryHigh,
+      differenceAnalyzeBalanced,
+      high,
+      veryHigh,
+      low
     ];
 
-    return Feedback;
+    return feedback;
   }
 }

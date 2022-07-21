@@ -200,4 +200,40 @@ class TaskProvider with ChangeNotifier {
     taskCommand.setTask(taskMap, value - 1, uid);
     taskCommand.deleteTask(document);
   }
+
+  Stream<QuerySnapshot> getListviewStream(int flag, String uid) {
+    return taskCommand.getListviewStream(flag, uid);
+  }
+
+  Stream<QuerySnapshot> getCompletedListStream(String uid) {
+    return taskCommand.getCompletedListStream(uid);
+  }
+
+  CollectionReference suggestionList(int flag, String uid) {
+    return taskCommand.suggestionList(flag, uid);
+  }
+
+  CollectionReference getTabMetaData(String uid) {
+    return taskCommand.getTabMetaData(uid);
+  }
+
+  void deleteTask(DocumentSnapshot documentSnapshot) {
+    taskCommand.deleteTask(documentSnapshot);
+  }
+
+  void updateMetaData(String uid, int flag, String status) {
+    DocumentReference metaData = taskCommand.getMetaData(uid);
+    int value;
+    String mode;
+    if (flag == 0)
+      mode = "Primary";
+    else
+      mode = "Secondary";
+    if (status == "Add")
+      value = 1;
+    else
+      value = -1;
+
+    taskCommand.setMetaData(metaData, value, mode);
+  }
 }

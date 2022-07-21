@@ -2,18 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proda/Models/FirebaseCommands.dart';
+import 'package:proda/Providers/TaskProvider.dart';
 import 'package:proda/Themes.dart';
+import 'package:provider/src/provider.dart';
 
 class CompletedListView extends StatelessWidget {
   List items = [];
-  var FirebaseCommand = FirebaseCommands();
+  var firebaseCommand = FirebaseCommands();
   static const routename = '/completed';
-  var ThemeStyle = ThemeStyles();
+  var themeStyle = ThemeStyles();
   FirebaseAuth auth = FirebaseAuth.instance;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ThemeStyle.ShadowDrawerButtonColor,
+        backgroundColor: themeStyle.ShadowDrawerButtonColor,
         title: Container(
           child: Text("Completed List"),
         ),
@@ -22,8 +24,9 @@ class CompletedListView extends StatelessWidget {
         children: [
           Container(
               child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseCommand.GetCompletedListStream(
-                      auth.currentUser!.uid),
+                  stream: context
+                      .read<TaskProvider>()
+                      .getCompletedListStream(auth.currentUser!.uid),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError) {
                       return Text('Something went wrong');
@@ -48,8 +51,8 @@ class CompletedListView extends StatelessWidget {
                                       begin: Alignment.topRight,
                                       end: Alignment.topLeft,
                                       colors: [
-                                        ThemeStyle.ListViewColorPrimaryFirst,
-                                        ThemeStyle.ListViewColorPrimaryFirst,
+                                        themeStyle.ListViewColorPrimaryFirst,
+                                        themeStyle.ListViewColorPrimaryFirst,
                                       ])),
                               child: ListTile(
                                 contentPadding: EdgeInsets.symmetric(
@@ -66,7 +69,7 @@ class CompletedListView extends StatelessWidget {
                                                   .toString(),
                                           style: TextStyle(
                                               fontSize: 18,
-                                              color: ThemeStyle
+                                              color: themeStyle
                                                   .OnPrimaryDrawerButtonColor),
                                         ),
                                         Text(
@@ -76,7 +79,7 @@ class CompletedListView extends StatelessWidget {
                                                   .toString(),
                                           style: TextStyle(
                                               fontSize: 18,
-                                              color: ThemeStyle
+                                              color: themeStyle
                                                   .OnPrimaryDrawerButtonColor),
                                         ),
                                       ]),

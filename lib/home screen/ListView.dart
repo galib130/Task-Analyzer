@@ -29,24 +29,24 @@ class AddList_State extends StatelessWidget {
       String data,
       DocumentSnapshot document,
       String description,
-      Map<dynamic, dynamic> map_data,
-      TextEditingController date_controller,
-      TextEditingController time_controller,
+      Map<dynamic, dynamic> mapData,
+      TextEditingController dateController,
+      TextEditingController timeController,
       int flag,
       String moveButton) {
-    TextEditingController update_controller = TextEditingController();
-    TextEditingController description_controller = TextEditingController();
-    update_controller.text = map_data['Task']['displayName'];
-    description_controller.text = map_data['Task']['description'];
-    date_controller.text = map_data['Task']['date'];
-    time_controller.text = map_data['Task']['time'];
+    TextEditingController updateController = TextEditingController();
+    TextEditingController descriptionController = TextEditingController();
+    updateController.text = mapData['Task']['displayName'];
+    descriptionController.text = mapData['Task']['description'];
+    dateController.text = mapData['Task']['date'];
+    timeController.text = mapData['Task']['time'];
     return showDialog(
         context: context,
         builder: (context) {
           return WillPopScope(
             onWillPop: () async {
-              time_controller.clear();
-              date_controller.clear();
+              timeController.clear();
+              dateController.clear();
               Navigator.pop(context);
 
               return false;
@@ -66,14 +66,14 @@ class AddList_State extends StatelessWidget {
                       Expanded(
                         child: TextField(
                           maxLines: 1,
-                          controller: update_controller,
+                          controller: updateController,
                         ),
                       ),
                       Text('Description'),
                       Expanded(
                         child: TextField(
                           maxLines: 1,
-                          controller: description_controller,
+                          controller: descriptionController,
                         ),
                       ),
                       Expanded(
@@ -82,7 +82,7 @@ class AddList_State extends StatelessWidget {
                           maxLines: 1,
                           readOnly: true,
                           decoration: InputDecoration(hintText: 'Date'),
-                          controller: date_controller,
+                          controller: dateController,
                         ),
                       ),
                       ElevatedButton(
@@ -100,7 +100,7 @@ class AddList_State extends StatelessWidget {
                         child: TextField(
                           maxLines: 1,
                           decoration: InputDecoration(hintText: 'Time'),
-                          controller: time_controller,
+                          controller: timeController,
                         ),
                       ),
                       ElevatedButton(
@@ -119,28 +119,28 @@ class AddList_State extends StatelessWidget {
                           String uid = auth.currentUser!.uid;
                           DateTime currentDate = DateTime.now();
                           Timestamp time = Timestamp.fromDate(currentDate);
-                          String SetTime;
-                          if (date_controller.text != '' &&
-                              time_controller.text != '') {
-                            SetTime = date_controller.text +
+                          String setTime;
+                          if (dateController.text != '' &&
+                              timeController.text != '') {
+                            setTime = dateController.text +
                                 '    ' +
-                                time_controller.text;
-                          } else if (date_controller.text != '') {
-                            SetTime = date_controller.text;
+                                timeController.text;
+                          } else if (dateController.text != '') {
+                            setTime = dateController.text;
                           } else
-                            SetTime = time_controller.text;
+                            setTime = timeController.text;
                           Map<dynamic, dynamic> taskMap = {
-                            "Name": update_controller.text.trim(),
+                            "Name": updateController.text.trim(),
                             "Timestamp": time,
                             "ticked": false,
-                            "setTime": SetTime,
-                            "displayName": update_controller.text.trim(),
-                            "difference": map_data['Task']['difference'],
-                            "notification id": map_data['Task']
+                            "setTime": setTime,
+                            "displayName": updateController.text.trim(),
+                            "difference": mapData['Task']['difference'],
+                            "notification id": mapData['Task']
                                 ['notification id'],
-                            "description": description_controller.text.trim(),
-                            "date": date_controller.text.trim(),
-                            "time": time_controller.text.trim(),
+                            "description": descriptionController.text.trim(),
+                            "date": dateController.text.trim(),
+                            "time": timeController.text.trim(),
                           };
 
                           context
@@ -151,8 +151,8 @@ class AddList_State extends StatelessWidget {
                               .updateSessionMove(uid, flag);
                           FirebaseCommand.UpdateMetaData(uid, flag, 'Subtract');
                           FirebaseCommand.UpdateMetaData(uid, flag - 1, 'Add');
-                          date_controller.clear();
-                          time_controller.clear();
+                          dateController.clear();
+                          timeController.clear();
 
                           Navigator.pop(context);
                         },
@@ -165,23 +165,23 @@ class AddList_State extends StatelessWidget {
                       ElevatedButton(
                         onPressed: () {
                           String SetTime;
-                          if (date_controller.text != '' &&
-                              time_controller.text != '') {
-                            SetTime = date_controller.text +
+                          if (dateController.text != '' &&
+                              timeController.text != '') {
+                            SetTime = dateController.text +
                                 '    ' +
-                                time_controller.text;
-                          } else if (date_controller.text != '') {
-                            SetTime = date_controller.text;
+                                timeController.text;
+                          } else if (dateController.text != '') {
+                            SetTime = dateController.text;
                           } else
-                            SetTime = time_controller.text;
+                            SetTime = timeController.text;
 
                           Map<dynamic, dynamic> taskMap;
                           taskMap = {
-                            "Name": update_controller.text,
-                            "displayName": update_controller.text,
-                            "description": description_controller.text,
-                            "time": time_controller.text,
-                            "date": date_controller.text,
+                            "Name": updateController.text,
+                            "displayName": updateController.text,
+                            "description": descriptionController.text,
+                            "time": timeController.text,
+                            "date": dateController.text,
                             "setTime": SetTime
                           };
 
@@ -190,8 +190,8 @@ class AddList_State extends StatelessWidget {
                               .read<TaskProvider>()
                               .TaskUpdate(taskMap, document);
 
-                          date_controller.clear();
-                          time_controller.clear();
+                          dateController.clear();
+                          timeController.clear();
                           Navigator.pop(context);
                         },
                         child: Text('Edit'),
@@ -220,33 +220,6 @@ class AddList_State extends StatelessWidget {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   Widget build(BuildContext context) {
-    DocumentReference collectQuadrant2 = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(auth.currentUser!.uid)
-        .collection("session")
-        .doc('Quadrant2');
-    DocumentReference collectQuadrant1 = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(auth.currentUser!.uid)
-        .collection("session")
-        .doc('Quadrant1');
-    DocumentReference avg_q1_document = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(auth.currentUser!.uid)
-        .collection("average_session")
-        .doc('Quadrant1');
-    DocumentReference avg_q2_document = FirebaseFirestore.instance
-        .collection('Users')
-        .doc(auth.currentUser!.uid)
-        .collection("average_session")
-        .doc('Quadrant2');
-
-    DocumentReference session = FirebaseFirestore.instance
-        .collection("Users")
-        .doc(auth.currentUser!.uid)
-        .collection("session_time")
-        .doc("time");
-
     return Expanded(
       child: StreamBuilder<QuerySnapshot>(
           stream: taskQuery,
@@ -267,44 +240,17 @@ class AddList_State extends StatelessWidget {
                 print(document.data().toString() + 'today right now');
                 return Dismissible(
                     key: Key('$data'),
-                    onDismissed: (DismissDirection) async {
+                    onDismissed: (dismissDirection) async {
                       //ondismissed(data['Name']);
 
-                      var documentdata = await session.get();
-
-                      var documentuser;
-                      if (documentdata.data() != null)
-                        documentuser = documentdata.data() as Map;
-                      if (flag == 0 &&
-                          documentuser != null &&
-                          documentuser['time'].compareTo(
-                                  Timestamp.fromDate(DateTime.now())) >
-                              0) {
-                        collectQuadrant1.update({
-                          "Name": FieldValue.increment(1),
-                        });
-                        avg_q1_document.update({
-                          "Name": FieldValue.increment(1),
-                        });
-                      } else if (flag == 1 &&
-                          documentuser != null &&
-                          documentuser['time'].compareTo(
-                                  Timestamp.fromDate(DateTime.now())) >
-                              0) {
-                        collectQuadrant2.update({
-                          "Name": FieldValue.increment(1),
-                          "color": '0xFFa531e8',
-                        });
-                        avg_q2_document.update({
-                          "Name": FieldValue.increment(1),
-                        });
-                      }
+                      context
+                          .read<SessionProvider>()
+                          .sessionDataDeleteTask(auth.currentUser!.uid, flag);
 
                       await flutterLocalNotificationsPlugin
                           .cancel(data['Task']['notification id'].hashCode);
-                      TaskCommand.deleteTask(document);
-
-                      FirebaseCommand.UpdateMetaData(
+                      context.read<TaskProvider>().deleteTask(document);
+                      context.read<TaskProvider>().updateMetaData(
                           auth.currentUser!.uid, flag, "Subtract");
                     },
                     child: GestureDetector(
@@ -409,10 +355,7 @@ class AddList_State extends StatelessWidget {
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: Color.fromARGB(
-                                                              255,
-                                                              252,
-                                                              252,
-                                                              252)),
+                                                              255, 43, 42, 42)),
                                                     ),
                                                   ),
                                                   Transform.scale(
@@ -420,8 +363,12 @@ class AddList_State extends StatelessWidget {
                                                     child: Checkbox(
                                                         fillColor:
                                                             MaterialStateProperty
-                                                                .all(Colors
-                                                                    .white),
+                                                                .all(Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        37,
+                                                                        37,
+                                                                        37)),
                                                         autofocus: true,
                                                         shape: CircleBorder(),
                                                         value: data['Task']
@@ -450,9 +397,9 @@ class AddList_State extends StatelessWidget {
                                                 style: TextStyle(
                                                     //fontSize: 18,
                                                     fontSize: 17,
-                                                    fontStyle: FontStyle.normal,
+                                                    fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
-                                                        255, 255, 253, 253)),
+                                                        255, 43, 42, 42)),
                                               )
                                           ]),
                                     ),

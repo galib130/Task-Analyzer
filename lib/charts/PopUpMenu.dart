@@ -4,7 +4,7 @@ import 'package:proda/Themes.dart';
 import 'package:proda/home%20screen/FeedbackDialog.dart';
 
 var themestyle = ThemeStyles();
-PopupMenuButton GetPopUpMenu(BuildContext context, SessionStatus status) {
+PopupMenuButton getPopUpMenu(BuildContext context, SessionStatus status) {
   return PopupMenuButton(
     color: themestyle.PrimaryDrawerButtonColor,
     itemBuilder: (context) {
