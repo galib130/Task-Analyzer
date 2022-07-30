@@ -12,6 +12,9 @@ import 'dart:async';
 
 class AddList_State extends StatelessWidget {
   var TaskCommand = TaskCommands();
+  TaskProvider taskProvider = TaskProvider();
+  SessionProvider sessionProvider = SessionProvider();
+
   Function(String, bool, DocumentSnapshot, Map<dynamic, dynamic>) checkBox;
   Function setDate;
   Function setTime;
@@ -22,7 +25,7 @@ class AddList_State extends StatelessWidget {
   MaterialColor color;
 
   Stream<QuerySnapshot> taskQuery;
-  var FirebaseCommand = FirebaseCommands();
+  var firebaseCommand = FirebaseCommands();
   createEditDialog(
       BuildContext,
       context,
@@ -143,14 +146,10 @@ class AddList_State extends StatelessWidget {
                             "time": timeController.text.trim(),
                           };
 
-                          context
-                              .read<TaskProvider>()
-                              .moveTask(uid, taskMap, document, flag);
-                          context
-                              .read<SessionProvider>()
-                              .updateSessionMove(uid, flag);
-                          FirebaseCommand.UpdateMetaData(uid, flag, 'Subtract');
-                          FirebaseCommand.UpdateMetaData(uid, flag - 1, 'Add');
+                          taskProvider.moveTask(uid, taskMap, document, flag);
+                          sessionProvider.updateSessionMove(uid, flag);
+                          firebaseCommand.UpdateMetaData(uid, flag, 'Subtract');
+                          firebaseCommand.UpdateMetaData(uid, flag - 1, 'Add');
                           dateController.clear();
                           timeController.clear();
 
@@ -186,9 +185,7 @@ class AddList_State extends StatelessWidget {
                           };
 
                           //update(update_controller.text,data);
-                          context
-                              .read<TaskProvider>()
-                              .TaskUpdate(taskMap, document);
+                          taskProvider.TaskUpdate(taskMap, document);
 
                           dateController.clear();
                           timeController.clear();
@@ -243,14 +240,13 @@ class AddList_State extends StatelessWidget {
                     onDismissed: (dismissDirection) async {
                       //ondismissed(data['Name']);
 
-                      context
-                          .read<SessionProvider>()
-                          .sessionDataDeleteTask(auth.currentUser!.uid, flag);
+                      sessionProvider.sessionDataDeleteTask(
+                          auth.currentUser!.uid, flag);
 
                       await flutterLocalNotificationsPlugin
                           .cancel(data['Task']['notification id'].hashCode);
-                      context.read<TaskProvider>().deleteTask(document);
-                      context.read<TaskProvider>().updateMetaData(
+                      taskProvider.deleteTask(document);
+                      taskProvider.updateMetaData(
                           auth.currentUser!.uid, flag, "Subtract");
                     },
                     child: GestureDetector(
@@ -320,14 +316,14 @@ class AddList_State extends StatelessWidget {
                                       colors: [
                                         flag == 0
                                             ? ThemeStyle
-                                                .ListViewColorPrimaryFirst
+                                                .OnPrimaryDrawerButtonColor
                                             : ThemeStyle
-                                                .ListViewColorSecondaryFirst,
+                                                .OnPrimaryDrawerButtonColor,
                                         flag == 0
                                             ? ThemeStyle
-                                                .ListViewColorPrimarySecond
+                                                .OnPrimaryDrawerButtonColor
                                             : ThemeStyle
-                                                .ListViewColorSecondarySecond
+                                                .OnPrimaryDrawerButtonColor
                                       ])),
                               child: Column(
                                 children: [

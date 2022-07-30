@@ -9,6 +9,7 @@ import 'package:provider/src/provider.dart';
 class CompletedListView extends StatelessWidget {
   List items = [];
   var firebaseCommand = FirebaseCommands();
+  TaskProvider taskProvider = TaskProvider();
   static const routename = '/completed';
   var themeStyle = ThemeStyles();
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -24,8 +25,7 @@ class CompletedListView extends StatelessWidget {
         children: [
           Container(
               child: StreamBuilder<QuerySnapshot>(
-                  stream: context
-                      .read<TaskProvider>()
+                  stream: taskProvider
                       .getCompletedListStream(auth.currentUser!.uid),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError) {

@@ -54,7 +54,7 @@ class TaskCommands {
 
     FirebaseCommand.UpdateCompleted(uid, CompletedTask);
 
-    Future.delayed(const Duration(milliseconds: 300), () {
+    Future.delayed(const Duration(milliseconds: 1000), () {
       taskService.deleteTask(documentSnapshot);
     });
   }

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class ThemeStyles {
-  Color PrimaryDrawerButtonColor = Color.fromARGB(157, 10, 2, 49);
+  Color PrimaryDrawerButtonColor = Color.fromARGB(255, 247, 244, 244);
   Color OnPrimaryDrawerButtonColor = Color.fromARGB(255, 247, 244, 244);
-  Color ShadowDrawerButtonColor = Color.fromARGB(255, 20, 2, 61);
+  Color ShadowDrawerButtonColor = Color.fromARGB(255, 247, 244, 244);
   double Drawerelevation = 10;
-  Color ListViewColorPrimaryFirst = Color.fromARGB(177, 6, 117, 196);
-  Color ListViewColorSecondaryFirst = Color.fromARGB(207, 99, 127, 255);
-  Color ListViewColorPrimarySecond = Color.fromARGB(177, 6, 117, 196);
-  Color ListViewColorSecondarySecond = Color.fromARGB(207, 99, 127, 255);
+  Color ListViewColorPrimaryFirst = Color.fromARGB(255, 247, 244, 244);
+  Color ListViewColorSecondaryFirst = Color.fromARGB(255, 247, 244, 244);
+  Color ListViewColorPrimarySecond = Color.fromARGB(255, 247, 244, 244);
+  Color ListViewColorSecondarySecond = Color.fromARGB(255, 247, 244, 244);
+  Color popupColor = Color.fromARGB(0, 0, 0, 0);
+
   ButtonStyle? DrawerStyle;
 
   ButtonStyle? getDrawerStyle() {
@@ -25,8 +27,7 @@ class ThemeStyles {
   ButtonStyle? AppButtonStyle;
 
   ButtonStyle? getAppButtonStyle() {
-    AppButtonStyle =
-        ElevatedButton.styleFrom(primary: PrimaryDrawerButtonColor);
+    AppButtonStyle = ElevatedButton.styleFrom(primary: Colors.black);
     return AppButtonStyle;
   }
 
@@ -38,8 +39,8 @@ class ThemeStyles {
             begin: Alignment.topRight,
             end: Alignment.topLeft,
             colors: [
-              Color.fromARGB(255, 11, 63, 122),
-              Color.fromARGB(255, 12, 7, 95),
+              Color.fromARGB(255, 248, 249, 250),
+              Color.fromARGB(255, 247, 246, 250),
             ]));
   }
 
@@ -66,7 +67,7 @@ class ThemeStyles {
   Text? getDropDownText(String textcontent) {
     return Text(
       textcontent,
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: Color.fromARGB(255, 10, 10, 10)),
     );
   }
 

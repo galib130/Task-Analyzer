@@ -3,9 +3,9 @@ import 'package:proda/Models/Task.dart';
 import 'dart:async';
 
 import 'package:proda/Providers/TaskProvider.dart';
-import 'package:provider/src/provider.dart';
 
 var taskCommand = TaskCommands();
+TaskProvider taskProvider = TaskProvider();
 Future<void> createAlertDialog(
     BuildContext context,
     TextEditingController _namecontroller,
@@ -53,7 +53,7 @@ Future<void> createAlertDialog(
                   ElevatedButton(
                     onPressed: () {
                       // _selectDate(context);
-                      context.read<TaskProvider>().selectDate(
+                      taskProvider.selectDate(
                           context, _datecontroller, _secondcontroller, uid);
                     },
                     child: Text('Select Date'),

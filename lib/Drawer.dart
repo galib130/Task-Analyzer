@@ -14,8 +14,8 @@ Drawer? getDrawer(BuildContext context) {
               begin: Alignment.topRight,
               end: Alignment.topLeft,
               colors: [
-                Color.fromARGB(255, 11, 63, 122),
-                Color.fromARGB(255, 12, 7, 95),
+                Color.fromARGB(255, 243, 244, 244),
+                Color.fromARGB(255, 243, 243, 246),
               ])),
       child: Stack(
         children: [
@@ -33,9 +33,7 @@ Drawer? getDrawer(BuildContext context) {
                 },
                 child: Text(
                   'Primary',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
+                  style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
                 style: themeStyle.getDrawerStyle(),
               )),
@@ -55,7 +53,7 @@ Drawer? getDrawer(BuildContext context) {
                 },
                 child: Text(
                   'Secondary',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
                 style: themeStyle.getDrawerStyle(),
               )),
@@ -70,7 +68,7 @@ Drawer? getDrawer(BuildContext context) {
               },
               child: Text(
                 'Session Summary',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 18, color: Colors.black),
               ),
               style: themeStyle.getDrawerStyle(),
             ),
@@ -86,7 +84,7 @@ Drawer? getDrawer(BuildContext context) {
               },
               child: Text(
                 'Efficiency',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(fontSize: 20, color: Colors.black),
               ),
               style: themeStyle.getDrawerStyle(),
             ),
@@ -101,7 +99,7 @@ Drawer? getDrawer(BuildContext context) {
                 },
                 child: Text(
                   "Completed",
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
                 style: themeStyle.getDrawerStyle(),
               )),
@@ -115,7 +113,7 @@ Drawer? getDrawer(BuildContext context) {
                 },
                 child: Text(
                   "HeartBeat",
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
                 style: themeStyle.getDrawerStyle(),
               ))

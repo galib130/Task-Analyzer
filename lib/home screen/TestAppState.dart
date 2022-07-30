@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:proda/Analysis%20Functions/Analysis.dart';
 import 'package:proda/Drawer.dart';
 import 'package:proda/Models/FirebaseCommands.dart';
-import 'package:proda/Models/Task.dart';
 import 'package:proda/Providers/ChangeState.dart';
 import 'package:proda/Providers/SessionProvider.dart';
 import 'package:proda/Providers/TaskProvider.dart';
@@ -24,11 +23,13 @@ List<String> textadd1 = <String>['S/W Lab', 'Maths'];
 final firebaseinstance = FirebaseFirestore.instance;
 var today = new DateTime.now();
 var addwithtoday = new DateTime.now();
-var change_state = 0;
+var changeState = 0;
 FirebaseAuth auth = FirebaseAuth.instance;
 
 class TestAppState extends State<TestApp> {
   String uid = auth.currentUser!.uid;
+  TaskProvider taskProvider = TaskProvider();
+  SessionProvider sessionProvider = SessionProvider();
   var themeStyle = ThemeStyles();
   var datePicked = 1;
   var timePicked = 1;
@@ -55,16 +56,13 @@ class TestAppState extends State<TestApp> {
   int difference = 0;
   static const routename = '/profile';
   var firebaseCommand = FirebaseCommands();
-
 //ok
   //call to add complete task and then delete the task
   void checkbox(String documnent, bool? value,
       DocumentSnapshot documentSnapshot, Map<dynamic, dynamic> data) async {
-    context
-        .read<TaskProvider>()
-        .TaskComplete(value, documentSnapshot, uid, data);
-    context.read<SessionProvider>().updateSessionComplete(
-        documnent, value, documentSnapshot, uid, change_state, data);
+    taskProvider.TaskComplete(value, documentSnapshot, uid, data);
+    sessionProvider.updateSessionComplete(
+        documnent, value, documentSnapshot, uid, changeState, data);
   }
 
   @override
@@ -96,17 +94,13 @@ class TestAppState extends State<TestApp> {
   }
 
   Widget build(BuildContext context) {
-    change_state = context.watch<ChangeState>().flag;
+    changeState = context.watch<ChangeState>().flag;
     final suggestList = [];
 
     //call suggestlist
     setState(() {
       suggestList.clear();
-      context
-          .read<TaskProvider>()
-          .suggestionList(change_state, uid)
-          .get()
-          .then((snapshot) {
+      taskProvider.suggestionList(changeState, uid).get().then((snapshot) {
         snapshot.docs.forEach((doc) {
           suggestList.add(doc.id.toString());
           // print(doc.id);
@@ -127,13 +121,13 @@ class TestAppState extends State<TestApp> {
 
     //Function to set a new session
     void setSession() async {
-      context.read<SessionProvider>().setSession(uid);
+      sessionProvider.setSession(uid);
     }
 
     //Function to initially add a task
     void add() {
 // calls the function which adds to firebase
-      context.read<TaskProvider>().postTasks(
+      taskProvider.postTasks(
           _taskcontroller.text.trim() +
               _datecontroller.text.trim() +
               _timecontroller.text.trim(),
@@ -143,38 +137,34 @@ class TestAppState extends State<TestApp> {
           _datecontroller,
           _timecontroller,
           _secondcontroller,
-          change_state);
-      context
-          .read<SessionProvider>()
-          .updateSessionAdd(uid, change_state, _taskcontroller.text);
+          changeState);
+      sessionProvider.updateSessionAdd(uid, changeState, _taskcontroller.text);
     }
 
     //Function to select date
     Future<Null> _selectDate(BuildContext context) async {
-      context
-          .read<TaskProvider>()
-          .selectDate(context, _datecontroller, _secondcontroller, uid);
+      taskProvider.selectDate(context, _datecontroller, _secondcontroller, uid);
     }
 
     // Function to select time
     Future<Null> _selectTime(BuildContext context) async {
-      context
-          .read<TaskProvider>()
-          .selectTime(context, _timecontroller, _secondcontroller, uid);
+      taskProvider.selectTime(context, _timecontroller, _secondcontroller, uid);
     }
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: themeStyle.PrimaryDrawerButtonColor,
+        backgroundColor: themeStyle.OnPrimaryDrawerButtonColor,
+        iconTheme: IconThemeData(color: Colors.black),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            change_state == 0
+            changeState == 0
                 ? Text(
                     "Primary",
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 20, color: Colors.black),
                   )
-                : Text("Secondary"),
+                : Text("Secondary",
+                    style: TextStyle(fontSize: 20, color: Colors.black)),
             Align(
               alignment: Alignment.topRight,
               child: ElevatedButton(
@@ -194,7 +184,7 @@ class TestAppState extends State<TestApp> {
         ),
         actions: [
           PopupMenuButton(
-            color: themeStyle.PrimaryDrawerButtonColor,
+            color: themeStyle.OnPrimaryDrawerButtonColor,
             itemBuilder: (context) {
               return [
                 PopupMenuItem(
@@ -223,13 +213,13 @@ class TestAppState extends State<TestApp> {
                     uid);
                 page;
               } else if (value == 2) {
-                context.read<TaskProvider>().setNotification(
-                      _datecontroller.text,
-                      _timecontroller.text,
-                      _secondcontroller.text,
-                      _taskcontroller.text,
-                      uid,
-                    );
+                taskProvider.setNotification(
+                  _datecontroller.text,
+                  _timecontroller.text,
+                  _secondcontroller.text,
+                  _taskcontroller.text,
+                  uid,
+                );
                 if (_taskcontroller.text.isNotEmpty) {
                   add();
                 }
@@ -247,7 +237,7 @@ class TestAppState extends State<TestApp> {
           )
         ],
       ),
-      backgroundColor: Color.fromARGB(255, 11, 63, 122),
+      backgroundColor: Color.fromARGB(255, 246, 244, 244),
       drawer: Drawer(child: getDrawer(context)),
       body: Container(
         decoration: themeStyle.getBackgroundTheme(),
@@ -268,8 +258,8 @@ class TestAppState extends State<TestApp> {
                         begin: Alignment.topRight,
                         end: Alignment.topLeft,
                         colors: [
-                          Color.fromARGB(153, 2, 141, 255),
-                          Color.fromARGB(204, 17, 165, 250)
+                          Color.fromARGB(153, 217, 221, 224),
+                          Color.fromARGB(153, 217, 221, 224)
                         ])),
                 child: TypeAheadField(
                   //cursorHeight: 2,
@@ -299,15 +289,18 @@ class TestAppState extends State<TestApp> {
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(255, 253, 250, 250)),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(255, 248, 251, 251)),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(255, 250, 247, 247)),
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                     ),
@@ -321,14 +314,14 @@ class TestAppState extends State<TestApp> {
                       onDismissed: (dismissDirection) {
                         var autocompleteData = context
                             .read<TaskProvider>()
-                            .suggestionList(change_state, uid)
+                            .suggestionList(changeState, uid)
                             .doc(suggestion.toString());
                         autocompleteData.delete();
                         suggestList.remove(suggestion);
                       },
                       child: Container(
                         child: ListTile(
-                          tileColor: Colors.cyan,
+                          tileColor: Color.fromARGB(255, 245, 247, 247),
                           title: Text(
                             suggestion.toString(),
                             style: TextStyle(fontSize: 16),
@@ -352,10 +345,8 @@ class TestAppState extends State<TestApp> {
               //See list button depending on state
               // Listview for quadrant 1
               AddList_State(
-                taskQuery: context
-                    .read<TaskProvider>()
-                    .getListviewStream(change_state, uid),
-                flag: change_state,
+                taskQuery: taskProvider.getListviewStream(changeState, uid),
+                flag: changeState,
                 checkBox: checkbox,
                 setDate: _selectDate,
                 setTime: _selectTime,
